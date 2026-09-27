@@ -60,18 +60,9 @@
 
         <p class="form-error" [class.is-visible]="!!errorMessage()">{{ errorMessage() }}</p>
 
-        <button type="submit" [disabled]="isSubmitting()">
-          <span>{{ isSubmitting() ? 'Creating account…' : 'Create account' }}</span>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M5 12h14M13 6l6 6-6 6"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
+        <app-button [disabled]="isSubmitting()">
+          {{ isSubmitting() ? 'Creating account…' : 'Create account' }}
+        </app-button>
       </form>
 
       <p class="switch">Already have an account? <a routerLink="/login">Sign in</a></p>

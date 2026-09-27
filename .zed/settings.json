@@ -1,0 +1,9 @@
+{
+  "lsp": {
+    "angular": {
+      "initialization_options": {
+        "angular_language_server_path": "frontend/node_modules/@angular/language-server"
+      }
+    }
+  }
+}

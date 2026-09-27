@@ -46,18 +46,9 @@
 
         <p class="form-error" [class.is-visible]="!!errorMessage()">{{ errorMessage() }}</p>
 
-        <button type="submit" [disabled]="isSubmitting()">
-          <span>{{ isSubmitting() ? 'Signing in…' : 'Sign in' }}</span>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path
-              d="M5 12h14M13 6l6 6-6 6"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
+        <app-button [disabled]="isSubmitting()">
+          {{ isSubmitting() ? 'Signing in…' : 'Sign in' }}
+        </app-button>
       </form>
 
       <p class="switch">Don't have an account? <a routerLink="/register">Sign up</a></p>
