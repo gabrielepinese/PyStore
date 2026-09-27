@@ -28,7 +28,7 @@
   flex-direction: column;
 
   .brand {
-    color: #c86d51;
+    color: #7a3018;
     font-weight: 700;
     font-size: 1.35rem;
   }
@@ -36,7 +36,7 @@
   .greeting {
     margin: 24px 0 4px;
     font-size: 0.78rem;
-    color: #8a8a86;
+    color: #4a4a47;
   }
 
   h1 {
@@ -56,7 +56,8 @@
   input {
     width: 100%;
     box-sizing: border-box;
-    padding: 0.7rem 0.9rem;
+    min-height: 44px;
+    padding: 0.85rem 0.9rem;
     border: 1px solid #e6e1d8;
     border-radius: 10px;
     background: #f2efe9;
@@ -64,11 +65,11 @@
     color: #1a1a1a;
 
     &::placeholder {
-      color: #a8a29a;
+      color: #4a4a47;
     }
 
-    &:focus {
-      outline: 2px solid #c86d51;
+    &:focus-visible {
+      outline: 3px solid #7a3018;
       outline-offset: 1px;
     }
   }
@@ -92,12 +93,12 @@
 
   .forgot-link {
     font-size: 0.72rem;
-    color: #c86d51;
+    color: #7a3018;
   }
 
   .field-error {
     margin: -4px 0 0;
-    color: #b3401f;
+    color: #8b1a0a;
     font-size: 12px;
     line-height: 16px;
     min-height: 16px;
@@ -111,7 +112,7 @@
 
   .form-error {
     margin: 8px 0 0;
-    color: #b3401f;
+    color: #8b1a0a;
     font-size: 12px;
     line-height: 16px;
     min-height: 16px;
@@ -126,16 +127,17 @@
   .switch {
     margin-top: 24px;
     font-size: 0.8rem;
-    color: #8a8a86;
+    color: #4a4a47;
     text-align: center;
 
     a {
-      color: #c86d51;
+      color: #7a3018;
       font-weight: 600;
-      text-decoration: none;
+      text-decoration: underline;
 
-      &:hover {
-        text-decoration: underline;
+      &:focus-visible {
+        outline: 3px solid #1a1a1a;
+        outline-offset: 2px;
       }
     }
   }

@@ -15,9 +15,13 @@
             formControlName="fullName"
             autocomplete="name"
             placeholder="Jane Doe"
+            aria-describedby="fullName-error"
+            [attr.aria-invalid]="form.controls.fullName.invalid && form.controls.fullName.touched"
           />
           <p
+            id="fullName-error"
             class="field-error"
+            aria-live="polite"
             [class.is-visible]="form.controls.fullName.invalid && form.controls.fullName.touched"
           >
             Enter your name.
@@ -32,9 +36,13 @@
             formControlName="email"
             autocomplete="email"
             placeholder="test@gmail.com"
+            aria-describedby="email-error"
+            [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched"
           />
           <p
+            id="email-error"
             class="field-error"
+            aria-live="polite"
             [class.is-visible]="form.controls.email.invalid && form.controls.email.touched"
           >
             Enter a valid email address.
@@ -49,16 +57,20 @@
             formControlName="password"
             autocomplete="new-password"
             placeholder="••••••••••"
+            aria-describedby="password-error"
+            [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
           />
           <p
+            id="password-error"
             class="field-error"
+            aria-live="polite"
             [class.is-visible]="form.controls.password.invalid && form.controls.password.touched"
           >
             Password must be at least 8 characters.
           </p>
         </div>
 
-        <p class="form-error" [class.is-visible]="!!errorMessage()">{{ errorMessage() }}</p>
+        <p class="form-error" role="alert" [class.is-visible]="!!errorMessage()">{{ errorMessage() }}</p>
 
         <app-button [disabled]="isSubmitting()">
           {{ isSubmitting() ? 'Creating account…' : 'Create account' }}

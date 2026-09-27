@@ -7,11 +7,12 @@
 
 button {
   width: 100%;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.4rem;
+  padding: 0.85rem 1.4rem;
   border: 1px solid transparent;
   border-radius: 8px;
   font-weight: 600;
@@ -29,11 +30,16 @@ button {
     display: block;
     width: 18px;
     height: 18px;
-    transition: transform 0.15s ease;
   }
 
-  &:hover:not(:disabled) svg {
-    transform: translateX(3px);
+  @media (prefers-reduced-motion: no-preference) {
+    svg {
+      transition: transform 0.15s ease;
+    }
+
+    &:hover:not(:disabled) svg {
+      transform: translateX(3px);
+    }
   }
 
   &:disabled {
@@ -41,22 +47,27 @@ button {
     cursor: not-allowed;
   }
 
+  &:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+  }
+
   &.primary {
-    background: #c86d51;
+    background: #7a3018;
     color: #f9f8f6;
 
     &:hover:not(:disabled) {
-      background: #b35a3d;
+      background: #5c2311;
     }
   }
 
   &.secondary {
     background: transparent;
-    border-color: #c86d51;
-    color: #c86d51;
+    border-color: #7a3018;
+    color: #7a3018;
 
     &:hover:not(:disabled) {
-      background: rgba(200, 109, 81, 0.08);
+      background: rgba(122, 48, 24, 0.08);
     }
   }
 }
