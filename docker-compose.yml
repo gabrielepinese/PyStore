@@ -1,0 +1,40 @@
+services:
+  auth-service:
+    build: ./backend/services/auth-service
+    ports:
+      - "8001:8001"
+    environment:
+      DATABASE_URL: sqlite:////app/data/auth.db
+      JWT_SECRET_KEY: ${AUTH_JWT_SECRET_KEY:-dev-only-insecure-secret-change-me-please-really}
+      CORS_ORIGINS: '["http://localhost:4200"]'
+    volumes:
+      - auth-data:/app/data
+      - ./backend/services/auth-service/app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+
+  products-service:
+    build: ./backend/services/products-service
+    ports:
+      - "8002:8002"
+    environment:
+      DATABASE_URL: sqlite:////app/data/products.db
+      CORS_ORIGINS: '["http://localhost:4200"]'
+    volumes:
+      - products-data:/app/data
+      - ./backend/services/products-service/app:/app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    depends_on:
+      - auth-service
+      - products-service
+
+volumes:
+  auth-data:
+  products-data:

@@ -1,5 +1,141 @@
-<section class="dashboard">
-  <h1>Welcome{{ authService.currentUser()?.fullName ? ', ' + authService.currentUser()?.fullName : '' }}</h1>
-  <p>You're signed in. This route is protected by <code>authGuard</code>.</p>
-  <button type="button" (click)="authService.logout()">Sign out</button>
-</section>
+<div class="page">
+  <header class="topbar">
+    <span class="brand">dumbEcommerce</span>
+
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+        <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+      <input
+        type="search"
+        placeholder="Search products..."
+        [value]="searchInputValue()"
+        (input)="onSearchInput($any($event.target).value)"
+        aria-label="Search products"
+      />
+    </div>
+
+    <div class="topbar-actions">
+      <button type="button" class="icon-btn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M3 4h2l2.4 12.4A2 2 0 0 0 9.36 18h7.78a2 2 0 0 0 1.96-1.6L21 8H6"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle cx="10" cy="21" r="1.4" fill="currentColor" />
+          <circle cx="18" cy="21" r="1.4" fill="currentColor" />
+        </svg>
+        @if (cartCount() > 0) {
+        <span class="badge">{{ cartCount() }}</span>
+        }
+      </button>
+
+      <div class="user">
+        <span class="avatar">{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</span>
+        <button type="button" class="signout" (click)="authService.logout()">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Good to see you</p>
+      <h1>Welcome{{ authService.currentUser()?.fullName ? ', ' + authService.currentUser()?.fullName : '' }}</h1>
+      <p class="subtitle">Fresh picks curated from what you've been browsing.</p>
+    </div>
+    <svg class="hero-art" viewBox="0 0 200 160" fill="none" aria-hidden="true">
+      <circle cx="150" cy="55" r="46" fill="#f2cbb6" opacity="0.6" />
+      <rect x="20" y="70" width="70" height="70" rx="16" fill="#5c2311" transform="rotate(-6 55 105)" />
+      <rect x="70" y="55" width="70" height="70" rx="16" fill="#c5a059" opacity="0.85" transform="rotate(8 105 90)" />
+    </svg>
+  </section>
+
+  <nav class="categories" aria-label="Product categories">
+    @for (category of categories(); track category) {
+    <button
+      type="button"
+      class="chip"
+      [class.is-active]="selectedCategory() === category"
+      (click)="selectCategory(category)"
+    >
+      {{ category }}
+    </button>
+    }
+  </nav>
+
+  <section class="recommended">
+    <div class="section-header">
+      <h2>Recommended for you</h2>
+      <p>Based on your recent activity</p>
+    </div>
+
+    @if (isLoading()) {
+    <div class="state-row">
+      <app-dot-loader />
+    </div>
+    } @else if (loadError()) {
+    <p class="state-row error">Couldn't load products. Is products-service running?</p>
+    } @else if (products().length === 0) {
+    <p class="state-row">No products match "{{ searchInputValue() }}".</p>
+    } @else {
+    <div class="product-grid">
+      @for (product of products(); track product.id) {
+      <article class="product-card">
+        <div class="thumb" [style.background]="product.accent">
+          @if (product.badge) {
+          <span class="tag" [class.tag-sale]="product.badge === 'Sale'">{{ product.badge }}</span>
+          }
+          <button
+            type="button"
+            class="wishlist-btn"
+            [class.is-active]="isWishlisted(product.id)"
+            [attr.aria-pressed]="isWishlisted(product.id)"
+            [attr.aria-label]="isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'"
+            (click)="toggleWishlist(product.id)"
+          >
+            <svg viewBox="0 0 24 24" [attr.fill]="isWishlisted(product.id) ? 'currentColor' : 'none'" aria-hidden="true">
+              <path
+                d="M12 20.3 4.6 13a5.2 5.2 0 0 1 7.4-7.3L12 5.7l0 0a5.2 5.2 0 0 1 7.4 7.3L12 20.3Z"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <p class="category-label">{{ product.category }}</p>
+        <h3 class="name">{{ product.name }}</h3>
+
+        <div class="rating" [attr.aria-label]="product.rating + ' out of 5 stars, ' + product.reviews + ' reviews'">
+          @for (star of stars(product.rating); track $index) {
+          <svg viewBox="0 0 24 24" [attr.fill]="star === 'full' ? '#c5a059' : 'none'" aria-hidden="true">
+            <path
+              d="m12 3 2.7 5.9 6.3.6-4.7 4.4 1.3 6.3L12 17l-5.6 3.2 1.3-6.3-4.7-4.4 6.3-.6L12 3Z"
+              [attr.stroke]="star === 'full' ? '#c5a059' : '#e6e1d8'"
+              stroke-width="1.4"
+              stroke-linejoin="round"
+            />
+          </svg>
+          }
+          <span class="reviews">({{ product.reviews }})</span>
+        </div>
+
+        <div class="price-row">
+          <span class="price">${{ product.price }}</span>
+          @if (product.originalPrice) {
+          <span class="price-original">${{ product.originalPrice }}</span>
+          }
+        </div>
+
+        <button type="button" class="add-to-cart" (click)="addToCart()">Add to cart</button>
+      </article>
+      }
+    </div>
+    }
+  </section>
+</div>
