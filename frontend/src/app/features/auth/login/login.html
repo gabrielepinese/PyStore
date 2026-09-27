@@ -1,27 +1,107 @@
-<div class="auth-card">
-  <h1>Sign in</h1>
+<div class="auth-page">
+  <div class="auth-panel">
+    <div class="auth-card">
+      <span class="brand">dumbEcommerce</span>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" autocomplete="email" />
-    @if (form.controls.email.invalid && form.controls.email.touched) {
-      <p class="field-error">Enter a valid email address.</p>
-    }
+      <p class="greeting">Welcome back!!!</p>
+      <h1>Sign in</h1>
 
-    <label for="password">Password</label>
-    <input id="password" type="password" formControlName="password" autocomplete="current-password" />
-    @if (form.controls.password.invalid && form.controls.password.touched) {
-      <p class="field-error">Password must be at least 8 characters.</p>
-    }
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="test@gmail.com"
+          />
+          <p
+            class="field-error"
+            [class.is-visible]="form.controls.email.invalid && form.controls.email.touched"
+          >
+            Enter a valid email address.
+          </p>
+        </div>
 
-    @if (errorMessage()) {
-      <p class="form-error">{{ errorMessage() }}</p>
-    }
+        <div class="field">
+          <div class="field-header">
+            <label for="password">Password</label>
+            <span class="forgot-link">Forgot Password?</span>
+          </div>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            autocomplete="current-password"
+            placeholder="••••••••••"
+          />
+          <p
+            class="field-error"
+            [class.is-visible]="form.controls.password.invalid && form.controls.password.touched"
+          >
+            Password must be at least 8 characters.
+          </p>
+        </div>
 
-    <button type="submit" [disabled]="isSubmitting()">
-      {{ isSubmitting() ? 'Signing in…' : 'Sign in' }}
-    </button>
-  </form>
+        <p class="form-error" [class.is-visible]="!!errorMessage()">{{ errorMessage() }}</p>
 
-  <p class="switch">Don't have an account? <a routerLink="/register">Create one</a></p>
+        <button type="submit" [disabled]="isSubmitting()">
+          <span>{{ isSubmitting() ? 'Signing in…' : 'Sign in' }}</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M5 12h14M13 6l6 6-6 6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </form>
+
+      <p class="switch">Don't have an account? <a routerLink="/register">Sign up</a></p>
+    </div>
+  </div>
+
+  <div class="illustration-panel" aria-hidden="true">
+    <svg class="deco-ring" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(26,26,26,0.15)" stroke-width="1" />
+    </svg>
+
+    <svg class="illustration" viewBox="0 0 320 340" fill="none">
+      <!-- ground line -->
+      <line x1="10" y1="320" x2="310" y2="320" stroke="rgba(26,26,26,0.18)" stroke-width="2" />
+
+      <!-- cart -->
+      <g transform="translate(20,190)">
+        <rect x="30" y="10" width="34" height="34" fill="#C5A059" transform="rotate(-8 47 27)" />
+        <rect x="70" y="20" width="26" height="26" fill="#1A1A1A" transform="rotate(10 83 33)" />
+        <circle cx="60" cy="18" r="16" fill="#1A1A1A" />
+        <path
+          d="M4 6h18l10 74h96l16-56H40"
+          stroke="#1A1A1A"
+          stroke-width="5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle cx="55" cy="120" r="9" fill="#1A1A1A" />
+        <circle cx="120" cy="120" r="9" fill="#1A1A1A" />
+      </g>
+
+      <!-- person -->
+      <g transform="translate(180,20)">
+        <ellipse cx="55" cy="38" rx="26" ry="28" fill="#E8C9A0" />
+        <path d="M29 34c2-20 50-20 52 0-6 6-46 6-52 0Z" fill="#1A1A1A" />
+        <rect x="18" y="70" width="74" height="110" rx="14" fill="#1A1A1A" />
+        <rect x="18" y="70" width="74" height="34" rx="14" fill="#FFFFFF" opacity="0.08" />
+        <rect x="30" y="150" width="50" height="70" rx="8" fill="#C5A059" />
+        <rect x="14" y="176" width="82" height="86" rx="10" fill="#1A1A1A" />
+      </g>
+
+      <!-- floating shapes -->
+      <path d="M12 300l16-10 4 18-20-8Z" fill="#1A1A1A" />
+      <circle cx="230" cy="300" r="6" fill="#C5A059" />
+    </svg>
+  </div>
 </div>
