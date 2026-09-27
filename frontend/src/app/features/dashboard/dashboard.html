@@ -1,0 +1,5 @@
+<section class="dashboard">
+  <h1>Welcome{{ authService.currentUser()?.fullName ? ', ' + authService.currentUser()?.fullName : '' }}</h1>
+  <p>You're signed in. This route is protected by <code>authGuard</code>.</p>
+  <button type="button" (click)="authService.logout()">Sign out</button>
+</section>

@@ -1,0 +1,5 @@
+@use '../../../shared/styles/auth-form' as auth;
+
+.auth-card {
+  @include auth.auth-card;
+}

@@ -1,0 +1,16 @@
+.dashboard {
+  max-width: 480px;
+  margin: 4rem auto;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+
+  button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+  }
+}
