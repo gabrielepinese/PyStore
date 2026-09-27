@@ -21,15 +21,15 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this.currentUserSignal() !== null);
 
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, request).pipe(
-      tap((res) => this.setSession(res)),
-    );
+    return this.http
+      .post<AuthResponse>(`${this.baseUrl}/login`, request, { withCredentials: true })
+      .pipe(tap((res) => this.setSession(res)));
   }
 
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/register`, request).pipe(
-      tap((res) => this.setSession(res)),
-    );
+    return this.http
+      .post<AuthResponse>(`${this.baseUrl}/register`, request, { withCredentials: true })
+      .pipe(tap((res) => this.setSession(res)));
   }
 
   /** Re-hydrates the current user from a stored access token, e.g. on app bootstrap or page refresh. */
@@ -39,21 +39,28 @@ export class AuthService {
     );
   }
 
+  /** Exchanges the httpOnly refresh cookie (sent automatically) for a new access token. */
   refreshToken(): Observable<TokenResponse> {
-    const refreshToken = this.tokenStorage.getRefreshToken();
-    return this.http.post<TokenResponse>(`${this.baseUrl}/refresh`, { refreshToken }).pipe(
-      tap((res) => this.tokenStorage.setTokens(res.accessToken, res.refreshToken)),
-    );
+    return this.http
+      .post<TokenResponse>(`${this.baseUrl}/refresh`, {}, { withCredentials: true })
+      .pipe(tap((res) => this.tokenStorage.setAccessToken(res.accessToken)));
   }
 
   logout(): void {
+    this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true }).subscribe({
+      complete: () => this.finishLogout(),
+      error: () => this.finishLogout(),
+    });
+  }
+
+  private finishLogout(): void {
     this.tokenStorage.clear();
     this.currentUserSignal.set(null);
     this.router.navigateByUrl('/login');
   }
 
   private setSession(res: AuthResponse): void {
-    this.tokenStorage.setTokens(res.accessToken, res.refreshToken);
+    this.tokenStorage.setAccessToken(res.accessToken);
     this.currentUserSignal.set(res.user);
   }
 }

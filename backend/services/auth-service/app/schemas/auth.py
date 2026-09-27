@@ -19,16 +19,23 @@ class RegisterRequest(_CamelModel):
     full_name: str = Field(min_length=2)
 
 
-class RefreshRequest(_CamelModel):
-    refresh_token: str
-
-
 class TokenResponse(_CamelModel):
+    """Internal shape produced by token_service — never sent to the client
+    as-is: the refresh token goes out as an httpOnly cookie, never in JSON."""
+
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
     expires_in: int  # seconds until access_token expiry
 
 
-class AuthResponse(TokenResponse):
+class AccessTokenResponse(_CamelModel):
+    """What actually goes in the response body."""
+
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+
+
+class AuthResponse(AccessTokenResponse):
     user: UserRead

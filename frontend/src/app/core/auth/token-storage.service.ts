@@ -1,30 +1,27 @@
 import { Injectable } from '@angular/core';
 
-const ACCESS_TOKEN_KEY = 'dumb_ecommerce_access_token';
-const REFRESH_TOKEN_KEY = 'dumb_ecommerce_refresh_token';
-
 /**
- * Thin wrapper around localStorage so the rest of the app never touches
- * the browser storage API directly. Swap the implementation (e.g. to an
- * httpOnly-cookie based flow) here without touching AuthService consumers.
+ * Holds the access token in memory only — never localStorage/sessionStorage,
+ * so it can't be read by an XSS payload that persists across reloads. The
+ * refresh token never reaches the client as JS-visible data at all: it's an
+ * httpOnly cookie the browser sends automatically to /auth/refresh.
+ *
+ * Trade-off: a hard page reload loses the in-memory access token, so the app
+ * has to call /auth/refresh (cookie-authenticated) to get a new one.
  */
 @Injectable({ providedIn: 'root' })
 export class TokenStorageService {
+  private accessToken: string | null = null;
+
   getAccessToken(): string | null {
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+    return this.accessToken;
   }
 
-  getRefreshToken(): string | null {
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
-  }
-
-  setTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  setAccessToken(accessToken: string): void {
+    this.accessToken = accessToken;
   }
 
   clear(): void {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    this.accessToken = null;
   }
 }

@@ -11,10 +11,13 @@ export interface RegisterRequest {
   fullName: string;
 }
 
-/** Shape returned by the auth microservice's /token and /refresh endpoints. */
+/**
+ * Shape returned by the auth microservice's /login, /register and /refresh
+ * endpoints. The refresh token itself is never in this body — it's set as
+ * an httpOnly cookie the browser manages, invisible to JS.
+ */
 export interface TokenResponse {
   accessToken: string;
-  refreshToken: string;
   tokenType: 'bearer';
   expiresIn: number;
 }

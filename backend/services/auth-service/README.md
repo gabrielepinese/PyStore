@@ -14,7 +14,15 @@ JSON through this service's API.
 - PyJWT for access/refresh tokens, `bcrypt` for password hashing
 - Refresh tokens are tracked server-side (`refresh_tokens` table, keyed by
   the JWT's `jti`) so a single session can be revoked without a token
-  blocklist keyed on the raw JWT — rotated on every `/refresh` call
+  blocklist keyed on the raw JWT — rotated on every `/refresh` call. Every
+  token produced by rotating the same login shares a `family_id`; if an
+  already-rotated-out token is ever presented again (a stolen/replayed
+  token), the whole family is revoked, not just that one request.
+- The refresh token itself never appears in a JSON response or in
+  `localStorage` — it's set as an `httpOnly` + `Secure` + `SameSite=Strict`
+  cookie (scoped to `/api/v1/auth`), so it's inaccessible to JS/XSS. Only
+  the short-lived access token goes in the response body, and the frontend
+  keeps it in memory rather than persisting it.
 
 ## Run locally
 
@@ -30,13 +38,13 @@ API docs: http://localhost:8001/docs
 
 ## Endpoints (`/api/v1/auth`)
 
-| Method | Path       | Auth           | Notes                                   |
-|--------|------------|----------------|------------------------------------------|
-| POST   | `/register`| —              | Creates user, returns token pair + user |
-| POST   | `/login`   | —              | Returns token pair + user               |
-| POST   | `/refresh` | refresh token  | Rotates refresh token                   |
-| POST   | `/logout`  | refresh token  | Revokes the given refresh token         |
-| GET    | `/me`      | access token   | Returns the current user                |
+| Method | Path       | Auth                 | Notes                                              |
+|--------|------------|----------------------|-----------------------------------------------------|
+| POST   | `/register`| —                    | Creates user, returns access token + user, sets refresh cookie |
+| POST   | `/login`   | —                    | Returns access token + user, sets refresh cookie   |
+| POST   | `/refresh` | refresh cookie       | Rotates the refresh cookie, returns a new access token |
+| POST   | `/logout`  | refresh cookie       | Revokes + clears the refresh cookie                |
+| GET    | `/me`      | access token (Bearer)| Returns the current user                           |
 
 ## Tests
 
@@ -46,8 +54,9 @@ pytest
 
 `tests/test_auth_flow.py` drives the full flow against a throwaway SQLite
 file: register → duplicate-email rejection → login → wrong-password
-rejection → `/me` with/without a token → refresh rotation → rotated-token
-reuse rejection → logout → refresh-after-logout rejection.
+rejection → `/me` with/without a token → refresh rotation → replaying the
+rotated-out cookie (reuse) rejects the request **and** kills the rest of
+that token family → logout → refresh-after-logout rejection.
 
 ## Not done yet (by design — scope is auth only for now)
 

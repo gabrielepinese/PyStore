@@ -9,19 +9,24 @@ def test_register_login_me_refresh_logout_flow(client):
     assert r.status_code == 201
     body = r.json()
     assert body["user"]["email"] == register_payload["email"]
-    assert "accessToken" in body and "refreshToken" in body
+    assert "accessToken" in body
+    assert "refreshToken" not in body
+    assert r.cookies.get("refresh_token")
 
     # duplicate email is rejected
     r_dup = client.post("/api/v1/auth/register", json=register_payload)
     assert r_dup.status_code == 409
 
-    # login with correct credentials
+    # login with correct credentials — overwrites the client's refresh cookie
     r_login = client.post(
         "/api/v1/auth/login",
         json={"email": register_payload["email"], "password": register_payload["password"]},
     )
     assert r_login.status_code == 200
     tokens = r_login.json()
+    assert "refreshToken" not in tokens
+    login_refresh_cookie = r_login.cookies.get("refresh_token")
+    assert login_refresh_cookie
 
     # login with wrong password is rejected
     r_bad = client.post(
@@ -39,23 +44,36 @@ def test_register_login_me_refresh_logout_flow(client):
     assert r_me.status_code == 200
     assert r_me.json()["fullName"] == register_payload["fullName"]
 
-    # refreshing rotates the refresh token
-    r_refresh = client.post("/api/v1/auth/refresh", json={"refreshToken": tokens["refreshToken"]})
+    # refreshing rotates the refresh cookie (client jar carries it automatically)
+    r_refresh = client.post("/api/v1/auth/refresh")
     assert r_refresh.status_code == 200
-    new_tokens = r_refresh.json()
-    assert new_tokens["refreshToken"] != tokens["refreshToken"]
+    assert "refreshToken" not in r_refresh.json()
+    rotated_refresh_cookie = r_refresh.cookies.get("refresh_token")
+    assert rotated_refresh_cookie
+    assert rotated_refresh_cookie != login_refresh_cookie
 
-    # the rotated-out (old) refresh token can no longer be used
-    r_refresh_reuse = client.post(
-        "/api/v1/auth/refresh", json={"refreshToken": tokens["refreshToken"]}
+    # replaying the rotated-out (old) cookie is reuse of a stolen token —
+    # it's rejected AND kills the whole family, not just this one request
+    r_reuse = client.post("/api/v1/auth/refresh", cookies={"refresh_token": login_refresh_cookie})
+    assert r_reuse.status_code == 401
+
+    # so the legitimately-latest cookie (from the same family) is now dead too
+    r_refresh_after_reuse = client.post(
+        "/api/v1/auth/refresh", cookies={"refresh_token": rotated_refresh_cookie}
     )
-    assert r_refresh_reuse.status_code == 401
+    assert r_refresh_after_reuse.status_code == 401
 
-    # logout revokes the current refresh token
-    r_logout = client.post("/api/v1/auth/logout", json={"refreshToken": new_tokens["refreshToken"]})
+    # start a fresh session to exercise logout in isolation
+    r_login2 = client.post(
+        "/api/v1/auth/login",
+        json={"email": register_payload["email"], "password": register_payload["password"]},
+    )
+    session_refresh_cookie = r_login2.cookies.get("refresh_token")
+
+    r_logout = client.post("/api/v1/auth/logout")
     assert r_logout.status_code == 204
 
     r_refresh_after_logout = client.post(
-        "/api/v1/auth/refresh", json={"refreshToken": new_tokens["refreshToken"]}
+        "/api/v1/auth/refresh", cookies={"refresh_token": session_refresh_cookie}
     )
     assert r_refresh_after_logout.status_code == 401
