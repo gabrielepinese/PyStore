@@ -15,10 +15,15 @@
 // ---- topbar ----
 
 .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: 24px;
   padding: 20px 0;
+  background: #f9f8f6;
+  border-bottom: 1px solid #e6e1d8;
 }
 
 .brand {
@@ -267,6 +272,52 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 22px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 32px;
+
+  button {
+    padding: 0.5rem 1.1rem;
+    border: 1px solid #7a3018;
+    border-radius: 8px;
+    background: transparent;
+    color: #7a3018;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: #7a3018;
+      color: #f9f8f6;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #1a1a1a;
+      outline-offset: 2px;
+    }
+  }
+
+  .page-number {
+    min-width: 36px;
+    padding: 0.5rem;
+    text-align: center;
+
+    &.is-active {
+      background: #7a3018;
+      color: #f9f8f6;
+    }
+  }
 }
 
 .product-card {

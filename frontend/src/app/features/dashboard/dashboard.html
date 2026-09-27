@@ -136,6 +136,26 @@
       </article>
       }
     </div>
+
+    @if (totalPages() > 1) {
+    <nav class="pagination" aria-label="Product pages">
+      <button type="button" (click)="goToPreviousPage()" [disabled]="currentPage() === 1">Previous</button>
+
+      @for (page of pageNumbers(); track page) {
+      <button
+        type="button"
+        class="page-number"
+        [class.is-active]="page === currentPage()"
+        [attr.aria-current]="page === currentPage() ? 'page' : null"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+      }
+
+      <button type="button" (click)="goToNextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+    </nav>
+    }
     }
   </section>
 </div>
