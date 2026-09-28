@@ -26,18 +26,17 @@ button {
     line-height: 1;
   }
 
-  svg {
+  fa-icon {
     display: block;
-    width: 18px;
-    height: 18px;
+    font-size: 1rem;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    svg {
+    fa-icon {
       transition: transform 0.15s ease;
     }
 
-    &:hover:not(:disabled) svg {
+    &:hover:not(:disabled) fa-icon {
       transform: translateX(3px);
     }
   }

@@ -34,9 +34,9 @@ export class AuthService {
 
   /** Re-hydrates the current user from a stored access token, e.g. on app bootstrap or page refresh. */
   loadCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/me`).pipe(
-      tap((user) => this.currentUserSignal.set(user)),
-    );
+    return this.http
+      .get<User>(`${this.baseUrl}/me`)
+      .pipe(tap((user) => this.currentUserSignal.set(user)));
   }
 
   /** Exchanges the httpOnly refresh cookie (sent automatically) for a new access token. */
@@ -56,7 +56,8 @@ export class AuthService {
   private finishLogout(): void {
     this.tokenStorage.clear();
     this.currentUserSignal.set(null);
-    this.router.navigateByUrl('/login');
+    // The dashboard is public, so signing out just turns the visitor into a guest.
+    this.router.navigateByUrl('/dashboard');
   }
 
   private setSession(res: AuthResponse): void {

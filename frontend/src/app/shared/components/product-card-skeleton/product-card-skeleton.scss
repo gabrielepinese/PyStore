@@ -1,0 +1,141 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #e6e1d8;
+  padding: 14px;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #ece7de;
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+  animation-delay: var(--skeleton-delay, 0ms);
+
+  // Dark-grey fill that runs left to right like a progress bar, then fades and restarts.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #4a4a47;
+    opacity: 0.22;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: skeleton-fill 2.4s ease-in-out infinite;
+    animation-delay: calc(var(--skeleton-delay, 0ms) + var(--bar-offset, 0ms));
+  }
+}
+
+// Stagger each bar inside a card so the fills don't all start together.
+.label {
+  --bar-offset: 0ms;
+}
+.name {
+  --bar-offset: 200ms;
+
+  &.short {
+    --bar-offset: 400ms;
+  }
+}
+.rating {
+  --bar-offset: 600ms;
+}
+.price {
+  --bar-offset: 800ms;
+}
+.button {
+  --bar-offset: 1000ms;
+}
+
+.thumb {
+  height: 140px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+}
+
+.label {
+  width: 34%;
+  height: 10px;
+}
+
+.name {
+  width: 88%;
+  height: 15px;
+  margin-top: 10px;
+
+  &.short {
+    width: 58%;
+    margin-top: 6px;
+  }
+}
+
+.rating {
+  width: 96px;
+  height: 12px;
+  margin-top: 12px;
+}
+
+.price {
+  width: 30%;
+  height: 18px;
+  margin: 14px 0 16px;
+}
+
+.button {
+  height: 36px;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes skeleton-fill {
+  0% {
+    transform: scaleX(0);
+    opacity: 0.22;
+  }
+
+  70% {
+    transform: scaleX(1);
+    opacity: 0.22;
+  }
+
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+// Reduced motion: nothing sweeps or scales, the fill just fades in and out so the
+// placeholder still reads as "loading" instead of a frozen shape.
+@media (prefers-reduced-motion: reduce) {
+  .bar::after {
+    transform: scaleX(1);
+    opacity: 0;
+    animation: skeleton-fade 2.4s ease-in-out infinite;
+    animation-delay: calc(var(--skeleton-delay, 0ms) + var(--bar-offset, 0ms));
+  }
+}
+
+@keyframes skeleton-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.22;
+  }
+}

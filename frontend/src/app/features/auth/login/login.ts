@@ -1,3 +1,5 @@
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faChevronLeft, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +10,7 @@ import { DotLoader } from '../../../shared/components/dot-loader/dot-loader';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, Button, DotLoader],
+  imports: [ReactiveFormsModule, RouterLink, Button, DotLoader, FaIconComponent],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -16,6 +18,8 @@ export class Login {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
+  protected readonly icons = { chevronLeft: faChevronLeft, eye: faEye, eyeSlash: faEyeSlash };
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);

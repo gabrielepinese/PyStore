@@ -5,5 +5,17 @@
         "angular_language_server_path": "frontend/node_modules/@angular/language-server"
       }
     }
+  },
+  "languages": {
+    "TypeScript": { "format_on_save": "on", "formatter": "prettier" },
+    "HTML": {
+      "format_on_save": "on",
+      "formatter": "prettier",
+      "prettier": { "allowed": true, "parser": "angular" }
+    },
+    "SCSS": { "format_on_save": "on", "formatter": "prettier" },
+    "CSS": { "format_on_save": "on", "formatter": "prettier" },
+    "JSON": { "format_on_save": "on", "formatter": "prettier" },
+    "JSONC": { "format_on_save": "on", "formatter": "prettier" }
   }
 }

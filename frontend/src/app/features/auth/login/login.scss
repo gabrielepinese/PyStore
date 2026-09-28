@@ -27,6 +27,28 @@
   display: flex;
   flex-direction: column;
 
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    margin-bottom: 20px;
+    color: #4a4a47;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      color: #7a3018;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #1a1a1a;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  }
+
   .brand {
     color: #7a3018;
     font-weight: 700;
@@ -107,13 +129,8 @@
     color: #4a4a47;
     cursor: pointer;
 
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .is-hidden {
-      display: none;
+    fa-icon {
+      font-size: 1.1rem;
     }
 
     &:focus-visible {

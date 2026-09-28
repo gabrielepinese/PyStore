@@ -29,3 +29,32 @@ class ProductListResponse(BaseModel):
     total: int
     limit: int
     offset: int
+
+
+class CategorySummary(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    name: str
+    product_count: int
+    min_price: float
+    max_price: float
+    avg_rating: float
+    on_sale_count: int
+    featured_product: str | None = None
+    accents: list[str]
+
+
+class BadgeFacet(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    name: str
+    count: int
+
+
+class ProductFacets(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    price_min: float
+    price_max: float
+    badges: list[BadgeFacet]
+    on_sale_count: int

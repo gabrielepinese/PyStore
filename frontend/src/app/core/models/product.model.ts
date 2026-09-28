@@ -17,3 +17,28 @@ export interface ProductListResponse {
   limit: number;
   offset: number;
 }
+
+export type ProductSort = 'newest' | 'price_asc' | 'price_desc' | 'rating' | 'popular' | 'discount';
+
+export interface CategorySummary {
+  name: string;
+  productCount: number;
+  minPrice: number;
+  maxPrice: number;
+  avgRating: number;
+  onSaleCount: number;
+  featuredProduct: string | null;
+  accents: string[];
+}
+
+export interface BadgeFacet {
+  name: string;
+  count: number;
+}
+
+export interface ProductFacets {
+  priceMin: number;
+  priceMax: number;
+  badges: BadgeFacet[];
+  onSaleCount: number;
+}

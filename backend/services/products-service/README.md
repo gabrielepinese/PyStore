@@ -32,11 +32,26 @@ service with no other setup.
 
 ## Endpoints (`/api/v1/products`)
 
-| Method | Path         | Notes                                                        |
-|--------|--------------|---------------------------------------------------------------|
-| GET    | `/`          | List products. Query params: `category`, `search`, `limit`, `offset` |
-| GET    | `/categories`| Distinct category names                                       |
-| GET    | `/{id}`      | Single product, 404 if missing                                 |
+| Method | Path                 | Notes |
+|--------|----------------------|-------|
+| GET    | `/`                  | List products (filters below) |
+| GET    | `/categories`        | Distinct category names |
+| GET    | `/categories/summary`| Per-category aggregates for the dashboard tiles: `productCount`, `minPrice`, `maxPrice`, `avgRating`, `onSaleCount`, `featuredProduct`, `accents`. Biggest category first |
+| GET    | `/facets`            | Filter-UI hints for a `category`/`search` scope: `priceMin`, `priceMax`, `badges[{name,count}]`, `onSaleCount` |
+| GET    | `/{id}`              | Single product, 404 if missing |
+
+`GET /` query params (all optional, all combinable):
+
+| Param       | Notes |
+|-------------|-------|
+| `category`  | Exact match; omit or `All` for every category |
+| `search`    | Case-insensitive substring on name **or** category |
+| `minPrice` / `maxPrice` | Inclusive price bounds (422 if min > max) |
+| `minRating` | 0–5, inclusive |
+| `onSale`    | `true` → only products with `originalPrice > price` |
+| `badge`     | Case-insensitive badge match (`New`, `Sale`, `Bestseller`) |
+| `sort`      | `newest` (default), `price_asc`, `price_desc`, `rating`, `popular`, `discount` |
+| `limit` / `offset` | Pagination (`limit` max 100) |
 
 ## Tests
 
