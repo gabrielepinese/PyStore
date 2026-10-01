@@ -95,7 +95,7 @@
           <p>{{ totalProducts() }} products across {{ summaries().length }} categories</p>
         </div>
         <button type="button" class="link-btn" (click)="selectCategory('All')">
-          Browse everything <fa-icon [icon]="icons.chevronRight" aria-hidden="true" />
+          Browse everything <fa-icon [icon]="icons.angleRight" aria-hidden="true" />
         </button>
       </div>
 
@@ -155,7 +155,7 @@
     <section class="listing">
       <div class="listing-head">
         <button type="button" class="back-btn" (click)="goToOverview()">
-          <fa-icon [icon]="icons.chevronLeft" aria-hidden="true" /> All categories
+          <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> All categories
         </button>
         <div class="section-header">
           <h2>{{ listTitle() }}</h2>

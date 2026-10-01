@@ -1,5 +1,5 @@
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faChevronLeft, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,7 +19,7 @@ export class Register {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  protected readonly icons = { chevronLeft: faChevronLeft, eye: faEye, eyeSlash: faEyeSlash };
+  protected readonly icons = { angleLeft: faAngleLeft, eye: faEye, eyeSlash: faEyeSlash };
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);

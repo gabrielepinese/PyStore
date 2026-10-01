@@ -1,8 +1,8 @@
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faArrowRight,
-  faChevronLeft,
-  faChevronRight,
+  faAngleLeft,
+  faAngleRight,
   faCartShopping,
   faHeart as faHeartSolid,
   faMagnifyingGlass,
@@ -94,8 +94,8 @@ function parsePrice(raw: string): number | null {
 export class Dashboard {
   protected readonly icons = {
     arrowRight: faArrowRight,
-    chevronLeft: faChevronLeft,
-    chevronRight: faChevronRight,
+    angleLeft: faAngleLeft,
+    angleRight: faAngleRight,
     cart: faCartShopping,
     heartRegular: faHeartRegular,
     heartSolid: faHeartSolid,
