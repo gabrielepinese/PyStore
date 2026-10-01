@@ -3,16 +3,16 @@ import {
   faArrowRight,
   faAngleLeft,
   faAngleRight,
-  faCartShopping,
   faHeart as faHeartSolid,
-  faMagnifyingGlass,
+  faShareNodes,
   faStar,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { CartService } from '../../core/cart/cart.service';
 import {
   CategorySummary,
   Product,
@@ -22,6 +22,7 @@ import {
 import { ProductListQuery, ProductService } from '../../core/products/product.service';
 import { DotLoader } from '../../shared/components/dot-loader/dot-loader';
 import { ProductCardSkeleton } from '../../shared/components/product-card-skeleton/product-card-skeleton';
+import { Topbar } from '../../shared/components/topbar/topbar';
 
 type TileSize = 'lg' | 'tall' | 'sm' | 'wide' | 'full';
 
@@ -85,9 +86,40 @@ function parsePrice(raw: string): number | null {
   return Number.isFinite(value) && value >= 0 ? value : null;
 }
 
+interface PromoBadge {
+  label: string;
+  message: string;
+}
+
+const PROMO_BADGES: Record<string, PromoBadge> = {
+  sale: { label: 'Sale', message: "Limited-time price drop — won't last" },
+  bestseller: { label: 'Bestseller', message: 'Loved by thousands of shoppers' },
+};
+
+function promoBadge(badge: string | null): PromoBadge | null {
+  return badge ? (PROMO_BADGES[badge.toLowerCase()] ?? null) : null;
+}
+
+const CATEGORY_BLURBS: Record<string, string> = {
+  electronics: 'Reliable tech, built to keep up with your day.',
+  fashion: 'A versatile piece that pairs with anything in your closet.',
+  home: 'Everyday comfort with a design that fits any room.',
+  beauty: 'Gentle, effective, and a favorite among regulars.',
+  sports: 'Durable gear made for frequent use.',
+  toys: 'Hours of fun, built to survive the playroom.',
+};
+
+const DEFAULT_BLURB = 'Solid quality at a fair price — a dependable pick.';
+
+function shortDescription(product: Product): string {
+  const promo = promoBadge(product.badge);
+  if (promo) return promo.message;
+  return product.description ?? CATEGORY_BLURBS[product.category.toLowerCase()] ?? DEFAULT_BLURB;
+}
+
 @Component({
   selector: 'app-dashboard',
-  imports: [DotLoader, ProductCardSkeleton, RouterLink, FaIconComponent],
+  imports: [DotLoader, ProductCardSkeleton, RouterLink, FaIconComponent, Topbar],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -96,21 +128,24 @@ export class Dashboard {
     arrowRight: faArrowRight,
     angleLeft: faAngleLeft,
     angleRight: faAngleRight,
-    cart: faCartShopping,
     heartRegular: faHeartRegular,
     heartSolid: faHeartSolid,
-    search: faMagnifyingGlass,
+    share: faShareNodes,
     star: faStar,
     xmark: faXmark,
   };
 
   protected readonly authService = inject(AuthService);
+  private readonly cartService = inject(CartService);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly productService = inject(ProductService);
 
   // ---- search ----
-  protected readonly searchInputValue = signal('');
-  protected readonly searchTerm = signal('');
+  // Seeded from ?search=, e.g. when the topbar sends a search here from another page.
+  private readonly initialSearch = this.route.snapshot.queryParamMap.get('search') ?? '';
+  protected readonly searchInputValue = signal(this.initialSearch);
+  protected readonly searchTerm = signal(this.initialSearch);
 
   // ---- navigation: null = category overview, 'All' or a name = product list ----
   protected readonly selectedCategory = signal<string | null>(null);
@@ -202,7 +237,6 @@ export class Dashboard {
   );
 
   protected readonly wishlist = signal<ReadonlySet<string>>(new Set());
-  protected readonly cartCount = signal(0);
 
   private readonly listQuery = computed<ProductListQuery | null>(() => {
     if (!this.showingProducts()) return null;
@@ -257,6 +291,18 @@ export class Dashboard {
 
   protected readonly stars = (rating: number) =>
     Array.from({ length: 5 }, (_, i) => (i < Math.round(rating) ? 'full' : 'empty'));
+
+  protected readonly promoBadge = (badge: string | null) => promoBadge(badge);
+  protected readonly shortDescription = (product: Product) => shortDescription(product);
+
+  protected shareProduct(product: Product): void {
+    const url = `${location.origin}/products/${product.id}`;
+    if (navigator.share) {
+      navigator.share({ title: product.name, url }).catch(() => {});
+    } else {
+      navigator.clipboard?.writeText(url).catch(() => {});
+    }
+  }
 
   protected onSearchInput(value: string): void {
     this.searchInputValue.set(value);
@@ -369,15 +415,10 @@ export class Dashboard {
     this.wishlist.set(next);
   }
 
-  protected openCart(): void {
-    // No cart page yet — for guests the icon is just another sign-in entry point.
-    this.requireSignIn();
-  }
-
   protected addToCart(): void {
     if (!this.requireSignIn()) return;
 
-    this.cartCount.update((count) => count + 1);
+    this.cartService.add();
   }
 
   /** Guests can browse but not act: sends them to the login page and returns false. */

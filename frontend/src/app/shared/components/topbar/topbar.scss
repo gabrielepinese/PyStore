@@ -1,0 +1,187 @@
+:host {
+  display: block;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #f9f8f6;
+  border-bottom: 1px solid #e6e1d8;
+}
+
+.topbar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 2rem;
+}
+
+.brand {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #7a3018;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid #7a3018;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+}
+
+.search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 420px;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  background: #f2efe9;
+  border: 1px solid #e6e1d8;
+  color: #4a4a47;
+
+  fa-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 0.88rem;
+    color: #1a1a1a;
+
+    &::placeholder {
+      color: #4a4a47;
+    }
+  }
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e6e1d8;
+  border-radius: 50%;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+
+  fa-icon {
+    font-size: 1.1rem;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #7a3018;
+    outline-offset: 2px;
+  }
+
+  .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #7a3018;
+    color: #f9f8f6;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+  }
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #7a3018;
+  color: #f9f8f6;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.signout {
+  border: none;
+  background: none;
+  color: #4a4a47;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #7a3018;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #7a3018;
+    outline-offset: 2px;
+  }
+}
+
+.signin {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  background: #7a3018;
+  color: #f9f8f6;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #5c2311;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar-inner {
+    flex-wrap: wrap;
+    padding: 16px 1.2rem;
+  }
+
+  .search {
+    order: 3;
+    max-width: none;
+    width: 100%;
+  }
+}

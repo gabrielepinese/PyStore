@@ -40,6 +40,10 @@ service with no other setup.
 | GET    | `/facets`            | Filter-UI hints for a `category`/`search` scope: `priceMin`, `priceMax`, `badges[{name,count}]`, `onSaleCount` |
 | GET    | `/{id}`              | Single product, 404 if missing |
 
+Every product carries `description` and `stock`. Both are display-only fields —
+`stock` is never aggregated into `/categories/summary` or `/facets`, so
+inventory levels don't skew the analytics those endpoints feed.
+
 `GET /` query params (all optional, all combinable):
 
 | Param       | Notes |

@@ -1,0 +1,51 @@
+<header class="topbar">
+  <div class="topbar-inner">
+    <button
+      type="button"
+      class="brand"
+      routerLink="/dashboard"
+      (click)="onBrandClick()"
+      aria-label="dumbEcommerce — back to categories"
+    >
+      dumbEcommerce
+    </button>
+
+    <div class="search">
+      <fa-icon [icon]="icons.search" aria-hidden="true" />
+      <input
+        type="search"
+        placeholder="Search products..."
+        [value]="searchValue()"
+        (input)="onSearchInput($any($event.target).value)"
+        (keydown.enter)="onSearchSubmit($any($event.target).value)"
+        aria-label="Search products"
+      />
+    </div>
+
+    <div class="topbar-actions">
+      <button
+        type="button"
+        class="icon-btn"
+        [attr.aria-label]="authService.isAuthenticated() ? 'Cart' : 'Cart — sign in required'"
+        (click)="openCart()"
+      >
+        <fa-icon [icon]="icons.cart" aria-hidden="true" />
+        @if (cartService.count() > 0) {
+          <span class="badge">{{ cartService.count() }}</span>
+        }
+      </button>
+
+      @if (authService.isAuthenticated()) {
+        <div class="user">
+          <span class="avatar">{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</span>
+          <button type="button" class="signout" (click)="authService.logout()">Sign out</button>
+        </div>
+      } @else {
+        <div class="user">
+          <a class="signout" routerLink="/register">Create account</a>
+          <a class="signin" routerLink="/login">Sign in</a>
+        </div>
+      }
+    </div>
+  </div>
+</header>

@@ -2,10 +2,12 @@ export interface Product {
   id: string;
   name: string;
   category: string;
+  description: string | null;
   price: number;
   originalPrice: number | null;
   rating: number;
   reviews: number;
+  stock: number;
   badge: string | null;
   accent: string;
   createdAt: string;

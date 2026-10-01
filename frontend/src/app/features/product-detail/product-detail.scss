@@ -1,0 +1,286 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f9f8f6;
+  font-family: system-ui, sans-serif;
+  color: #1a1a1a;
+}
+
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  color: #4a4a47;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    color: #1a1a1a;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+  }
+}
+
+.state-row {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+
+  &.error {
+    color: #8b1a0a;
+  }
+}
+
+.breadcrumb {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #4a4a47;
+  margin-bottom: 1.5rem;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+}
+
+.gallery {
+  position: relative;
+}
+
+.hero {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid #e6e1d8;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #8b1a0a;
+  color: #f9f8f6;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.product-code {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #4a4a47;
+}
+
+.name {
+  margin: 0 0 14px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.price-rating {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.price {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.price-original {
+  font-size: 1.05rem;
+  color: #4a4a47;
+  text-decoration: line-through;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  fa-icon {
+    font-size: 1rem;
+    color: #e6e1d8;
+
+    &.is-full {
+      color: #c5a059;
+    }
+  }
+
+  .reviews {
+    margin-left: 6px;
+    font-size: 0.85rem;
+    color: #4a4a47;
+  }
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e6e1d8;
+  margin: 20px 0;
+}
+
+.description {
+  margin: 0;
+  color: #4a4a47;
+  line-height: 1.6;
+}
+
+.stock-line {
+  margin: 0 0 20px;
+  font-size: 0.85rem;
+  color: #4a4a47;
+}
+
+.purchase-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.add-to-cart {
+  padding: 0.85rem 1.8rem;
+  border: 1px solid #7a3018;
+  background: #7a3018;
+  color: #f9f8f6;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+  }
+}
+
+.wishlist-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.85rem 1.4rem;
+  border: 1px solid #e6e1d8;
+  background: transparent;
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &.is-active {
+    color: #8b1a0a;
+    border-color: #8b1a0a;
+  }
+
+  &:hover {
+    background: #f9f8f6;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #7a3018;
+    outline-offset: 2px;
+  }
+}
+
+.tabs {
+  margin-top: 48px;
+}
+
+.tab-headers {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid #e6e1d8;
+}
+
+.tab-header {
+  padding: 0 0 12px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #4a4a47;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  &.is-active {
+    color: #1a1a1a;
+    border-bottom-color: #7a3018;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+  }
+}
+
+.detail-list {
+  margin: 20px 0 0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e6e1d8;
+
+  dt {
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  dd {
+    margin: 0;
+    color: #4a4a47;
+    text-align: right;
+  }
+}
+
+.shipping-info {
+  margin-top: 20px;
+  color: #4a4a47;
+  line-height: 1.6;
+
+  p {
+    margin: 0 0 8px;
+  }
+}
+
+@media (max-width: 720px) {
+  .detail {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,137 @@
+<app-topbar (searchSubmit)="goToDashboardSearch($event)" />
+
+<div class="page">
+  <a class="back-link" routerLink="/dashboard">
+    <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> Back to products
+  </a>
+
+  @if (isLoading()) {
+    <div class="state-row">
+      <app-dot-loader />
+    </div>
+  } @else if (loadError() || !product()) {
+    <p class="state-row error">Couldn't load this product.</p>
+  } @else {
+    @let p = product()!;
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">{{ p.category }} / {{ p.name }}</nav>
+
+    <div class="detail">
+      <div class="gallery">
+        <div class="hero" [style.background]="p.accent">
+          @if (discountPercent(); as percent) {
+            <span class="discount-badge">{{ percent }}%</span>
+          }
+        </div>
+      </div>
+
+      <div class="info">
+        <p class="product-code">Product code: {{ p.id }}</p>
+        <h1 class="name">{{ p.name }}</h1>
+
+        <div class="price-rating">
+          <span class="price">${{ p.price }}</span>
+          @if (p.originalPrice) {
+            <span class="price-original">${{ p.originalPrice }}</span>
+          }
+          <div
+            class="rating"
+            [attr.aria-label]="p.rating + ' out of 5 stars, ' + p.reviews + ' reviews'"
+          >
+            @for (star of stars(p.rating); track $index) {
+              <fa-icon [icon]="icons.star" [class.is-full]="star === 'full'" aria-hidden="true" />
+            }
+            <span class="reviews">{{ p.reviews }} reviews</span>
+          </div>
+        </div>
+
+        <hr />
+
+        <p class="description">{{ p.description ?? 'No description available for this product.' }}</p>
+
+        <hr />
+
+        <p class="stock-line">
+          @if (p.stock > 0) {
+            {{ p.stock }} in stock
+          } @else {
+            Out of stock
+          }
+        </p>
+
+        <div class="purchase-row">
+          <button
+            type="button"
+            class="add-to-cart"
+            [disabled]="p.stock === 0"
+            (click)="addToCart()"
+          >
+            {{ addedToCart() ? 'Added' : 'Add to cart' }}
+          </button>
+
+          <button
+            type="button"
+            class="wishlist-btn"
+            [class.is-active]="isWishlisted()"
+            [attr.aria-pressed]="isWishlisted()"
+            (click)="toggleWishlist()"
+          >
+            <fa-icon [icon]="isWishlisted() ? icons.heartSolid : icons.heartRegular" aria-hidden="true" />
+            {{ isWishlisted() ? 'In wishlist' : 'Add to wishlist' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab-headers" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          class="tab-header"
+          [class.is-active]="activeTab() === 'details'"
+          [attr.aria-selected]="activeTab() === 'details'"
+          (click)="setTab('details')"
+        >
+          Details
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="tab-header"
+          [class.is-active]="activeTab() === 'shipping'"
+          [attr.aria-selected]="activeTab() === 'shipping'"
+          (click)="setTab('shipping')"
+        >
+          Shipping &amp; returns
+        </button>
+      </div>
+
+      @if (activeTab() === 'details') {
+        <dl class="detail-list">
+          <div class="detail-row">
+            <dt>SKU</dt>
+            <dd>{{ p.id }}</dd>
+          </div>
+          <div class="detail-row">
+            <dt>Category</dt>
+            <dd>{{ p.category }}</dd>
+          </div>
+          <div class="detail-row">
+            <dt>Rating</dt>
+            <dd>{{ p.rating }} / 5 ({{ p.reviews }} reviews)</dd>
+          </div>
+          <div class="detail-row">
+            <dt>Availability</dt>
+            <dd>{{ p.stock > 0 ? p.stock + ' in stock' : 'Out of stock' }}</dd>
+          </div>
+        </dl>
+      } @else {
+        <div class="shipping-info">
+          <p>Estimated delivery: 3–5 business days.</p>
+          <p>Free returns within 30 days of delivery.</p>
+        </div>
+      }
+    </div>
+  }
+</div>

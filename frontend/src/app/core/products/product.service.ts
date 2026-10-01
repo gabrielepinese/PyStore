@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   CategorySummary,
+  Product,
   ProductFacets,
   ProductListResponse,
   ProductSort,
@@ -73,6 +74,10 @@ export class ProductService {
 
   facets(query: ProductFacetsQuery = {}): Observable<ProductFacets> {
     return this.http.get<ProductFacets>(`${this.baseUrl}/facets`, { params: scopeParams(query) });
+  }
+
+  get(id: string): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/${id}`);
   }
 }
 

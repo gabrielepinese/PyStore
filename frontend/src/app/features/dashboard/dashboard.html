@@ -1,52 +1,10 @@
+<app-topbar
+  [searchValue]="searchInputValue()"
+  (searchValueChange)="onSearchInput($event)"
+  (brandClick)="goToOverview()"
+/>
+
 <div class="page">
-  <header class="topbar">
-    <button
-      type="button"
-      class="brand"
-      (click)="goToOverview()"
-      aria-label="dumbEcommerce — back to categories"
-    >
-      dumbEcommerce
-    </button>
-
-    <div class="search">
-      <fa-icon [icon]="icons.search" aria-hidden="true" />
-      <input
-        type="search"
-        placeholder="Search products..."
-        [value]="searchInputValue()"
-        (input)="onSearchInput($any($event.target).value)"
-        aria-label="Search products"
-      />
-    </div>
-
-    <div class="topbar-actions">
-      <button
-        type="button"
-        class="icon-btn"
-        [attr.aria-label]="authService.isAuthenticated() ? 'Cart' : 'Cart — sign in required'"
-        (click)="openCart()"
-      >
-        <fa-icon [icon]="icons.cart" aria-hidden="true" />
-        @if (cartCount() > 0) {
-          <span class="badge">{{ cartCount() }}</span>
-        }
-      </button>
-
-      @if (authService.isAuthenticated()) {
-        <div class="user">
-          <span class="avatar">{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</span>
-          <button type="button" class="signout" (click)="authService.logout()">Sign out</button>
-        </div>
-      } @else {
-        <div class="user">
-          <a class="signout" routerLink="/register">Create account</a>
-          <a class="signin" routerLink="/login">Sign in</a>
-        </div>
-      }
-    </div>
-  </header>
-
   <section class="hero">
     <div class="hero-copy">
       <p class="eyebrow">Good to see you</p>
@@ -287,7 +245,7 @@
         @if (loadError()) {
           <p class="state-row error">Couldn't load products. Is products-service running?</p>
         } @else if (products().length === 0 && isLoading()) {
-          <div class="product-grid" aria-hidden="true">
+          <div class="product-list" aria-hidden="true">
             @for (slot of skeletonSlots(); track slot) {
               <app-product-card-skeleton [index]="slot" />
             }
@@ -300,66 +258,101 @@
             }
           </div>
         } @else {
-          <div class="product-grid">
+          <div class="product-list">
             @if (isLoading()) {
               @for (slot of skeletonSlots(); track slot) {
                 <app-product-card-skeleton [index]="slot" aria-hidden="true" />
               }
             } @else {
               @for (product of products(); track product.id) {
-                <article class="product-card">
-                  <div class="thumb" [style.background]="product.accent">
-                    @if (product.badge) {
-                      <span class="tag" [class.tag-sale]="product.badge === 'Sale'">{{
-                        product.badge
-                      }}</span>
-                    }
-                    <button
-                      type="button"
-                      class="wishlist-btn"
-                      [class.is-active]="isWishlisted(product.id)"
-                      [attr.aria-pressed]="isWishlisted(product.id)"
-                      [attr.aria-label]="
-                        isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'
-                      "
-                      (click)="toggleWishlist(product.id)"
-                    >
-                      <fa-icon
-                        [icon]="isWishlisted(product.id) ? icons.heartSolid : icons.heartRegular"
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </div>
+                <article
+                  class="product-row"
+                  [class.is-promo]="!!promoBadge(product.badge)"
+                  [class.is-sale]="product.badge === 'Sale'"
+                  [class.is-bestseller]="product.badge === 'Bestseller'"
+                >
+                  <a
+                    class="row-link"
+                    [routerLink]="['/products', product.id]"
+                    [attr.aria-label]="'View details for ' + product.name"
+                  ></a>
 
-                  <p class="category-label">{{ product.category }}</p>
-                  <h3 class="name">{{ product.name }}</h3>
-
-                  <div
-                    class="rating"
-                    [attr.aria-label]="
-                      product.rating + ' out of 5 stars, ' + product.reviews + ' reviews'
-                    "
-                  >
-                    @for (star of stars(product.rating); track $index) {
-                      <fa-icon
-                        [icon]="icons.star"
-                        [class.is-full]="star === 'full'"
-                        aria-hidden="true"
-                      />
-                    }
-                    <span class="reviews">({{ product.reviews }})</span>
-                  </div>
-
-                  <div class="price-row">
-                    <span class="price">${{ product.price }}</span>
-                    @if (product.originalPrice) {
-                      <span class="price-original">${{ product.originalPrice }}</span>
+                  <div class="row-thumb" [style.background]="product.accent">
+                    @if (product.badge && !promoBadge(product.badge)) {
+                      <span class="tag">{{ product.badge }}</span>
                     }
                   </div>
 
-                  <button type="button" class="add-to-cart" (click)="addToCart()">
-                    Add to cart
-                  </button>
+                  <div class="row-info">
+                    <h3 class="name">{{ product.name }}</h3>
+
+                    <div class="price-rating">
+                      <span class="price">${{ product.price }}</span>
+                      @if (product.originalPrice) {
+                        <span class="price-original">${{ product.originalPrice }}</span>
+                      }
+
+                      <div
+                        class="rating"
+                        [attr.aria-label]="
+                          product.rating + ' out of 5 stars, ' + product.reviews + ' reviews'
+                        "
+                      >
+                        @for (star of stars(product.rating); track $index) {
+                          <fa-icon
+                            [icon]="icons.star"
+                            [class.is-full]="star === 'full'"
+                            aria-hidden="true"
+                          />
+                        }
+                        <span class="reviews">({{ product.reviews }})</span>
+                      </div>
+                    </div>
+
+                    <div class="row-meta">
+                      <span class="category-label">{{ product.category }}</span>
+                      <span class="stock">{{ product.stock }} left in stock</span>
+                    </div>
+                  </div>
+
+                  <div class="row-side">
+                    @if (promoBadge(product.badge); as promo) {
+                      <span class="tag">{{ promo.label }}</span>
+                    }
+
+                    <p class="description">{{ shortDescription(product) }}</p>
+
+                    <div class="row-actions">
+                      <button type="button" class="add-to-cart" (click)="addToCart()">
+                        Add to cart
+                      </button>
+
+                      <button
+                        type="button"
+                        class="icon-action"
+                        aria-label="Share product"
+                        (click)="shareProduct(product)"
+                      >
+                        <fa-icon [icon]="icons.share" aria-hidden="true" />
+                      </button>
+
+                      <button
+                        type="button"
+                        class="icon-action"
+                        [class.is-active]="isWishlisted(product.id)"
+                        [attr.aria-pressed]="isWishlisted(product.id)"
+                        [attr.aria-label]="
+                          isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'
+                        "
+                        (click)="toggleWishlist(product.id)"
+                      >
+                        <fa-icon
+                          [icon]="isWishlisted(product.id) ? icons.heartSolid : icons.heartRegular"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
+                  </div>
                 </article>
               }
             }

@@ -13,10 +13,12 @@ class ProductRead(BaseModel):
     id: str
     name: str
     category: str
+    description: str | None = None
     price: float
     original_price: float | None = None
     rating: float
     reviews: int
+    stock: int
     badge: str | None = None
     accent: str
     created_at: datetime
