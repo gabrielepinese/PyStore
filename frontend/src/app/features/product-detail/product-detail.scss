@@ -17,9 +17,14 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
   color: #4a4a47;
+  font: inherit;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     color: #1a1a1a;
@@ -73,16 +78,27 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .thumb {
   position: relative;
+  flex: 0 0 64px;
   width: 64px;
   height: 64px;
   padding: 0;
   overflow: hidden;
   border: 2px solid #e6e1d8;
   cursor: pointer;
+  scroll-snap-align: start;
 
   &:hover {
     border-color: #c5a059;
@@ -112,25 +128,24 @@
   border: 1px solid #e6e1d8;
 }
 
+@media (min-width: 721px) {
+  .hero {
+    flex: 0 0 400px;
+    width: 400px;
+    height: 400px;
+  }
+
+  .thumbs {
+    max-height: 400px;
+  }
+}
+
 // Stands in for a product photo until real images exist — each view lays out
 // its decorative squares differently, so they read as separate seller photos.
 .view-shape {
   position: absolute;
   transform: translate(-50%, -50%);
   background: rgba(255, 255, 255, 0.4);
-}
-
-.view-label {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  padding: 4px 10px;
-  background: rgba(26, 26, 26, 0.55);
-  color: #f9f8f6;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 .discount-badge {
@@ -358,6 +373,10 @@ hr {
   .thumbs {
     flex: 0 0 auto;
     flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
   }
 
   .thumb {

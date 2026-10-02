@@ -1,9 +1,9 @@
 <app-topbar (searchSubmit)="goToDashboardSearch($event)" />
 
 <div class="page">
-  <a class="back-link" routerLink="/dashboard">
+  <button type="button" class="back-link" (click)="goBack()">
     <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> Back to products
-  </a>
+  </button>
 
   @if (isLoading()) {
     <div class="state-row">
@@ -68,8 +68,6 @@
               [style.opacity]="layer.opacity"
             ></span>
           }
-
-          <span class="view-label">{{ views[activeView()].label }}</span>
         </div>
       </div>
 

@@ -148,7 +148,10 @@ export class Dashboard {
   protected readonly searchTerm = signal(this.initialSearch);
 
   // ---- navigation: null = category overview, 'All' or a name = product list ----
-  protected readonly selectedCategory = signal<string | null>(null);
+  // Seeded from ?category=, so a product's "Back to products" link (browser back
+  // to this same URL) restores the list instead of landing back on the overview.
+  private readonly initialCategory = this.route.snapshot.queryParamMap.get('category');
+  protected readonly selectedCategory = signal<string | null>(this.initialCategory);
   protected readonly showingProducts = computed(
     () => this.selectedCategory() !== null || this.searchTerm() !== '',
   );
@@ -221,7 +224,8 @@ export class Dashboard {
   protected readonly loadError = signal(false);
 
   private readonly pageSize = 8;
-  protected readonly offset = signal(0);
+  private readonly initialPage = Number(this.route.snapshot.queryParamMap.get('page')) || 1;
+  protected readonly offset = signal(Math.max(0, this.initialPage - 1) * this.pageSize);
   protected readonly total = signal(0);
   protected readonly currentPage = computed(() => Math.floor(this.offset() / this.pageSize) + 1);
   protected readonly totalPages = computed(() =>
@@ -286,6 +290,24 @@ export class Dashboard {
     effect(() => {
       if (!this.showingProducts()) return;
       this.fetchFacets(this.activeCategory(), this.searchTerm());
+    });
+
+    // Mirror the list state into the URL (replacing, not pushing) so navigating
+    // away to a product and back lands on this same list, not the overview.
+    effect(() => {
+      const category = this.selectedCategory();
+      const search = this.searchTerm();
+      const page = this.currentPage();
+
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          category: category ?? null,
+          search: search || null,
+          page: page > 1 ? page : null,
+        },
+        replaceUrl: true,
+      });
     });
   }
 

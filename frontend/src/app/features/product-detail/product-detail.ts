@@ -6,8 +6,9 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
+import { Location } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { CartService } from '../../core/cart/cart.service';
 import { Product } from '../../core/models/product.model';
@@ -55,11 +56,37 @@ const PRODUCT_VIEWS: ProductView[] = [
       { top: '50%', left: '50%', size: '30%', opacity: 0.3 },
     ],
   },
+  {
+    label: 'Packaging',
+    layers: [
+      { top: '20%', left: '50%', size: '30%', opacity: 0.25 },
+      { top: '60%', left: '30%', size: '20%', opacity: 0.18 },
+      { top: '60%', left: '70%', size: '20%', opacity: 0.18 },
+    ],
+  },
+  {
+    label: 'In use',
+    layers: [
+      { top: '40%', left: '40%', size: '50%', opacity: 0.2 },
+      { top: '75%', left: '80%', size: '18%', opacity: 0.3 },
+    ],
+  },
+  {
+    label: 'Top',
+    layers: [{ top: '50%', left: '50%', size: '70%', opacity: 0.16 }],
+  },
+  {
+    label: 'Scale',
+    layers: [
+      { top: '30%', left: '30%', size: '22%', opacity: 0.28 },
+      { top: '65%', left: '65%', size: '45%', opacity: 0.14 },
+    ],
+  },
 ];
 
 @Component({
   selector: 'app-product-detail',
-  imports: [RouterLink, FaIconComponent, DotLoader, Topbar],
+  imports: [FaIconComponent, DotLoader, Topbar],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
 })
@@ -77,6 +104,7 @@ export class ProductDetail {
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly location = inject(Location);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
   protected readonly authService = inject(AuthService);
@@ -131,6 +159,18 @@ export class ProductDetail {
 
   protected nextView(): void {
     this.activeView.update((i) => (i + 1) % this.views.length);
+  }
+
+  protected goBack(): void {
+    // navigationId > 1 means we got here via in-app navigation (e.g. from the
+    // product list) — go back there. Otherwise (direct link, refresh) there's
+    // no in-app page to return to, so land on the dashboard instead.
+    const navigationId = (history.state as { navigationId?: number } | null)?.navigationId;
+    if (navigationId && navigationId > 1) {
+      this.location.back();
+    } else {
+      this.router.navigateByUrl('/dashboard');
+    }
   }
 
   protected goToDashboardSearch(term: string): void {
