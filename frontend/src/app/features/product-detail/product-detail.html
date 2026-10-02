@@ -17,11 +17,59 @@
     <nav class="breadcrumb" aria-label="Breadcrumb">{{ p.category }} / {{ p.name }}</nav>
 
     <div class="detail">
-      <div class="gallery">
+      <div
+        class="gallery"
+        role="group"
+        aria-label="Product views"
+        tabindex="0"
+        (keydown.arrowup)="prevView()"
+        (keydown.arrowdown)="nextView()"
+        (keydown.arrowleft)="prevView()"
+        (keydown.arrowright)="nextView()"
+      >
+        <div class="thumbs">
+          @for (view of views; track view.label; let i = $index) {
+            <button
+              type="button"
+              class="thumb"
+              [class.is-active]="i === activeView()"
+              [style.background]="p.accent"
+              [attr.aria-label]="'Show ' + view.label + ' view'"
+              [attr.aria-current]="i === activeView()"
+              (click)="goToView(i)"
+              (mouseenter)="goToView(i)"
+            >
+              @for (layer of view.layers; track $index) {
+                <span
+                  class="thumb-shape"
+                  [style.top]="layer.top"
+                  [style.left]="layer.left"
+                  [style.width]="layer.size"
+                  [style.height]="layer.size"
+                  [style.opacity]="layer.opacity"
+                ></span>
+              }
+            </button>
+          }
+        </div>
+
         <div class="hero" [style.background]="p.accent">
           @if (discountPercent(); as percent) {
             <span class="discount-badge">{{ percent }}%</span>
           }
+
+          @for (layer of views[activeView()].layers; track $index) {
+            <span
+              class="view-shape"
+              [style.top]="layer.top"
+              [style.left]="layer.left"
+              [style.width]="layer.size"
+              [style.height]="layer.size"
+              [style.opacity]="layer.opacity"
+            ></span>
+          }
+
+          <span class="view-label">{{ views[activeView()].label }}</span>
         </div>
       </div>
 

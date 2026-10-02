@@ -17,6 +17,46 @@ import { Topbar } from '../../shared/components/topbar/topbar';
 
 type Tab = 'details' | 'shipping';
 
+interface ImageLayer {
+  top: string;
+  left: string;
+  size: string;
+  opacity: number;
+}
+
+interface ProductView {
+  label: string;
+  layers: ImageLayer[];
+}
+
+// No real product photography yet — each entry is a distinct abstract
+// composition over the accent color, standing in for a separate seller photo
+// (not the same image rotated).
+const PRODUCT_VIEWS: ProductView[] = [
+  { label: 'Front', layers: [{ top: '50%', left: '50%', size: '55%', opacity: 0.18 }] },
+  {
+    label: 'Side',
+    layers: [
+      { top: '35%', left: '68%', size: '42%', opacity: 0.22 },
+      { top: '75%', left: '28%', size: '26%', opacity: 0.14 },
+    ],
+  },
+  {
+    label: 'Back',
+    layers: [
+      { top: '25%', left: '25%', size: '38%', opacity: 0.16 },
+      { top: '70%', left: '65%', size: '55%', opacity: 0.2 },
+    ],
+  },
+  {
+    label: 'Detail',
+    layers: [
+      { top: '50%', left: '50%', size: '85%', opacity: 0.12 },
+      { top: '50%', left: '50%', size: '30%', opacity: 0.3 },
+    ],
+  },
+];
+
 @Component({
   selector: 'app-product-detail',
   imports: [RouterLink, FaIconComponent, DotLoader, Topbar],
@@ -31,6 +71,9 @@ export class ProductDetail {
     heartSolid: faHeartSolid,
     star: faStar,
   };
+
+  protected readonly views = PRODUCT_VIEWS;
+  protected readonly activeView = signal(0);
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -76,6 +119,18 @@ export class ProductDetail {
 
   protected setTab(tab: Tab): void {
     this.activeTab.set(tab);
+  }
+
+  protected goToView(index: number): void {
+    this.activeView.set(index);
+  }
+
+  protected prevView(): void {
+    this.activeView.update((i) => (i - 1 + this.views.length) % this.views.length);
+  }
+
+  protected nextView(): void {
+    this.activeView.update((i) => (i + 1) % this.views.length);
   }
 
   protected goToDashboardSearch(term: string): void {
