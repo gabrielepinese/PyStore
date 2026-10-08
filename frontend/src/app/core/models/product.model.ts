@@ -41,6 +41,7 @@ export interface BadgeFacet {
 export interface ProductFacets {
   priceMin: number;
   priceMax: number;
+  priceHistogram: number[];
   badges: BadgeFacet[];
   onSaleCount: number;
 }

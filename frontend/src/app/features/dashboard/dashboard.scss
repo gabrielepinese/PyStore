@@ -1,7 +1,7 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: #F6F2EF;
+  background: #f6f2ef;
   font-family: system-ui, sans-serif;
   color: #1a1a1a;
 }
@@ -24,7 +24,7 @@
   margin-top: 12px;
   padding: 40px 44px;
   border-radius: 24px;
-  background: linear-gradient(135deg, #ECE4DF 0%, #D0BFB2 100%);
+  background: linear-gradient(135deg, #ece4df 0%, #d0bfb2 100%);
   overflow: hidden;
 }
 
@@ -37,7 +37,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #735F58;
+    color: #735f58;
   }
 
   h1 {
@@ -49,7 +49,7 @@
 
   .subtitle {
     margin: 0;
-    color: #6B6C6E;
+    color: #6b6c6e;
     font-size: 0.95rem;
   }
 }
@@ -81,7 +81,7 @@
   padding: 4px 2px;
   border: none;
   background: none;
-  color: #735F58;
+  color: #735f58;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -91,7 +91,7 @@
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -106,17 +106,17 @@
     padding: 0;
     border: none;
     background: none;
-    color: #6B6C6E;
+    color: #6b6c6e;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
 
     &:hover {
-      color: #735F58;
+      color: #735f58;
     }
 
     &:focus-visible {
-      outline: 3px solid #735F58;
+      outline: 3px solid #735f58;
       outline-offset: 2px;
       border-radius: 4px;
     }
@@ -141,7 +141,7 @@
   padding: 20px;
   border: none;
   border-radius: 24px;
-  background: var(--tile-bg, #B3B4B8);
+  background: var(--tile-bg, #b3b4b8);
   color: var(--tile-fg, #1a1a1a);
   text-align: left;
   font: inherit;
@@ -244,7 +244,7 @@
   padding: 3px 10px;
   border-radius: 999px;
   background: #8b1a0a;
-  color: #F6F2EF;
+  color: #f6f2ef;
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -309,47 +309,19 @@
   margin-top: 24px;
 }
 
-.sidebar {
-  position: sticky;
-  top: 90px;
-  height: calc(100vh - 110px);
-}
-
-// Separate scroll container from the sticky positioning element: combining
-// position:sticky and overflow on the same box is flaky across browsers
-// (Safari in particular can lock the inner scroll). This div alone owns
-// overflow/scrolling, independent of the sidebar's own position in the page.
 .sidebar-scroll {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #B3B4B8 transparent;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #B3B4B8;
-    border-radius: 999px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #735F58;
-  }
+  gap: 22px;
+  padding: 22px;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #fff;
 }
 
 .sidebar-section {
-  padding-bottom: 24px;
-  border-bottom: 1px solid #B3B4B8;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e4e2e0;
 
   &:last-of-type {
     border-bottom: none;
@@ -358,9 +330,13 @@
 }
 
 .sidebar-title {
-  margin: 0 0 12px;
-  font-size: 0.95rem;
+  margin: 0 0 14px;
+  padding-left: 10px;
+  border-left: 2px solid #735f58;
+  font-size: 0.82rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: #1a1a1a;
 }
 
@@ -377,9 +353,9 @@
   gap: 8px;
   padding: 0.55rem 0.6rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 2px;
   background: none;
-  color: #6B6C6E;
+  color: #6b6c6e;
   font-size: 0.88rem;
   font-weight: 600;
   text-align: left;
@@ -391,64 +367,244 @@
   .count {
     font-size: 0.78rem;
     font-weight: 600;
-    color: #B3B4B8;
+    color: #b3b4b8;
   }
 
   &:hover {
-    background: #ECE4DF;
+    background: #ece4df;
   }
 
   &.is-active {
-    background: #735F58;
-    color: #F6F2EF;
+    background: #735f58;
+    color: #f6f2ef;
 
     .count {
-      color: #D0BFB2;
+      color: #d0bfb2;
     }
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 2px;
   }
 }
 
-.sidebar-select {
+.select-dropdown {
+  position: relative;
+}
+
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   width: 100%;
   padding: 0.55rem 0.7rem;
-  border: 1px solid #B3B4B8;
-  border-radius: 8px;
+  border: 1px solid #b3b4b8;
+  border-radius: 2px;
   background: #fff;
   color: #1a1a1a;
   font: inherit;
   font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+
+  fa-icon {
+    font-size: 0.75rem;
+    color: #6b6c6e;
+    transition: transform 0.15s ease;
+  }
+
+  &:hover {
+    border-color: #735f58;
+  }
+
+  &.is-open {
+    border-color: #735f58;
+
+    fa-icon {
+      transform: rotate(180deg);
+    }
+  }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 1px;
   }
 }
 
-.price-inputs {
+// Full-viewport, invisible — just there to catch the "click elsewhere to
+// close" gesture without wiring up a document-level click listener.
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+}
+
+.select-panel {
+  position: absolute;
+  z-index: 31;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.select-option {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: none;
+  border-radius: 2px;
+  background: none;
+  color: #1a1a1a;
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #ece4df;
+  }
+
+  &.is-active {
+    background: #735f58;
+    color: #f6f2ef;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #735f58;
+    outline-offset: 1px;
+  }
+}
+
+// Booking-style range filter: a flat track with a filled segment between two
+// overlapping native range inputs (price) or up to one value (rating). Both
+// inputs ignore pointer events everywhere except their own thumb, so each
+// handle only grabs clicks/drags meant for it, not the whole track.
+.range-filter {
+  padding-top: 4px;
+}
+
+.range-values {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
 
-  input {
-    width: 0;
-    flex: 1 1 auto;
-    padding: 0.5rem 0.6rem;
-    border: 1px solid #B3B4B8;
-    border-radius: 8px;
-    background: #fff;
-    color: #1a1a1a;
-    font: inherit;
-    font-size: 0.85rem;
+// Bars sit right above the track, same horizontal inset, so they read as
+// "the track's shape" rather than a separate chart.
+.price-histogram {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 32px;
+  margin: 0 8px 0;
+}
 
-    &:focus-visible {
-      outline: 3px solid #735F58;
-      outline-offset: 1px;
-    }
+.histogram-bar {
+  flex: 1 1 0;
+  min-height: 2px;
+  background: #e4e2e0;
+  border-radius: 1px;
+  transition: background 0.15s ease;
+
+  &.is-active {
+    background: #d0bfb2;
+  }
+}
+
+.range-track {
+  position: relative;
+  height: 4px;
+  margin: 0 8px;
+  background: #e4e2e0;
+  border-radius: 2px;
+}
+
+.range-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: #735f58;
+  border-radius: 2px;
+}
+
+// Browsers already inset a native thumb's travel by half its own width (at
+// value=min its center sits half-a-thumb in from the true edge, not at the
+// edge itself), so a plain 0–100% input never lines up with a 0–100% track:
+// the thumb's center stops short of each end. Widening the input by one
+// thumb-width (half on each side) cancels that inset, so the thumb's center
+// — not its edge — is what reaches the track's true start and end.
+$thumb-size: 16px;
+
+.range-input {
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * $thumb-size / 2);
+  width: calc(100% + $thumb-size);
+  height: 4px;
+  margin: 0;
+  background: transparent;
+  transform: translateY(-50%);
+  appearance: none;
+  pointer-events: none;
+
+  &::-webkit-slider-runnable-track {
+    background: transparent;
+    height: 4px;
+  }
+
+  &::-moz-range-track {
+    background: transparent;
+    height: 4px;
+  }
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    pointer-events: auto;
+    width: $thumb-size;
+    height: $thumb-size;
+    // WebKit doesn't auto-center the thumb on a track shorter than it —
+    // without this it hangs below the line instead of straddling it.
+    margin-top: calc((4px - $thumb-size) / 2);
+    border-radius: 50%;
+    background: #735f58;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+
+  &::-moz-range-thumb {
+    pointer-events: auto;
+    width: $thumb-size;
+    height: $thumb-size;
+    border: none;
+    border-radius: 50%;
+    background: #735f58;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+
+  &:focus-visible::-webkit-slider-thumb {
+    outline: 3px solid #735f58;
+    outline-offset: 2px;
+  }
+
+  &:focus-visible::-moz-range-thumb {
+    outline: 3px solid #735f58;
+    outline-offset: 2px;
   }
 }
 
@@ -477,10 +633,10 @@
     justify-content: center;
     width: 18px;
     height: 18px;
-    border: 1px solid #B3B4B8;
-    border-radius: 4px;
+    border: 1px solid #b3b4b8;
+    border-radius: 2px;
     background: #fff;
-    color: #F6F2EF;
+    color: #f6f2ef;
     font-size: 12px;
     line-height: 1;
     transition:
@@ -495,17 +651,17 @@
 
   .count {
     margin-left: auto;
-    color: #6B6C6E;
+    color: #6b6c6e;
     font-size: 0.8rem;
   }
 
   &:hover .checkbox {
-    border-color: #735F58;
+    border-color: #735f58;
   }
 
   &.is-active .checkbox {
-    background: #735F58;
-    border-color: #735F58;
+    background: #735f58;
+    border-color: #735f58;
 
     &::after {
       opacity: 1;
@@ -513,14 +669,16 @@
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 }
 
 .clear-all {
   padding: 0;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .listing-main {
@@ -540,16 +698,6 @@
     grid-template-columns: 1fr;
   }
 
-  .sidebar {
-    position: static;
-    height: auto;
-  }
-
-  .sidebar-scroll {
-    height: auto;
-    overflow-y: visible;
-  }
-
   .category-list {
     flex-direction: row;
     flex-wrap: wrap;
@@ -565,20 +713,20 @@
   align-items: center;
   gap: 6px;
   padding: 0.3rem 0.7rem;
-  border: 1px solid #D0BFB2;
-  border-radius: 999px;
-  background: #D0BFB2;
-  color: #5A4842;
+  border: 1px solid #d0bfb2;
+  border-radius: 2px;
+  background: #d0bfb2;
+  color: #5a4842;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    background: #B0A297;
+    background: #b0a297;
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 2px;
   }
 }
@@ -594,7 +742,7 @@
 
   p {
     margin: 0;
-    color: #6B6C6E;
+    color: #6b6c6e;
     font-size: 0.88rem;
   }
 }
@@ -603,7 +751,7 @@
   display: flex;
   justify-content: center;
   padding: 40px 0;
-  color: #6B6C6E;
+  color: #6b6c6e;
   font-size: 0.9rem;
 
   &.error {
@@ -634,12 +782,9 @@
 }
 
 .product-list {
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  background: #fff;
-  border: 1px solid #B3B4B8;
-  overflow: hidden;
+  gap: 16px;
 }
 
 .pagination {
@@ -647,43 +792,63 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 32px;
+  gap: 6px;
+  margin-top: 40px;
 
   button {
-    padding: 0.5rem 1.1rem;
-    border: 1px solid #735F58;
-    border-radius: 8px;
-    background: transparent;
-    color: #735F58;
-    font-weight: 600;
-    font-size: 0.85rem;
+    border: none;
+    background: none;
+    font: inherit;
     cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background: #735F58;
-      color: #F6F2EF;
-    }
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
 
     &:disabled {
-      opacity: 0.4;
+      opacity: 0.35;
       cursor: not-allowed;
     }
 
     &:focus-visible {
-      outline: 3px solid #1a1a1a;
+      outline: 3px solid #735f58;
       outline-offset: 2px;
     }
   }
 
+  // Round nav controls (matches the icon buttons elsewhere in the app),
+  // not the flat 2px-radius cards/inputs — a pagination strip reads as a
+  // row of pill/circle controls, not boxes.
+  .page-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: #1a1a1a;
+
+    &:hover:not(:disabled) {
+      background: #ece4df;
+    }
+  }
+
   .page-number {
-    min-width: 36px;
-    padding: 0.5rem;
-    text-align: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 0.4rem;
+    border-radius: 50%;
+    color: #6b6c6e;
+    font-weight: 600;
+    font-size: 0.85rem;
+
+    &:hover:not(:disabled) {
+      background: #ece4df;
+      color: #1a1a1a;
+    }
 
     &.is-active {
-      background: #735F58;
-      color: #F6F2EF;
+      background: #735f58;
+      color: #f6f2ef;
     }
   }
 }
@@ -694,26 +859,22 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  border-bottom: 1px solid #B3B4B8;
-  transition: background 0.15s ease;
-
-  &:last-child {
-    border-bottom: none;
-  }
+  background: #fff;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  transition: border-color 0.15s ease;
 
   &:hover {
-    background: #F6F2EF;
+    border-color: #735f58;
   }
 
-  // Inset shadow keeps the promo border a uniform 2px on every side,
-  // independent of the 1px row divider set by border-bottom above.
   &.is-sale {
     box-shadow: inset 0 0 0 2px #8b1a0a;
     background: rgba(139, 26, 10, 0.04);
   }
 
   &.is-bestseller {
-    box-shadow: inset 0 0 0 2px #D0BFB2;
+    box-shadow: inset 0 0 0 2px #d0bfb2;
     background: rgba(197, 160, 89, 0.08);
   }
 }
@@ -726,7 +887,7 @@
   z-index: 1;
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: -3px;
   }
 }
@@ -736,6 +897,8 @@
   flex: 0 0 120px;
   width: 120px;
   height: 120px;
+  border-radius: 2px;
+  overflow: hidden;
 }
 
 @media (min-width: 1024px) {
@@ -749,12 +912,13 @@
 .tag {
   display: inline-block;
   padding: 4px 10px;
-  background: #F6F2EF;
+  background: #f6f2ef;
   color: #1a1a1a;
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  border-radius: 2px;
 }
 
 .row-thumb .tag {
@@ -788,12 +952,12 @@
 .price {
   font-size: 1.55rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #735f58;
 }
 
 .price-original {
   font-size: 0.92rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
   text-decoration: line-through;
 }
 
@@ -804,17 +968,17 @@
 
   fa-icon {
     font-size: 1.05rem;
-    color: #B3B4B8;
+    color: #b3b4b8;
 
     &.is-full {
-      color: #D0BFB2;
+      color: #d0bfb2;
     }
   }
 
   .reviews {
     margin-left: 6px;
     font-size: 0.88rem;
-    color: #6B6C6E;
+    color: #6b6c6e;
   }
 }
 
@@ -830,12 +994,12 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: #6B6C6E;
+  color: #6b6c6e;
 }
 
 .stock {
   font-size: 0.82rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
 
   &::before {
     content: '·';
@@ -855,18 +1019,18 @@
 
 .is-sale .row-side .tag {
   background: #8b1a0a;
-  color: #F6F2EF;
+  color: #f6f2ef;
 }
 
 .is-bestseller .row-side .tag {
-  background: #D0BFB2;
+  background: #d0bfb2;
   color: #1a1a1a;
 }
 
 .description {
   margin: 0;
   font-size: 0.85rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
   line-height: 1.4;
 }
 
@@ -879,9 +1043,10 @@
 
 .add-to-cart {
   padding: 0.75rem 1.4rem;
-  border: 1px solid #735F58;
+  border: 1px solid #735f58;
+  border-radius: 2px;
   background: transparent;
-  color: #735F58;
+  color: #735f58;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -891,8 +1056,8 @@
     color 0.15s ease;
 
   &:hover {
-    background: #735F58;
-    color: #F6F2EF;
+    background: #735f58;
+    color: #f6f2ef;
   }
 
   &:focus-visible {
@@ -907,10 +1072,14 @@
   justify-content: center;
   width: 42px;
   height: 42px;
-  border: 1px solid #B3B4B8;
-  background: #ECE4DF;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #f6f2ef;
   color: #1a1a1a;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 
   fa-icon {
     font-size: 1.05rem;
@@ -918,14 +1087,16 @@
 
   &.is-active {
     color: #8b1a0a;
+    border-color: #8b1a0a;
   }
 
   &:hover {
-    background: #B3B4B8;
+    background: #ece4df;
+    border-color: #b3b4b8;
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 2px;
   }
 }

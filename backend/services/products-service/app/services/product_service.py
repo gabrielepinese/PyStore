@@ -37,7 +37,8 @@ def _apply_filters(
     max_price: float | None = None,
     min_rating: float | None = None,
     on_sale: bool = False,
-    badge: str | None = None,
+    badges: list[str] | None = None,
+    in_stock: bool = False,
 ) -> Select:
     if category and category.lower() != "all":
         stmt = stmt.where(Product.category == category)
@@ -54,8 +55,10 @@ def _apply_filters(
         stmt = stmt.where(Product.rating >= min_rating)
     if on_sale:
         stmt = stmt.where(_ON_SALE)
-    if badge:
-        stmt = stmt.where(func.lower(Product.badge) == badge.strip().lower())
+    if badges:
+        stmt = stmt.where(func.lower(Product.badge).in_([b.strip().lower() for b in badges]))
+    if in_stock:
+        stmt = stmt.where(Product.stock > 0)
 
     return stmt
 
@@ -68,7 +71,8 @@ def list_products(
     max_price: float | None = None,
     min_rating: float | None = None,
     on_sale: bool = False,
-    badge: str | None = None,
+    badges: list[str] | None = None,
+    in_stock: bool = False,
     sort: SortKey = "newest",
     limit: int | None = None,
     offset: int = 0,
@@ -80,7 +84,8 @@ def list_products(
         max_price=max_price,
         min_rating=min_rating,
         on_sale=on_sale,
-        badge=badge,
+        badges=badges,
+        in_stock=in_stock,
     )
 
     total = db.scalar(_apply_filters(select(func.count()).select_from(Product), **filters)) or 0
@@ -150,6 +155,24 @@ def category_summaries(db: Session) -> list[CategorySummary]:
     return summaries
 
 
+_PRICE_HISTOGRAM_BUCKETS = 12
+
+
+def _price_histogram(prices: list[float], price_min: float, price_max: float) -> list[int]:
+    """Bucket prices into a fixed number of even-width bins across the
+    scope's price range — the bars behind the price slider's track."""
+    counts = [0] * _PRICE_HISTOGRAM_BUCKETS
+    span = price_max - price_min
+    if span <= 0:
+        counts[0] = len(prices)
+        return counts
+
+    for price in prices:
+        index = int((price - price_min) / span * _PRICE_HISTOGRAM_BUCKETS)
+        counts[min(index, _PRICE_HISTOGRAM_BUCKETS - 1)] += 1
+    return counts
+
+
 def facets(db: Session, category: str | None = None, search: str | None = None) -> ProductFacets:
     """Ranges/values the filter UI can offer for the current category/search
     scope — computed *without* the other filters applied so the controls
@@ -159,6 +182,9 @@ def facets(db: Session, category: str | None = None, search: str | None = None) 
     price_min, price_max = db.execute(
         _apply_filters(select(func.min(Product.price), func.max(Product.price)), **scope)
     ).one()
+
+    prices = list(db.scalars(_apply_filters(select(Product.price), **scope)).all())
+    price_histogram = _price_histogram(prices, price_min or 0, price_max or 0)
 
     badge_rows = db.execute(
         _apply_filters(select(Product.badge, func.count(Product.id)), **scope)
@@ -174,6 +200,7 @@ def facets(db: Session, category: str | None = None, search: str | None = None) 
     return ProductFacets(
         price_min=price_min or 0,
         price_max=price_max or 0,
+        price_histogram=price_histogram,
         badges=[BadgeFacet(name=name, count=count) for name, count in badge_rows],
         on_sale_count=on_sale_count,
     )

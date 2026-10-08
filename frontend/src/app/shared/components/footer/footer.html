@@ -1,0 +1,30 @@
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <p class="brand-name">dumbEcommerce</p>
+      <p class="brand-tag">A small demo storefront — browse, filter, and check out products across a handful of categories.</p>
+    </div>
+
+    <nav class="footer-col" aria-label="Shop">
+      <h3>Shop</h3>
+      <a routerLink="/dashboard">All products</a>
+      @for (category of categories(); track category) {
+        <a routerLink="/dashboard" [queryParams]="{ category }">{{ category }}</a>
+      }
+    </nav>
+
+    <nav class="footer-col" aria-label="Account">
+      <h3>Account</h3>
+      @if (authService.isAuthenticated()) {
+        <button type="button" class="link-btn" (click)="authService.logout()">Sign out</button>
+      } @else {
+        <a routerLink="/login">Sign in</a>
+        <a routerLink="/register">Create account</a>
+      }
+    </nav>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© {{ year }} dumbEcommerce — demo project, not a real store.</p>
+  </div>
+</footer>

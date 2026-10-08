@@ -148,61 +148,105 @@
 
           <div class="sidebar-section">
             <h3 class="sidebar-title">Sort by</h3>
-            <select
-              class="sidebar-select"
-              [value]="filters().sort"
-              (change)="setSort($any($event.target).value)"
-            >
-              @for (option of sortOptions; track option.value) {
-                <option [value]="option.value" [selected]="filters().sort === option.value">
-                  {{ option.label }}
-                </option>
+            <div class="select-dropdown">
+              <button
+                type="button"
+                class="select-trigger"
+                [class.is-open]="sortMenuOpen()"
+                aria-haspopup="listbox"
+                [attr.aria-expanded]="sortMenuOpen()"
+                (click)="toggleSortMenu()"
+                (keydown.escape)="sortMenuOpen.set(false)"
+              >
+                <span>{{ currentSortLabel() }}</span>
+                <fa-icon [icon]="icons.chevronDown" aria-hidden="true" />
+              </button>
+
+              @if (sortMenuOpen()) {
+                <div class="dropdown-backdrop" (click)="sortMenuOpen.set(false)"></div>
+                <ul class="select-panel" role="listbox" (keydown.escape)="sortMenuOpen.set(false)">
+                  @for (option of sortOptions; track option.value) {
+                    <li role="option" [attr.aria-selected]="filters().sort === option.value">
+                      <button
+                        type="button"
+                        class="select-option"
+                        [class.is-active]="filters().sort === option.value"
+                        (click)="selectSort(option.value)"
+                      >
+                        {{ option.label }}
+                      </button>
+                    </li>
+                  }
+                </ul>
               }
-            </select>
+            </div>
           </div>
 
           <div class="sidebar-section">
-            <h3 class="sidebar-title">Price ($)</h3>
-            <div class="price-inputs">
-              <input
-                #minPriceInput
-                type="number"
-                min="0"
-                inputmode="decimal"
-                aria-label="Minimum price"
-                [placeholder]="facets() ? '' + facets()!.priceMin : 'Min'"
-                [value]="filters().minPrice ?? ''"
-                (change)="setPriceRange(minPriceInput.value, maxPriceInput.value)"
-              />
-              <span aria-hidden="true">–</span>
-              <input
-                #maxPriceInput
-                type="number"
-                min="0"
-                inputmode="decimal"
-                aria-label="Maximum price"
-                [placeholder]="facets() ? '' + facets()!.priceMax : 'Max'"
-                [value]="filters().maxPrice ?? ''"
-                (change)="setPriceRange(minPriceInput.value, maxPriceInput.value)"
-              />
+            <h3 class="sidebar-title">Price</h3>
+            <div class="range-filter">
+              <div class="range-values">
+                <span>${{ priceSliderMin() }}</span>
+                <span>${{ priceSliderMax() }}</span>
+              </div>
+              @if (priceHistogramBars().length) {
+                <div class="price-histogram" aria-hidden="true">
+                  @for (bar of priceHistogramBars(); track $index) {
+                    <span
+                      class="histogram-bar"
+                      [class.is-active]="bar.active"
+                      [style.height.%]="bar.height"
+                    ></span>
+                  }
+                </div>
+              }
+              <div class="range-track">
+                <div
+                  class="range-fill"
+                  [style.left.%]="priceFillLeft()"
+                  [style.right.%]="priceFillRight()"
+                ></div>
+                <input
+                  type="range"
+                  class="range-input"
+                  [min]="priceBounds().min"
+                  [max]="priceBounds().max"
+                  [value]="priceSliderMin()"
+                  aria-label="Minimum price"
+                  (input)="onMinPriceSlider($any($event.target).value)"
+                />
+                <input
+                  type="range"
+                  class="range-input"
+                  [min]="priceBounds().min"
+                  [max]="priceBounds().max"
+                  [value]="priceSliderMax()"
+                  aria-label="Maximum price"
+                  (input)="onMaxPriceSlider($any($event.target).value)"
+                />
+              </div>
             </div>
           </div>
 
           <div class="sidebar-section">
             <h3 class="sidebar-title">Rating</h3>
-            <div class="check-list">
-              @for (option of ratingOptions; track option.label) {
-                <button
-                  type="button"
-                  class="check-item"
-                  [class.is-active]="filters().minRating === option.value"
-                  [attr.aria-pressed]="filters().minRating === option.value"
-                  (click)="setMinRating(option.value)"
-                >
-                  <span class="checkbox" aria-hidden="true"></span>
-                  <span>{{ option.label }}</span>
-                </button>
-              }
+            <div class="range-filter">
+              <div class="range-values">
+                <span>{{ ratingSliderValue() === 0 ? 'Any' : ratingSliderValue() + '+ stars' }}</span>
+              </div>
+              <div class="range-track">
+                <div class="range-fill" style="left: 0%" [style.right.%]="100 - ratingFillPercent()"></div>
+                <input
+                  type="range"
+                  class="range-input"
+                  min="0"
+                  max="5"
+                  step="0.5"
+                  [value]="ratingSliderValue()"
+                  aria-label="Minimum rating"
+                  (input)="onRatingSlider($any($event.target).value)"
+                />
+              </div>
             </div>
           </div>
 
@@ -226,8 +270,8 @@
                 <button
                   type="button"
                   class="check-item"
-                  [class.is-active]="filters().badge === badge.name"
-                  [attr.aria-pressed]="filters().badge === badge.name"
+                  [class.is-active]="filters().badges.includes(badge.name)"
+                  [attr.aria-pressed]="filters().badges.includes(badge.name)"
                   (click)="toggleBadge(badge.name)"
                 >
                   <span class="checkbox" aria-hidden="true"></span>
@@ -235,6 +279,22 @@
                   <span class="count">{{ badge.count }}</span>
                 </button>
               }
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Availability</h3>
+            <div class="check-list">
+              <button
+                type="button"
+                class="check-item"
+                [class.is-active]="filters().inStock"
+                [attr.aria-pressed]="filters().inStock"
+                (click)="toggleInStock()"
+              >
+                <span class="checkbox" aria-hidden="true"></span>
+                <span>In stock only</span>
+              </button>
             </div>
           </div>
 
@@ -249,11 +309,11 @@
         <div class="listing-main">
           @if (activeFilters().length > 0) {
             <div class="active-filters" aria-label="Active filters">
-              @for (chip of activeFilters(); track chip.key) {
+              @for (chip of activeFilters(); track chip.key + (chip.value ?? '')) {
                 <button
                   type="button"
                   class="active-chip"
-                  (click)="removeFilter(chip.key)"
+                  (click)="removeFilter(chip)"
                   [attr.aria-label]="'Remove filter ' + chip.label"
                 >
                   {{ chip.label }} <fa-icon [icon]="icons.xmark" aria-hidden="true" />
@@ -392,10 +452,12 @@
                 <nav class="pagination" aria-label="Product pages">
                   <button
                     type="button"
+                    class="page-arrow"
+                    aria-label="Previous page"
                     (click)="goToPreviousPage()"
                     [disabled]="currentPage() === 1"
                   >
-                    Previous
+                    <fa-icon [icon]="icons.angleLeft" aria-hidden="true" />
                   </button>
 
                   @for (page of pageNumbers(); track page) {
@@ -412,10 +474,12 @@
 
                   <button
                     type="button"
+                    class="page-arrow"
+                    aria-label="Next page"
                     (click)="goToNextPage()"
                     [disabled]="currentPage() === totalPages()"
                   >
-                    Next
+                    <fa-icon [icon]="icons.angleRight" aria-hidden="true" />
                   </button>
                 </nav>
               }

@@ -1,9 +1,15 @@
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faAngleLeft,
+  faAward,
+  faBarcode,
+  faBoxOpen,
+  faCalendarDays,
   faCartShopping,
+  faFolderOpen,
   faHeart as faHeartSolid,
   faStar,
+  faTag,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { DatePipe, Location } from '@angular/common';
@@ -107,10 +113,16 @@ const PRODUCT_VIEWS: ProductView[] = [
 export class ProductDetail {
   protected readonly icons = {
     angleLeft: faAngleLeft,
+    award: faAward,
+    barcode: faBarcode,
+    boxOpen: faBoxOpen,
+    calendar: faCalendarDays,
     cart: faCartShopping,
+    folder: faFolderOpen,
     heartRegular: faHeartRegular,
     heartSolid: faHeartSolid,
     star: faStar,
+    tag: faTag,
   };
 
   protected readonly views = PRODUCT_VIEWS;

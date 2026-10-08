@@ -18,7 +18,8 @@ export interface ProductListQuery {
   maxPrice?: number | null;
   minRating?: number | null;
   onSale?: boolean;
-  badge?: string | null;
+  badges?: string[];
+  inStock?: boolean;
   sort?: ProductSort;
   limit?: number;
   offset?: number;
@@ -49,8 +50,13 @@ export class ProductService {
     if (query.onSale) {
       params = params.set('onSale', true);
     }
-    if (query.badge) {
-      params = params.set('badge', query.badge);
+    if (query.badges?.length) {
+      for (const badge of query.badges) {
+        params = params.append('badge', badge);
+      }
+    }
+    if (query.inStock) {
+      params = params.set('inStock', true);
     }
     if (query.sort) {
       params = params.set('sort', query.sort);

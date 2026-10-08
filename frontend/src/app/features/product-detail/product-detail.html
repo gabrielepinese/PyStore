@@ -178,44 +178,72 @@
 
           <div class="spec-section">
             <h3>Product information</h3>
-            <dl class="detail-list">
-              <div class="detail-row">
-                <dt>SKU</dt>
-                <dd>{{ p.id }}</dd>
+            <div class="spec-grid">
+              <div class="spec-card">
+                <span class="spec-icon"><fa-icon [icon]="icons.barcode" aria-hidden="true" /></span>
+                <div class="spec-content">
+                  <span class="spec-label">SKU</span>
+                  <span class="spec-value">{{ p.id }}</span>
+                </div>
               </div>
-              <div class="detail-row">
-                <dt>Category</dt>
-                <dd>{{ p.category }}</dd>
+
+              <div class="spec-card">
+                <span class="spec-icon"><fa-icon [icon]="icons.folder" aria-hidden="true" /></span>
+                <div class="spec-content">
+                  <span class="spec-label">Category</span>
+                  <span class="spec-value">{{ p.category }}</span>
+                </div>
               </div>
+
               @if (p.badge) {
-                <div class="detail-row">
-                  <dt>Badge</dt>
-                  <dd>{{ p.badge }}</dd>
+                <div class="spec-card">
+                  <span class="spec-icon"><fa-icon [icon]="icons.award" aria-hidden="true" /></span>
+                  <div class="spec-content">
+                    <span class="spec-label">Badge</span>
+                    <span class="spec-value">{{ p.badge }}</span>
+                  </div>
                 </div>
               }
-              <div class="detail-row">
-                <dt>Price</dt>
-                <dd>${{ p.price }}</dd>
-              </div>
-              @if (p.originalPrice) {
-                <div class="detail-row">
-                  <dt>List price</dt>
-                  <dd>${{ p.originalPrice }}</dd>
+
+              <div class="spec-card">
+                <span class="spec-icon"><fa-icon [icon]="icons.tag" aria-hidden="true" /></span>
+                <div class="spec-content">
+                  <span class="spec-label">Price</span>
+                  <span class="spec-value">
+                    ${{ p.price }}
+                    @if (p.originalPrice) {
+                      <span class="spec-strike">${{ p.originalPrice }}</span>
+                    }
+                  </span>
                 </div>
-              }
-              <div class="detail-row">
-                <dt>Rating</dt>
-                <dd>{{ p.rating }} / 5 ({{ p.reviews }} reviews)</dd>
               </div>
-              <div class="detail-row">
-                <dt>Availability</dt>
-                <dd>{{ p.stock > 0 ? p.stock + ' in stock' : 'Out of stock' }}</dd>
+
+              <div class="spec-card">
+                <span class="spec-icon"><fa-icon [icon]="icons.star" aria-hidden="true" /></span>
+                <div class="spec-content">
+                  <span class="spec-label">Rating</span>
+                  <span class="spec-value">{{ p.rating }} / 5 <span class="spec-sub">({{ p.reviews }} reviews)</span></span>
+                </div>
               </div>
-              <div class="detail-row">
-                <dt>Added</dt>
-                <dd>{{ p.createdAt | date: 'mediumDate' }}</dd>
+
+              <div class="spec-card">
+                <span class="spec-icon"><fa-icon [icon]="icons.boxOpen" aria-hidden="true" /></span>
+                <div class="spec-content">
+                  <span class="spec-label">Availability</span>
+                  <span class="spec-value" [class.is-in-stock]="p.stock > 0" [class.is-out-stock]="p.stock === 0">
+                    {{ p.stock > 0 ? p.stock + ' in stock' : 'Out of stock' }}
+                  </span>
+                </div>
               </div>
-            </dl>
+
+              <div class="spec-card">
+                <span class="spec-icon"><fa-icon [icon]="icons.calendar" aria-hidden="true" /></span>
+                <div class="spec-content">
+                  <span class="spec-label">Added</span>
+                  <span class="spec-value">{{ p.createdAt | date: 'mediumDate' }}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       } @else if (activeTab() === 'shipping') {

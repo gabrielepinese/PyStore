@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// The routed page renders as router-outlet's next sibling. Growing it (not
+// the footer) is what pins the footer to the bottom on short pages instead
+// of leaving a gap below it.
+:host > router-outlet + * {
+  flex: 1 0 auto;
+}

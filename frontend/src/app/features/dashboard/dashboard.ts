@@ -3,6 +3,7 @@ import {
   faArrowRight,
   faAngleLeft,
   faAngleRight,
+  faChevronDown,
   faHeart as faHeartSolid,
   faShareNodes,
   faStar,
@@ -39,10 +40,11 @@ interface Filters {
   maxPrice: number | null;
   minRating: number | null;
   onSale: boolean;
-  badge: string | null;
+  badges: string[];
+  inStock: boolean;
 }
 
-type FilterKey = 'price' | 'minRating' | 'onSale' | 'badge';
+type FilterKey = 'price' | 'minRating' | 'onSale' | 'badge' | 'inStock';
 
 const DEFAULT_FILTERS: Filters = {
   sort: 'newest',
@@ -50,7 +52,8 @@ const DEFAULT_FILTERS: Filters = {
   maxPrice: null,
   minRating: null,
   onSale: false,
-  badge: null,
+  badges: [],
+  inStock: false,
 };
 
 const ALL = 'All';
@@ -80,11 +83,6 @@ function isLight(hex: string): boolean {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.62;
 }
 
-function parsePrice(raw: string): number | null {
-  if (raw.trim() === '') return null;
-  const value = Number(raw);
-  return Number.isFinite(value) && value >= 0 ? value : null;
-}
 
 interface PromoBadge {
   label: string;
@@ -128,6 +126,7 @@ export class Dashboard {
     arrowRight: faArrowRight,
     angleLeft: faAngleLeft,
     angleRight: faAngleRight,
+    chevronDown: faChevronDown,
     heartRegular: faHeartRegular,
     heartSolid: faHeartSolid,
     share: faShareNodes,
@@ -200,14 +199,61 @@ export class Dashboard {
     { value: 'price_asc', label: 'Price: low to high' },
     { value: 'price_desc', label: 'Price: high to low' },
   ];
-  protected readonly ratingOptions: { value: number | null; label: string }[] = [
-    { value: null, label: 'Any' },
-    { value: 4, label: '4+' },
-    { value: 4.5, label: '4.5+' },
-  ];
+  protected readonly sortMenuOpen = signal(false);
+  protected readonly currentSortLabel = computed(
+    () => this.sortOptions.find((o) => o.value === this.filters().sort)?.label ?? '',
+  );
+  // Booking-style range sliders. Bounds come from the live facets (falling
+  // back to a wide default before they load); the slider's resting position
+  // at either bound means "no constraint there", same as the old null state.
+  protected readonly priceBounds = computed(() => {
+    const f = this.facets();
+    return { min: f ? Math.floor(f.priceMin) : 0, max: f ? Math.ceil(f.priceMax) : 1000 };
+  });
+  protected readonly priceSliderMin = computed(
+    () => this.filters().minPrice ?? this.priceBounds().min,
+  );
+  protected readonly priceSliderMax = computed(
+    () => this.filters().maxPrice ?? this.priceBounds().max,
+  );
+  protected readonly priceFillLeft = computed(() => {
+    const { min, max } = this.priceBounds();
+    return ((this.priceSliderMin() - min) / (max - min || 1)) * 100;
+  });
+  protected readonly priceFillRight = computed(() => {
+    const { min, max } = this.priceBounds();
+    return 100 - ((this.priceSliderMax() - min) / (max - min || 1)) * 100;
+  });
+
+  // Booking's price slider shows a little histogram of how many products
+  // fall in each price band, bars scaled to the tallest bucket, lit up
+  // wherever they overlap the currently selected range.
+  protected readonly priceHistogramBars = computed(() => {
+    const histogram = this.facets()?.priceHistogram ?? [];
+    if (!histogram.length) return [];
+
+    const peak = Math.max(1, ...histogram);
+    const bounds = this.priceBounds();
+    const bucketWidth = (bounds.max - bounds.min || 1) / histogram.length;
+    const selMin = this.priceSliderMin();
+    const selMax = this.priceSliderMax();
+
+    return histogram.map((count, i) => {
+      const bucketStart = bounds.min + i * bucketWidth;
+      const bucketEnd = bucketStart + bucketWidth;
+      return {
+        height: (count / peak) * 100,
+        active: bucketEnd > selMin && bucketStart < selMax,
+      };
+    });
+  });
+
+  protected readonly ratingSliderValue = computed(() => this.filters().minRating ?? 0);
+  protected readonly ratingFillPercent = computed(() => (this.ratingSliderValue() / 5) * 100);
+
   protected readonly activeFilters = computed(() => {
     const f = this.filters();
-    const chips: { key: FilterKey; label: string }[] = [];
+    const chips: { key: FilterKey; label: string; value?: string }[] = [];
     if (f.minPrice != null || f.maxPrice != null) {
       const label =
         f.minPrice != null && f.maxPrice != null
@@ -219,7 +265,8 @@ export class Dashboard {
     }
     if (f.minRating != null) chips.push({ key: 'minRating', label: `${f.minRating}+ stars` });
     if (f.onSale) chips.push({ key: 'onSale', label: 'On sale' });
-    if (f.badge) chips.push({ key: 'badge', label: f.badge });
+    if (f.inStock) chips.push({ key: 'inStock', label: 'In stock' });
+    for (const badge of f.badges) chips.push({ key: 'badge', label: badge, value: badge });
     return chips;
   });
 
@@ -361,37 +408,68 @@ export class Dashboard {
     this.patchFilters({ sort: value as ProductSort });
   }
 
-  protected setPriceRange(rawMin: string, rawMax: string): void {
-    let minPrice = parsePrice(rawMin);
-    let maxPrice = parsePrice(rawMax);
-    if (minPrice != null && maxPrice != null && minPrice > maxPrice) {
-      [minPrice, maxPrice] = [maxPrice, minPrice];
-    }
-    this.patchFilters({ minPrice, maxPrice });
+  protected toggleSortMenu(): void {
+    this.sortMenuOpen.update((open) => !open);
+  }
+
+  protected selectSort(value: ProductSort): void {
+    this.setSort(value);
+    this.sortMenuOpen.set(false);
+  }
+
+  // Each handle is clamped against the other so the two thumbs can't cross;
+  // resting exactly on a bound means "no constraint there" (back to null).
+  protected onMinPriceSlider(raw: string): void {
+    const { min } = this.priceBounds();
+    const value = Math.min(Number(raw), this.priceSliderMax());
+    this.patchFilters({ minPrice: value <= min ? null : value });
+  }
+
+  protected onMaxPriceSlider(raw: string): void {
+    const { max } = this.priceBounds();
+    const value = Math.max(Number(raw), this.priceSliderMin());
+    this.patchFilters({ maxPrice: value >= max ? null : value });
   }
 
   protected setMinRating(value: number | null): void {
     this.patchFilters({ minRating: value });
   }
 
+  protected onRatingSlider(raw: string): void {
+    const value = Number(raw);
+    this.setMinRating(value <= 0 ? null : value);
+  }
+
   protected toggleOnSale(): void {
     this.patchFilters({ onSale: !this.filters().onSale });
   }
 
-  protected toggleBadge(badge: string): void {
-    this.patchFilters({ badge: this.filters().badge === badge ? null : badge });
+  protected toggleInStock(): void {
+    this.patchFilters({ inStock: !this.filters().inStock });
   }
 
-  protected removeFilter(key: FilterKey): void {
-    switch (key) {
+  // Badges are a multi-select checkbox group: picking a second one adds to the
+  // set instead of replacing the first.
+  protected toggleBadge(badge: string): void {
+    const current = this.filters().badges;
+    const badges = current.includes(badge)
+      ? current.filter((b) => b !== badge)
+      : [...current, badge];
+    this.patchFilters({ badges });
+  }
+
+  protected removeFilter(chip: { key: FilterKey; value?: string }): void {
+    switch (chip.key) {
       case 'price':
         return this.patchFilters({ minPrice: null, maxPrice: null });
       case 'minRating':
         return this.patchFilters({ minRating: null });
       case 'onSale':
         return this.patchFilters({ onSale: false });
+      case 'inStock':
+        return this.patchFilters({ inStock: false });
       case 'badge':
-        return this.patchFilters({ badge: null });
+        return this.toggleBadge(chip.value!);
     }
   }
 

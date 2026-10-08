@@ -32,8 +32,12 @@ def list_products(
     on_sale: bool = Query(
         default=False, alias="onSale", description="Only discounted products"
     ),
-    badge: str | None = Query(
-        default=None, description="Case-insensitive badge match, e.g. 'New'"
+    badge: list[str] | None = Query(
+        default=None,
+        description="Case-insensitive badge match; repeat to match any of several, e.g. 'New'",
+    ),
+    in_stock: bool = Query(
+        default=False, alias="inStock", description="Only products currently in stock"
     ),
     sort: SortKey = Query(default="newest"),
     limit: int | None = Query(default=None, ge=1, le=100),
@@ -54,7 +58,8 @@ def list_products(
         max_price=max_price,
         min_rating=min_rating,
         on_sale=on_sale,
-        badge=badge,
+        badges=badge,
+        in_stock=in_stock,
         sort=sort,
         limit=limit,
         offset=offset,

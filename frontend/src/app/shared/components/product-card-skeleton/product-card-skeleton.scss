@@ -3,18 +3,16 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  border-bottom: 1px solid #B3B4B8;
-
-  &:last-child {
-    border-bottom: none;
-  }
+  background: #fff;
+  border: 1px solid #E4E2E0;
+  border-radius: 2px;
 }
 
 .bar {
   position: relative;
   display: block;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 2px;
   background: #ECE4DF;
   animation: skeleton-pulse 1.8s ease-in-out infinite;
   animation-delay: var(--skeleton-delay, 0ms);
@@ -54,6 +52,7 @@
   flex: 0 0 120px;
   width: 120px;
   height: 120px;
+  border-radius: 2px;
 }
 
 @media (min-width: 1024px) {
@@ -108,6 +107,7 @@
   width: 130px;
   height: 42px;
   margin-top: 14px;
+  border-radius: 2px;
 }
 
 @keyframes skeleton-pulse {

@@ -58,6 +58,7 @@ class ProductFacets(BaseModel):
 
     price_min: float
     price_max: float
+    price_histogram: list[int]
     badges: list[BadgeFacet]
     on_sale_count: int
 
