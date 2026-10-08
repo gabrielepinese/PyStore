@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.models.product import Product
+from app.models.review import Review
 from app.schemas.product import BadgeFacet, CategorySummary, ProductFacets
 
 settings = get_settings()
@@ -176,3 +177,55 @@ def facets(db: Session, category: str | None = None, search: str | None = None) 
         badges=[BadgeFacet(name=name, count=count) for name, count in badge_rows],
         on_sale_count=on_sale_count,
     )
+
+
+def list_reviews(
+    db: Session, product_id: str, limit: int, offset: int
+) -> tuple[list[Review], int]:
+    total = (
+        db.scalar(
+            select(func.count()).select_from(Review).where(Review.product_id == product_id)
+        )
+        or 0
+    )
+
+    stmt = (
+        select(Review)
+        .where(Review.product_id == product_id)
+        .order_by(Review.created_at.desc(), Review.id)
+        .offset(offset)
+        .limit(limit)
+    )
+    items = list(db.scalars(stmt).all())
+
+    return items, total
+
+
+def rating_breakdown(rating: float, total: int) -> dict[int, int]:
+    """Synthesize a plausible 1-5 star distribution for the overview bars.
+
+    We only store one aggregate `rating` per product (not a running tally per
+    star), so this derives a deterministic, triangular-shaped distribution
+    centered on that rating rather than requiring real per-star counts."""
+    stars = range(5, 0, -1)
+    if total <= 0:
+        return {star: 0 for star in stars}
+
+    clamped = max(1.0, min(5.0, rating))
+    # Small floor weight keeps even a 5-star-rated product showing a sliver of
+    # low-star reviews, which reads as more believable than an all-or-nothing split.
+    weights = {star: max(0.02, 1 - abs(star - clamped) * 0.6) for star in stars}
+    weight_sum = sum(weights.values())
+    raw = {star: (weight / weight_sum) * total for star, weight in weights.items()}
+
+    counts = {star: int(value) for star, value in raw.items()}
+    remainder = total - sum(counts.values())
+
+    # Hand out leftover units to whichever stars have the largest fractional
+    # part (ties broken by proximity to the real rating) until the counts sum
+    # back up to `total` exactly.
+    order = sorted(raw, key=lambda star: (-(raw[star] - counts[star]), abs(star - clamped)))
+    for star in order[:remainder]:
+        counts[star] += 1
+
+    return dict(sorted(counts.items(), key=lambda kv: kv[0], reverse=True))

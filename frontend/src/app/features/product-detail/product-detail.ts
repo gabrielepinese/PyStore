@@ -6,17 +6,31 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { CartService } from '../../core/cart/cart.service';
-import { Product } from '../../core/models/product.model';
+import { Product, Review } from '../../core/models/product.model';
 import { ProductService } from '../../core/products/product.service';
 import { DotLoader } from '../../shared/components/dot-loader/dot-loader';
 import { Topbar } from '../../shared/components/topbar/topbar';
 
-type Tab = 'details' | 'shipping';
+type Tab = 'details' | 'shipping' | 'reviews';
+
+const REVIEWS_PAGE_SIZE = 5;
+
+interface ReviewsSummary {
+  averageRating: number;
+  reviewCount: number;
+  ratingBreakdown: Record<number, number>;
+}
+
+interface BreakdownRow {
+  star: number;
+  count: number;
+  percent: number;
+}
 
 interface ImageLayer {
   top: string;
@@ -86,7 +100,7 @@ const PRODUCT_VIEWS: ProductView[] = [
 
 @Component({
   selector: 'app-product-detail',
-  imports: [FaIconComponent, DotLoader, Topbar],
+  imports: [FaIconComponent, DotLoader, Topbar, DatePipe],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
 })
@@ -122,6 +136,22 @@ export class ProductDetail {
     return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
   });
 
+  protected readonly aboutBullets = computed(() => {
+    const description = this.product()?.description;
+    if (!description) return [];
+    return description
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean);
+  });
+
+  protected readonly reviews = signal<Review[]>([]);
+  protected readonly reviewsSummary = signal<ReviewsSummary | null>(null);
+  protected readonly reviewsLoading = signal(false);
+  protected readonly reviewsTotal = signal(0);
+  protected readonly reviewsInitialized = signal(false);
+  protected readonly hasMoreReviews = computed(() => this.reviews().length < this.reviewsTotal());
+
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -147,6 +177,44 @@ export class ProductDetail {
 
   protected setTab(tab: Tab): void {
     this.activeTab.set(tab);
+    if (tab === 'reviews' && !this.reviewsInitialized()) {
+      this.loadReviews(true);
+    }
+  }
+
+  protected loadMoreReviews(): void {
+    this.loadReviews(false);
+  }
+
+  protected breakdownRows(summary: ReviewsSummary): BreakdownRow[] {
+    return [5, 4, 3, 2, 1].map((star) => {
+      const count = summary.ratingBreakdown[star] ?? 0;
+      const percent = summary.reviewCount > 0 ? Math.round((count / summary.reviewCount) * 100) : 0;
+      return { star, count, percent };
+    });
+  }
+
+  private loadReviews(reset: boolean): void {
+    const product = this.product();
+    if (!product) return;
+
+    const offset = reset ? 0 : this.reviews().length;
+    this.reviewsInitialized.set(true);
+    this.reviewsLoading.set(true);
+
+    this.productService.reviews(product.id, REVIEWS_PAGE_SIZE, offset).subscribe({
+      next: (response) => {
+        this.reviews.update((current) => (reset ? response.items : [...current, ...response.items]));
+        this.reviewsTotal.set(response.total);
+        this.reviewsSummary.set({
+          averageRating: response.averageRating,
+          reviewCount: response.reviewCount,
+          ratingBreakdown: response.ratingBreakdown,
+        });
+        this.reviewsLoading.set(false);
+      },
+      error: () => this.reviewsLoading.set(false),
+    });
   }
 
   protected goToView(index: number): void {

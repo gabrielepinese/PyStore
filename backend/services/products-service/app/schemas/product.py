@@ -60,3 +60,31 @@ class ProductFacets(BaseModel):
     price_max: float
     badges: list[BadgeFacet]
     on_sale_count: int
+
+
+class ReviewRead(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, from_attributes=True)
+
+    id: str
+    product_id: str
+    author: str
+    rating: int
+    title: str
+    body: str
+    created_at: datetime
+
+
+class ReviewListResponse(BaseModel):
+    """Paginated reviews for a product plus the aggregate overview the
+    reviews tab's summary card needs, so the frontend doesn't need a second
+    round trip just to render star-breakdown bars."""
+
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    items: list[ReviewRead]
+    total: int
+    limit: int
+    offset: int
+    average_rating: float
+    review_count: int
+    rating_breakdown: dict[int, int]

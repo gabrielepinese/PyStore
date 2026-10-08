@@ -8,7 +8,7 @@
 .auth-page {
   display: flex;
   height: 100vh;
-  background: #f9f8f6;
+  background: #F6F2EF;
   overflow: hidden;
 }
 
@@ -33,13 +33,13 @@
     gap: 6px;
     align-self: flex-start;
     margin-bottom: 20px;
-    color: #4a4a47;
+    color: #6B6C6E;
     font-size: 0.8rem;
     font-weight: 600;
     text-decoration: none;
 
     &:hover {
-      color: #7a3018;
+      color: #735F58;
     }
 
     &:focus-visible {
@@ -50,7 +50,7 @@
   }
 
   .brand {
-    color: #7a3018;
+    color: #735F58;
     font-weight: 700;
     font-size: 1.35rem;
   }
@@ -58,7 +58,7 @@
   .greeting {
     margin: 24px 0 4px;
     font-size: 0.78rem;
-    color: #4a4a47;
+    color: #6B6C6E;
   }
 
   h1 {
@@ -72,7 +72,7 @@
     display: block;
     font-size: 0.78rem;
     font-weight: 600;
-    color: #4a4a47;
+    color: #6B6C6E;
   }
 
   input {
@@ -80,18 +80,18 @@
     box-sizing: border-box;
     min-height: 44px;
     padding: 0.85rem 0.9rem;
-    border: 1px solid #e6e1d8;
+    border: 1px solid #B3B4B8;
     border-radius: 10px;
-    background: #f2efe9;
+    background: #ECE4DF;
     font-size: 0.88rem;
     color: #1a1a1a;
 
     &::placeholder {
-      color: #4a4a47;
+      color: #6B6C6E;
     }
 
     &:focus-visible {
-      outline: 3px solid #7a3018;
+      outline: 3px solid #735F58;
       outline-offset: 1px;
     }
   }
@@ -126,7 +126,7 @@
     padding: 0;
     border: none;
     background: none;
-    color: #4a4a47;
+    color: #6B6C6E;
     cursor: pointer;
 
     fa-icon {
@@ -134,7 +134,7 @@
     }
 
     &:focus-visible {
-      outline: 3px solid #7a3018;
+      outline: 3px solid #735F58;
       outline-offset: 2px;
       border-radius: 4px;
     }
@@ -159,7 +159,7 @@
 
   .forgot-link {
     font-size: 0.72rem;
-    color: #7a3018;
+    color: #735F58;
   }
 
   .field-error {
@@ -193,11 +193,11 @@
   .switch {
     margin-top: 24px;
     font-size: 0.8rem;
-    color: #4a4a47;
+    color: #6B6C6E;
     text-align: center;
 
     a {
-      color: #7a3018;
+      color: #735F58;
       font-weight: 600;
       text-decoration: underline;
 
@@ -215,7 +215,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f2cbb6;
+  background: #D0BFB2;
   border-radius: 0;
   overflow: hidden;
   min-height: 0;

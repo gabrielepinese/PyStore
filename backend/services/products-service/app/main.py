@@ -7,11 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes.products import router as products_router
 from app.core.config import get_settings
 from app.db.base import Base
-from app.db.seed import seed_products
+from app.db.seed import seed_products, seed_reviews
 from app.db.session import SessionLocal, engine
 
 # Import models so they register on Base.metadata before create_all runs.
-from app.models import product  # noqa: F401
+from app.models import product, review  # noqa: F401
 
 settings = get_settings()
 
@@ -25,6 +25,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     db = SessionLocal()
     try:
         seed_products(db)
+        seed_reviews(db)
     finally:
         db.close()
 

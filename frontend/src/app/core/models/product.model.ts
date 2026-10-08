@@ -44,3 +44,23 @@ export interface ProductFacets {
   badges: BadgeFacet[];
   onSaleCount: number;
 }
+
+export interface Review {
+  id: string;
+  productId: string;
+  author: string;
+  rating: number;
+  title: string;
+  body: string;
+  createdAt: string;
+}
+
+export interface ReviewListResponse {
+  items: Review[];
+  total: number;
+  limit: number;
+  offset: number;
+  averageRating: number;
+  reviewCount: number;
+  ratingBreakdown: Record<number, number>;
+}

@@ -7,6 +7,8 @@ from app.schemas.product import (
     ProductFacets,
     ProductListResponse,
     ProductRead,
+    ReviewListResponse,
+    ReviewRead,
 )
 from app.services import product_service
 from app.services.product_service import SortKey
@@ -92,3 +94,30 @@ def get_product(product_id: str, db: Session = Depends(get_db)) -> ProductRead:
             status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
         )
     return ProductRead.model_validate(product)
+
+
+@router.get("/{product_id}/reviews", response_model=ReviewListResponse)
+def list_product_reviews(
+    product_id: str,
+    limit: int = Query(default=5, ge=1, le=50),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+) -> ReviewListResponse:
+    product = product_service.get_product(db, product_id)
+    if product is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
+        )
+
+    items, total = product_service.list_reviews(db, product_id, limit=limit, offset=offset)
+    breakdown = product_service.rating_breakdown(product.rating, product.reviews)
+
+    return ReviewListResponse(
+        items=[ReviewRead.model_validate(item) for item in items],
+        total=total,
+        limit=limit,
+        offset=offset,
+        average_rating=product.rating,
+        review_count=product.reviews,
+        rating_breakdown=breakdown,
+    )

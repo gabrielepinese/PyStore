@@ -8,6 +8,7 @@ import {
   ProductFacets,
   ProductListResponse,
   ProductSort,
+  ReviewListResponse,
 } from '../models/product.model';
 
 export interface ProductListQuery {
@@ -78,6 +79,11 @@ export class ProductService {
 
   get(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.baseUrl}/${id}`);
+  }
+
+  reviews(productId: string, limit: number, offset: number): Observable<ReviewListResponse> {
+    const params = new HttpParams().set('limit', limit).set('offset', offset);
+    return this.http.get<ReviewListResponse>(`${this.baseUrl}/${productId}/reviews`, { params });
   }
 }
 

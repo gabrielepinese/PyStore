@@ -52,18 +52,18 @@ button {
   }
 
   &.primary {
-    background: #7a3018;
-    color: #f9f8f6;
+    background: #735F58;
+    color: #F6F2EF;
 
     &:hover:not(:disabled) {
-      background: #5c2311;
+      background: #5A4842;
     }
   }
 
   &.secondary {
     background: transparent;
-    border-color: #7a3018;
-    color: #7a3018;
+    border-color: #735F58;
+    color: #735F58;
 
     &:hover:not(:disabled) {
       background: rgba(122, 48, 24, 0.08);

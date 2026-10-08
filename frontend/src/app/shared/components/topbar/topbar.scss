@@ -6,8 +6,8 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: #f9f8f6;
-  border-bottom: 1px solid #e6e1d8;
+  background: #F6F2EF;
+  border-bottom: 1px solid #B3B4B8;
 }
 
 .topbar-inner {
@@ -26,12 +26,12 @@
   font: inherit;
   font-weight: 700;
   font-size: 1.2rem;
-  color: #7a3018;
+  color: #735F58;
   white-space: nowrap;
   cursor: pointer;
 
   &:focus-visible {
-    outline: 3px solid #7a3018;
+    outline: 3px solid #735F58;
     outline-offset: 4px;
     border-radius: 4px;
   }
@@ -45,9 +45,9 @@
   max-width: 420px;
   padding: 0.6rem 0.9rem;
   border-radius: 999px;
-  background: #f2efe9;
-  border: 1px solid #e6e1d8;
-  color: #4a4a47;
+  background: #ECE4DF;
+  border: 1px solid #B3B4B8;
+  color: #6B6C6E;
 
   fa-icon {
     font-size: 1rem;
@@ -63,7 +63,7 @@
     color: #1a1a1a;
 
     &::placeholder {
-      color: #4a4a47;
+      color: #6B6C6E;
     }
   }
 }
@@ -82,7 +82,7 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border: 1px solid #e6e1d8;
+  border: 1px solid #B3B4B8;
   border-radius: 50%;
   background: #fff;
   color: #1a1a1a;
@@ -93,7 +93,7 @@
   }
 
   &:focus-visible {
-    outline: 3px solid #7a3018;
+    outline: 3px solid #735F58;
     outline-offset: 2px;
   }
 
@@ -105,8 +105,8 @@
     height: 18px;
     padding: 0 4px;
     border-radius: 999px;
-    background: #7a3018;
-    color: #f9f8f6;
+    background: #735F58;
+    color: #F6F2EF;
     font-size: 0.65rem;
     font-weight: 700;
     line-height: 18px;
@@ -127,8 +127,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #7a3018;
-  color: #f9f8f6;
+  background: #735F58;
+  color: #F6F2EF;
   font-weight: 700;
   font-size: 0.85rem;
   text-transform: uppercase;
@@ -137,18 +137,18 @@
 .signout {
   border: none;
   background: none;
-  color: #4a4a47;
+  color: #6B6C6E;
   font-size: 0.82rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: #7a3018;
+    color: #735F58;
   }
 
   &:focus-visible {
-    outline: 3px solid #7a3018;
+    outline: 3px solid #735F58;
     outline-offset: 2px;
   }
 }
@@ -156,15 +156,15 @@
 .signin {
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
-  background: #7a3018;
-  color: #f9f8f6;
+  background: #735F58;
+  color: #F6F2EF;
   font-size: 0.82rem;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.15s ease;
 
   &:hover {
-    background: #5c2311;
+    background: #5A4842;
   }
 
   &:focus-visible {

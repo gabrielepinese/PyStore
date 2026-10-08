@@ -170,16 +170,21 @@ export class Dashboard {
   protected readonly totalProducts = computed(() =>
     this.summaries().reduce((sum, s) => sum + s.productCount, 0),
   );
+
+  protected categoryCount(name: string): number {
+    if (name === ALL) return this.totalProducts();
+    return this.summaries().find((s) => s.name === name)?.productCount ?? 0;
+  }
   protected readonly tiles = computed<CategoryTile[]>(() => {
     const summaries = this.summaries();
     return summaries.map((summary, index) => {
-      const [base = '#e6e1d8', ...rest] = summary.accents;
+      const [base = '#B3B4B8', ...rest] = summary.accents;
       return {
         ...summary,
         size: tileSize(index, summaries.length),
         background: base,
-        foreground: isLight(base) ? '#1a1a1a' : '#f9f8f6',
-        shapes: rest.length ? rest : ['#f9f8f6'],
+        foreground: isLight(base) ? '#1a1a1a' : '#F6F2EF',
+        shapes: rest.length ? rest : ['#F6F2EF'],
       };
     });
   });

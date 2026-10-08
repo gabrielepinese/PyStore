@@ -3,7 +3,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  border-bottom: 1px solid #e6e1d8;
+  border-bottom: 1px solid #B3B4B8;
 
   &:last-child {
     border-bottom: none;
@@ -15,7 +15,7 @@
   display: block;
   overflow: hidden;
   border-radius: 0;
-  background: #ece7de;
+  background: #ECE4DF;
   animation: skeleton-pulse 1.8s ease-in-out infinite;
   animation-delay: var(--skeleton-delay, 0ms);
 
@@ -24,7 +24,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: #4a4a47;
+    background: #6B6C6E;
     opacity: 0.22;
     transform: scaleX(0);
     transform-origin: left;

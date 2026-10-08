@@ -1,6 +1,11 @@
+import random
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy.orm import Session
 
 from app.models.product import Product
+from app.models.review import Review
+from app.services.product_service import rating_breakdown
 
 # Mirrors the mock catalog the Angular dashboard shipped with before this
 # service existed, so swapping the frontend over to real data is a drop-in
@@ -27,4 +32,76 @@ def seed_products(db: Session) -> None:
         return
 
     db.add_all(Product(**data) for data in SEED_PRODUCTS)
+    db.commit()
+
+
+_REVIEW_AUTHORS = [
+    "Alex M.", "Jordan P.", "Sam K.", "Taylor R.", "Morgan B.", "Casey L.",
+    "Riley T.", "Jamie S.", "Drew H.", "Avery N.", "Quinn F.", "Reese D.",
+]
+
+_REVIEW_TITLES_BY_STAR = {
+    5: ["Exceeded my expectations", "Exactly what I needed", "Couldn't be happier", "Five stars, would buy again"],
+    4: ["Really solid pick", "Happy with this", "Does the job well", "Good value overall"],
+    3: ["Does what it says", "Fine, nothing special", "Decent for the price"],
+    2: ["Expected more", "A bit disappointing", "Mixed feelings"],
+    1: ["Not what I hoped for", "Wouldn't buy again"],
+}
+
+_REVIEW_BODIES_BY_STAR = {
+    5: [
+        "Arrived quickly and the quality is even better than the photos suggested. Already recommended it to a friend.",
+        "Been using it daily for weeks now and it still looks brand new. Worth every penny.",
+        "This is exactly the kind of quality I was hoping for. No complaints at all.",
+    ],
+    4: [
+        "Good quality overall, just a couple of small details keep it from a perfect score.",
+        "Does what it promises, and the packaging was nice too.",
+        "Happy with the purchase — only took a star off because of the price.",
+    ],
+    3: [
+        "It's fine. Does the job but nothing stood out as impressive.",
+        "Average experience, matches the description but no surprises.",
+    ],
+    2: [
+        "Had higher hopes based on the photos. It works but feels a bit cheaper than expected.",
+        "Okay for the price, but I probably wouldn't repurchase.",
+    ],
+    1: [
+        "Didn't match the description and customer support was slow to respond.",
+        "Arrived with a defect and the replacement took too long to ship.",
+    ],
+}
+
+
+def seed_reviews(db: Session) -> None:
+    """Seed a small, believable sample of per-star reviews for each product.
+
+    Dev/demo seed only. The sample size is independent of each product's
+    aggregate `reviews` count (that stat represents "all reviews ever", while
+    this is just the handful of real review rows the UI can page through)."""
+    if db.query(Review).count() > 0:
+        return
+
+    rng = random.Random(1234)
+    now = datetime.now(timezone.utc)
+
+    for product in db.query(Product).all():
+        sample_size = min(12, max(4, product.reviews // 20 + 4))
+        breakdown = rating_breakdown(product.rating, sample_size)
+        stars = [star for star, count in breakdown.items() for _ in range(count)]
+        rng.shuffle(stars)
+
+        for star in stars:
+            db.add(
+                Review(
+                    product_id=product.id,
+                    author=rng.choice(_REVIEW_AUTHORS),
+                    rating=star,
+                    title=rng.choice(_REVIEW_TITLES_BY_STAR[star]),
+                    body=rng.choice(_REVIEW_BODIES_BY_STAR[star]),
+                    created_at=now - timedelta(days=rng.randint(1, 240), hours=rng.randint(0, 23)),
+                )
+            )
+
     db.commit()

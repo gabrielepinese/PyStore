@@ -151,31 +151,146 @@
         >
           Shipping &amp; returns
         </button>
+        <button
+          type="button"
+          role="tab"
+          class="tab-header"
+          [class.is-active]="activeTab() === 'reviews'"
+          [attr.aria-selected]="activeTab() === 'reviews'"
+          (click)="setTab('reviews')"
+        >
+          Reviews
+        </button>
       </div>
 
       @if (activeTab() === 'details') {
-        <dl class="detail-list">
-          <div class="detail-row">
-            <dt>SKU</dt>
-            <dd>{{ p.id }}</dd>
+        <div class="details-panel">
+          @if (aboutBullets().length) {
+            <div class="about-section">
+              <h3>About this item</h3>
+              <ul class="about-list">
+                @for (bullet of aboutBullets(); track $index) {
+                  <li>{{ bullet }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          <div class="spec-section">
+            <h3>Product information</h3>
+            <dl class="detail-list">
+              <div class="detail-row">
+                <dt>SKU</dt>
+                <dd>{{ p.id }}</dd>
+              </div>
+              <div class="detail-row">
+                <dt>Category</dt>
+                <dd>{{ p.category }}</dd>
+              </div>
+              @if (p.badge) {
+                <div class="detail-row">
+                  <dt>Badge</dt>
+                  <dd>{{ p.badge }}</dd>
+                </div>
+              }
+              <div class="detail-row">
+                <dt>Price</dt>
+                <dd>${{ p.price }}</dd>
+              </div>
+              @if (p.originalPrice) {
+                <div class="detail-row">
+                  <dt>List price</dt>
+                  <dd>${{ p.originalPrice }}</dd>
+                </div>
+              }
+              <div class="detail-row">
+                <dt>Rating</dt>
+                <dd>{{ p.rating }} / 5 ({{ p.reviews }} reviews)</dd>
+              </div>
+              <div class="detail-row">
+                <dt>Availability</dt>
+                <dd>{{ p.stock > 0 ? p.stock + ' in stock' : 'Out of stock' }}</dd>
+              </div>
+              <div class="detail-row">
+                <dt>Added</dt>
+                <dd>{{ p.createdAt | date: 'mediumDate' }}</dd>
+              </div>
+            </dl>
           </div>
-          <div class="detail-row">
-            <dt>Category</dt>
-            <dd>{{ p.category }}</dd>
+        </div>
+      } @else if (activeTab() === 'shipping') {
+        <div class="shipping-panel">
+          <div class="shipping-options">
+            <div class="shipping-option">
+              <h4>Standard shipping</h4>
+              <p>3–5 business days · Free on orders over $35</p>
+            </div>
+            <div class="shipping-option">
+              <h4>Express shipping</h4>
+              <p>1–2 business days · $8.99</p>
+            </div>
           </div>
-          <div class="detail-row">
-            <dt>Rating</dt>
-            <dd>{{ p.rating }} / 5 ({{ p.reviews }} reviews)</dd>
+          <div class="shipping-policies">
+            <h4>Returns</h4>
+            <p>Free returns within 30 days of delivery. Item must be unused and in its original packaging.</p>
+            <h4>Packaging</h4>
+            <p>Ships in plastic-free, recyclable packaging.</p>
           </div>
-          <div class="detail-row">
-            <dt>Availability</dt>
-            <dd>{{ p.stock > 0 ? p.stock + ' in stock' : 'Out of stock' }}</dd>
-          </div>
-        </dl>
+        </div>
       } @else {
-        <div class="shipping-info">
-          <p>Estimated delivery: 3–5 business days.</p>
-          <p>Free returns within 30 days of delivery.</p>
+        <div class="reviews-panel">
+          @if (reviewsSummary(); as summary) {
+            <div class="reviews-overview">
+              <div class="overview-score">
+                <span class="score">{{ summary.averageRating.toFixed(1) }}</span>
+                <div class="stars" [attr.aria-label]="summary.averageRating + ' out of 5 stars'">
+                  @for (star of stars(summary.averageRating); track $index) {
+                    <fa-icon [icon]="icons.star" [class.is-full]="star === 'full'" aria-hidden="true" />
+                  }
+                </div>
+                <span class="count">{{ summary.reviewCount }} global ratings</span>
+              </div>
+
+              <div class="breakdown">
+                @for (row of breakdownRows(summary); track row.star) {
+                  <div class="breakdown-row">
+                    <span class="breakdown-label">{{ row.star }} star</span>
+                    <div class="breakdown-bar"><span [style.width.%]="row.percent"></span></div>
+                    <span class="breakdown-pct">{{ row.percent }}%</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <div class="review-list">
+            @for (review of reviews(); track review.id) {
+              <article class="review-card">
+                <div class="review-head">
+                  <div class="stars">
+                    @for (star of stars(review.rating); track $index) {
+                      <fa-icon [icon]="icons.star" [class.is-full]="star === 'full'" aria-hidden="true" />
+                    }
+                  </div>
+                  <h3 class="review-title">{{ review.title }}</h3>
+                </div>
+                <p class="review-meta">{{ review.author }} · {{ review.createdAt | date: 'mediumDate' }}</p>
+                <p class="review-body">{{ review.body }}</p>
+              </article>
+            } @empty {
+              @if (!reviewsLoading()) {
+                <p class="no-reviews">No reviews yet for this product.</p>
+              }
+            }
+          </div>
+
+          @if (reviewsLoading()) {
+            <div class="state-row">
+              <app-dot-loader />
+            </div>
+          } @else if (hasMoreReviews()) {
+            <button type="button" class="load-more" (click)="loadMoreReviews()">Load more reviews</button>
+          }
         </div>
       }
     </div>

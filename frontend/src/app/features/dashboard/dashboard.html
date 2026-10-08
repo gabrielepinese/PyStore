@@ -22,14 +22,14 @@
       </p>
     </div>
     <svg class="hero-art" viewBox="0 0 200 160" fill="none" aria-hidden="true">
-      <circle cx="150" cy="55" r="46" fill="#f2cbb6" opacity="0.6" />
+      <circle cx="150" cy="55" r="46" fill="#D0BFB2" opacity="0.6" />
       <rect
         x="20"
         y="70"
         width="70"
         height="70"
         rx="16"
-        fill="#5c2311"
+        fill="#5A4842"
         transform="rotate(-6 55 105)"
       />
       <rect
@@ -38,7 +38,7 @@
         width="70"
         height="70"
         rx="16"
-        fill="#c5a059"
+        fill="#D0BFB2"
         opacity="0.85"
         transform="rotate(8 105 90)"
       />
@@ -126,266 +126,302 @@
         </div>
       </div>
 
-      <nav class="categories" aria-label="Product categories">
-        @for (category of categoryNames(); track category) {
-          <button
-            type="button"
-            class="chip"
-            [class.is-active]="activeCategory() === category"
-            (click)="selectCategory(category)"
-          >
-            {{ category }}
-          </button>
-        }
-      </nav>
-
-      <div class="filters" role="group" aria-label="Filter products">
-        <label class="filter-field">
-          <span class="filter-label">Sort by</span>
-          <select [value]="filters().sort" (change)="setSort($any($event.target).value)">
-            @for (option of sortOptions; track option.value) {
-              <option [value]="option.value" [selected]="filters().sort === option.value">
-                {{ option.label }}
-              </option>
-            }
-          </select>
-        </label>
-
-        <div class="filter-field">
-          <span class="filter-label">Price ($)</span>
-          <div class="price-inputs">
-            <input
-              #minPriceInput
-              type="number"
-              min="0"
-              inputmode="decimal"
-              aria-label="Minimum price"
-              [placeholder]="facets() ? '' + facets()!.priceMin : 'Min'"
-              [value]="filters().minPrice ?? ''"
-              (change)="setPriceRange(minPriceInput.value, maxPriceInput.value)"
-            />
-            <span aria-hidden="true">–</span>
-            <input
-              #maxPriceInput
-              type="number"
-              min="0"
-              inputmode="decimal"
-              aria-label="Maximum price"
-              [placeholder]="facets() ? '' + facets()!.priceMax : 'Max'"
-              [value]="filters().maxPrice ?? ''"
-              (change)="setPriceRange(minPriceInput.value, maxPriceInput.value)"
-            />
-          </div>
-        </div>
-
-        <div class="filter-field">
-          <span class="filter-label">Rating</span>
-          <div class="pill-group">
-            @for (option of ratingOptions; track option.label) {
-              <button
-                type="button"
-                class="pill"
-                [class.is-active]="filters().minRating === option.value"
-                [attr.aria-pressed]="filters().minRating === option.value"
-                (click)="setMinRating(option.value)"
-              >
-                {{ option.label }}
-              </button>
-            }
-          </div>
-        </div>
-
-        <div class="filter-field">
-          <span class="filter-label">Offers</span>
-          <div class="pill-group">
-            <button
-              type="button"
-              class="pill"
-              [class.is-active]="filters().onSale"
-              [attr.aria-pressed]="filters().onSale"
-              (click)="toggleOnSale()"
-            >
-              On sale
-              @if (facets(); as f) {
-                ({{ f.onSaleCount }})
-              }
-            </button>
-            @for (badge of facets()?.badges ?? []; track badge.name) {
-              <button
-                type="button"
-                class="pill"
-                [class.is-active]="filters().badge === badge.name"
-                [attr.aria-pressed]="filters().badge === badge.name"
-                (click)="toggleBadge(badge.name)"
-              >
-                {{ badge.name }} ({{ badge.count }})
-              </button>
-            }
-          </div>
-        </div>
-      </div>
-
-      @if (activeFilters().length > 0) {
-        <div class="active-filters" aria-label="Active filters">
-          @for (chip of activeFilters(); track chip.key) {
-            <button
-              type="button"
-              class="active-chip"
-              (click)="removeFilter(chip.key)"
-              [attr.aria-label]="'Remove filter ' + chip.label"
-            >
-              {{ chip.label }} <fa-icon [icon]="icons.xmark" aria-hidden="true" />
-            </button>
-          }
-          <button type="button" class="link-btn" (click)="clearFilters()">Clear all</button>
-        </div>
-      }
-
-      <div #results class="results" [class.is-loading]="isLoading()" [attr.aria-busy]="isLoading()">
-        @if (loadError()) {
-          <p class="state-row error">Couldn't load products. Is products-service running?</p>
-        } @else if (products().length === 0 && isLoading()) {
-          <div class="product-list" aria-hidden="true">
-            @for (slot of skeletonSlots(); track slot) {
-              <app-product-card-skeleton [index]="slot" />
-            }
-          </div>
-        } @else if (products().length === 0) {
-          <div class="state-row empty">
-            <p>No products match your {{ activeFilters().length > 0 ? 'filters' : 'search' }}.</p>
-            @if (activeFilters().length > 0) {
-              <button type="button" class="link-btn" (click)="clearFilters()">Clear filters</button>
-            }
-          </div>
-        } @else {
-          <div class="product-list">
-            @if (isLoading()) {
-              @for (slot of skeletonSlots(); track slot) {
-                <app-product-card-skeleton [index]="slot" aria-hidden="true" />
-              }
-            } @else {
-              @for (product of products(); track product.id) {
-                <article
-                  class="product-row"
-                  [class.is-promo]="!!promoBadge(product.badge)"
-                  [class.is-sale]="product.badge === 'Sale'"
-                  [class.is-bestseller]="product.badge === 'Bestseller'"
-                >
-                  <a
-                    class="row-link"
-                    [routerLink]="['/products', product.id]"
-                    [attr.aria-label]="'View details for ' + product.name"
-                  ></a>
-
-                  <div class="row-thumb" [style.background]="product.accent">
-                    @if (product.badge && !promoBadge(product.badge)) {
-                      <span class="tag">{{ product.badge }}</span>
-                    }
-                  </div>
-
-                  <div class="row-info">
-                    <h3 class="name">{{ product.name }}</h3>
-
-                    <div class="price-rating">
-                      <span class="price">${{ product.price }}</span>
-                      @if (product.originalPrice) {
-                        <span class="price-original">${{ product.originalPrice }}</span>
-                      }
-
-                      <div
-                        class="rating"
-                        [attr.aria-label]="
-                          product.rating + ' out of 5 stars, ' + product.reviews + ' reviews'
-                        "
-                      >
-                        @for (star of stars(product.rating); track $index) {
-                          <fa-icon
-                            [icon]="icons.star"
-                            [class.is-full]="star === 'full'"
-                            aria-hidden="true"
-                          />
-                        }
-                        <span class="reviews">({{ product.reviews }})</span>
-                      </div>
-                    </div>
-
-                    <div class="row-meta">
-                      <span class="category-label">{{ product.category }}</span>
-                      <span class="stock">{{ product.stock }} left in stock</span>
-                    </div>
-                  </div>
-
-                  <div class="row-side">
-                    @if (promoBadge(product.badge); as promo) {
-                      <span class="tag">{{ promo.label }}</span>
-                    }
-
-                    <p class="description">{{ shortDescription(product) }}</p>
-
-                    <div class="row-actions">
-                      <button type="button" class="add-to-cart" (click)="addToCart()">
-                        Add to cart
-                      </button>
-
-                      <button
-                        type="button"
-                        class="icon-action"
-                        aria-label="Share product"
-                        (click)="shareProduct(product)"
-                      >
-                        <fa-icon [icon]="icons.share" aria-hidden="true" />
-                      </button>
-
-                      <button
-                        type="button"
-                        class="icon-action"
-                        [class.is-active]="isWishlisted(product.id)"
-                        [attr.aria-pressed]="isWishlisted(product.id)"
-                        [attr.aria-label]="
-                          isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'
-                        "
-                        (click)="toggleWishlist(product.id)"
-                      >
-                        <fa-icon
-                          [icon]="isWishlisted(product.id) ? icons.heartSolid : icons.heartRegular"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              }
-            }
-          </div>
-
-          @if (totalPages() > 1) {
-            <nav class="pagination" aria-label="Product pages">
-              <button type="button" (click)="goToPreviousPage()" [disabled]="currentPage() === 1">
-                Previous
-              </button>
-
-              @for (page of pageNumbers(); track page) {
+      <div class="listing-body">
+        <aside class="sidebar">
+        <div class="sidebar-scroll">
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Categories</h3>
+            <nav class="category-list" aria-label="Product categories">
+              @for (category of categoryNames(); track category) {
                 <button
                   type="button"
-                  class="page-number"
-                  [class.is-active]="page === currentPage()"
-                  [attr.aria-current]="page === currentPage() ? 'page' : null"
-                  (click)="goToPage(page)"
+                  class="category-item"
+                  [class.is-active]="activeCategory() === category"
+                  (click)="selectCategory(category)"
                 >
-                  {{ page }}
+                  <span>{{ category }}</span>
+                  <span class="count">{{ categoryCount(category) }}</span>
                 </button>
               }
+            </nav>
+          </div>
 
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Sort by</h3>
+            <select
+              class="sidebar-select"
+              [value]="filters().sort"
+              (change)="setSort($any($event.target).value)"
+            >
+              @for (option of sortOptions; track option.value) {
+                <option [value]="option.value" [selected]="filters().sort === option.value">
+                  {{ option.label }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Price ($)</h3>
+            <div class="price-inputs">
+              <input
+                #minPriceInput
+                type="number"
+                min="0"
+                inputmode="decimal"
+                aria-label="Minimum price"
+                [placeholder]="facets() ? '' + facets()!.priceMin : 'Min'"
+                [value]="filters().minPrice ?? ''"
+                (change)="setPriceRange(minPriceInput.value, maxPriceInput.value)"
+              />
+              <span aria-hidden="true">–</span>
+              <input
+                #maxPriceInput
+                type="number"
+                min="0"
+                inputmode="decimal"
+                aria-label="Maximum price"
+                [placeholder]="facets() ? '' + facets()!.priceMax : 'Max'"
+                [value]="filters().maxPrice ?? ''"
+                (change)="setPriceRange(minPriceInput.value, maxPriceInput.value)"
+              />
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Rating</h3>
+            <div class="check-list">
+              @for (option of ratingOptions; track option.label) {
+                <button
+                  type="button"
+                  class="check-item"
+                  [class.is-active]="filters().minRating === option.value"
+                  [attr.aria-pressed]="filters().minRating === option.value"
+                  (click)="setMinRating(option.value)"
+                >
+                  <span class="checkbox" aria-hidden="true"></span>
+                  <span>{{ option.label }}</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">Offers</h3>
+            <div class="check-list">
               <button
                 type="button"
-                (click)="goToNextPage()"
-                [disabled]="currentPage() === totalPages()"
+                class="check-item"
+                [class.is-active]="filters().onSale"
+                [attr.aria-pressed]="filters().onSale"
+                (click)="toggleOnSale()"
               >
-                Next
+                <span class="checkbox" aria-hidden="true"></span>
+                <span>On sale</span>
+                @if (facets(); as f) {
+                  <span class="count">{{ f.onSaleCount }}</span>
+                }
               </button>
-            </nav>
+              @for (badge of facets()?.badges ?? []; track badge.name) {
+                <button
+                  type="button"
+                  class="check-item"
+                  [class.is-active]="filters().badge === badge.name"
+                  [attr.aria-pressed]="filters().badge === badge.name"
+                  (click)="toggleBadge(badge.name)"
+                >
+                  <span class="checkbox" aria-hidden="true"></span>
+                  <span>{{ badge.name }}</span>
+                  <span class="count">{{ badge.count }}</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (activeFilters().length > 0) {
+            <button type="button" class="link-btn clear-all" (click)="clearFilters()">
+              Clear all filters
+            </button>
           }
-        }
+        </div>
+        </aside>
+
+        <div class="listing-main">
+          @if (activeFilters().length > 0) {
+            <div class="active-filters" aria-label="Active filters">
+              @for (chip of activeFilters(); track chip.key) {
+                <button
+                  type="button"
+                  class="active-chip"
+                  (click)="removeFilter(chip.key)"
+                  [attr.aria-label]="'Remove filter ' + chip.label"
+                >
+                  {{ chip.label }} <fa-icon [icon]="icons.xmark" aria-hidden="true" />
+                </button>
+              }
+            </div>
+          }
+
+          <div
+            #results
+            class="results"
+            [class.is-loading]="isLoading()"
+            [attr.aria-busy]="isLoading()"
+          >
+            @if (loadError()) {
+              <p class="state-row error">Couldn't load products. Is products-service running?</p>
+            } @else if (products().length === 0 && isLoading()) {
+              <div class="product-list" aria-hidden="true">
+                @for (slot of skeletonSlots(); track slot) {
+                  <app-product-card-skeleton [index]="slot" />
+                }
+              </div>
+            } @else if (products().length === 0) {
+              <div class="state-row empty">
+                <p>No products match your {{ activeFilters().length > 0 ? 'filters' : 'search' }}.</p>
+                @if (activeFilters().length > 0) {
+                  <button type="button" class="link-btn" (click)="clearFilters()">
+                    Clear filters
+                  </button>
+                }
+              </div>
+            } @else {
+              <div class="product-list">
+                @if (isLoading()) {
+                  @for (slot of skeletonSlots(); track slot) {
+                    <app-product-card-skeleton [index]="slot" aria-hidden="true" />
+                  }
+                } @else {
+                  @for (product of products(); track product.id) {
+                    <article
+                      class="product-row"
+                      [class.is-promo]="!!promoBadge(product.badge)"
+                      [class.is-sale]="product.badge === 'Sale'"
+                      [class.is-bestseller]="product.badge === 'Bestseller'"
+                    >
+                      <a
+                        class="row-link"
+                        [routerLink]="['/products', product.id]"
+                        [attr.aria-label]="'View details for ' + product.name"
+                      ></a>
+
+                      <div class="row-thumb" [style.background]="product.accent">
+                        @if (product.badge && !promoBadge(product.badge)) {
+                          <span class="tag">{{ product.badge }}</span>
+                        }
+                      </div>
+
+                      <div class="row-info">
+                        <h3 class="name">{{ product.name }}</h3>
+
+                        <div class="price-rating">
+                          <span class="price">${{ product.price }}</span>
+                          @if (product.originalPrice) {
+                            <span class="price-original">${{ product.originalPrice }}</span>
+                          }
+
+                          <div
+                            class="rating"
+                            [attr.aria-label]="
+                              product.rating + ' out of 5 stars, ' + product.reviews + ' reviews'
+                            "
+                          >
+                            @for (star of stars(product.rating); track $index) {
+                              <fa-icon
+                                [icon]="icons.star"
+                                [class.is-full]="star === 'full'"
+                                aria-hidden="true"
+                              />
+                            }
+                            <span class="reviews">({{ product.reviews }})</span>
+                          </div>
+                        </div>
+
+                        <div class="row-meta">
+                          <span class="category-label">{{ product.category }}</span>
+                          <span class="stock">{{ product.stock }} left in stock</span>
+                        </div>
+                      </div>
+
+                      <div class="row-side">
+                        @if (promoBadge(product.badge); as promo) {
+                          <span class="tag">{{ promo.label }}</span>
+                        }
+
+                        <p class="description">{{ shortDescription(product) }}</p>
+
+                        <div class="row-actions">
+                          <button type="button" class="add-to-cart" (click)="addToCart()">
+                            Add to cart
+                          </button>
+
+                          <button
+                            type="button"
+                            class="icon-action"
+                            aria-label="Share product"
+                            (click)="shareProduct(product)"
+                          >
+                            <fa-icon [icon]="icons.share" aria-hidden="true" />
+                          </button>
+
+                          <button
+                            type="button"
+                            class="icon-action"
+                            [class.is-active]="isWishlisted(product.id)"
+                            [attr.aria-pressed]="isWishlisted(product.id)"
+                            [attr.aria-label]="
+                              isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'
+                            "
+                            (click)="toggleWishlist(product.id)"
+                          >
+                            <fa-icon
+                              [icon]="
+                                isWishlisted(product.id) ? icons.heartSolid : icons.heartRegular
+                              "
+                              aria-hidden="true"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  }
+                }
+              </div>
+
+              @if (totalPages() > 1) {
+                <nav class="pagination" aria-label="Product pages">
+                  <button
+                    type="button"
+                    (click)="goToPreviousPage()"
+                    [disabled]="currentPage() === 1"
+                  >
+                    Previous
+                  </button>
+
+                  @for (page of pageNumbers(); track page) {
+                    <button
+                      type="button"
+                      class="page-number"
+                      [class.is-active]="page === currentPage()"
+                      [attr.aria-current]="page === currentPage() ? 'page' : null"
+                      (click)="goToPage(page)"
+                    >
+                      {{ page }}
+                    </button>
+                  }
+
+                  <button
+                    type="button"
+                    (click)="goToNextPage()"
+                    [disabled]="currentPage() === totalPages()"
+                  >
+                    Next
+                  </button>
+                </nav>
+              }
+            }
+          </div>
+        </div>
       </div>
     </section>
   }
