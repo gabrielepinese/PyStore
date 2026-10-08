@@ -74,7 +74,7 @@ def test_filter_by_min_rating(client):
 def test_filter_on_sale(client):
     r = client.get("/api/v1/products", params={"onSale": "true"})
     body = r.json()
-    assert body["total"] == 3
+    assert body["total"] == 6
     assert all(item["originalPrice"] > item["price"] for item in body["items"])
 
 
@@ -94,8 +94,9 @@ def test_sort_price_ascending_and_descending(client):
 
 def test_sort_by_discount_puts_biggest_discount_first(client):
     items = client.get("/api/v1/products", params={"sort": "discount"}).json()["items"]
-    # p3: 129/159 → ~18.9% off; p7: 24/30 → 20% off; p1: 38/48 → ~20.8% off
-    assert items[0]["id"] == "p1"
+    # p11: 19/25 → 24% off (biggest); p1: 38/48 → ~20.8%; p7: 24/30 → 20%;
+    # p9: 42/52 → ~19.2%; p3: 129/159 → ~18.9%; p6: 118/139 → ~15.1%
+    assert items[0]["id"] == "p11"
     assert items[-1]["originalPrice"] is None
 
 
