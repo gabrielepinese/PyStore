@@ -1,4 +1,4 @@
-# dumbECommerce
+# PyStore
 
 Mock ecommerce built for a portfolio. Angular frontend, Python
 microservices backend. Currently scaffolded: login/registration + JWT

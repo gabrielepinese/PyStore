@@ -1,6 +1,6 @@
 # backend
 
-Microservices backend for the dumbECommerce portfolio project. Each service
+Microservices backend for the PyStore portfolio project. Each service
 under `services/` is an independent FastAPI app with its own dependencies,
 database, and Dockerfile — no shared code or shared DB between them.
 
