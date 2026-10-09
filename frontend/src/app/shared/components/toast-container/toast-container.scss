@@ -1,0 +1,139 @@
+:host {
+  display: contents;
+  font-family: system-ui, sans-serif;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(26, 26, 26, 0.4);
+  animation: backdrop-in 0.15s ease;
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  position: relative;
+  width: min(360px, 100%);
+  padding: 20px 32px 18px 20px;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.12);
+  overflow: hidden;
+  text-align: left;
+  animation: modal-in 0.2s ease;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1a1a1a;
+}
+
+.modal-description {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #6b6c6e;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: #6b6c6e;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background: #ece4df;
+    color: #1a1a1a;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #735f58;
+    outline-offset: 1px;
+  }
+}
+
+.modal-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #735f58;
+  transform-origin: left;
+  animation-name: modal-shrink;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes modal-shrink {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+.modal--success .modal-progress {
+  background: #3f3330;
+}
+
+.modal--error .modal-progress {
+  background: #8b1a0a;
+}
+
+.modal--info .modal-progress {
+  background: #735f58;
+}

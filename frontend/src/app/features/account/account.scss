@@ -268,6 +268,107 @@ form {
   gap: 16px;
 }
 
+.field .label-optional {
+  font-weight: 400;
+  color: #b3b4b8;
+}
+
+.phone-field {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  min-height: 42px;
+  border: 1px solid #b3b4b8;
+  border-radius: 2px;
+  background: #fff;
+  transition: border-color 0.15s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 64px;
+    width: 1px;
+    background: #e4e2e0;
+  }
+
+  &:hover {
+    border-color: #735f58;
+  }
+
+  &:focus-within {
+    border-color: #735f58;
+    outline: 3px solid #735f58;
+    outline-offset: 1px;
+  }
+}
+
+// Higher specificity than the generic `.field input, select` rule above —
+// this lives inside `.field` too, and needs to override its border/background/sizing.
+.field .phone-number {
+  flex: 1 1 auto;
+  width: auto;
+  min-height: auto;
+  padding: 0.6rem 0.7rem 0.6rem 0.75rem;
+  border: none;
+  background: transparent;
+  outline: none;
+
+  &:hover {
+    border-color: transparent;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.phone-prefix-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: 64px;
+  background: #f6f2ef;
+}
+
+.field .phone-prefix {
+  width: 100%;
+  height: 100%;
+  min-height: auto;
+  padding: 0.6rem 1.3rem 0.6rem 0.65rem;
+  border: none;
+  color: #5a4842;
+  font-weight: 600;
+  text-align: left;
+  appearance: none;
+  cursor: pointer;
+
+  &:hover {
+    border-color: transparent;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.phone-prefix-chevron {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  color: #b3b4b8;
+  font-size: 0.6rem;
+  pointer-events: none;
+}
+
+.field-hint {
+  margin: 2px 0 0;
+  color: #6b6c6e;
+  font-size: 0.75rem;
+}
+
 .field-error {
   margin: 0;
   color: #8b1a0a;
@@ -313,6 +414,10 @@ form {
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 128px;
   padding: 0.65rem 1.4rem;
   border: 1px solid #735f58;
   border-radius: 2px;
@@ -384,12 +489,11 @@ form {
     outline-offset: 2px;
     border-radius: 2px;
   }
-}
 
-.saved-hint {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #2e7d4f;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 // ---- address / card entity cards ----

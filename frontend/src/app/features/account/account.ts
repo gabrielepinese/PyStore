@@ -2,6 +2,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faAngleLeft,
   faBoxOpen,
+  faChevronDown,
   faCreditCard,
   faLocationDot,
   faPen,
@@ -19,6 +20,10 @@ import { Address } from '../../core/models/address.model';
 import { PaymentMethod } from '../../core/models/payment-method.model';
 import { DotLoader } from '../../shared/components/dot-loader/dot-loader';
 import { Topbar } from '../../shared/components/topbar/topbar';
+import { ToastService } from '../../shared/services/toast.service';
+import { COUNTRIES, ITALIAN_CITIES } from '../../shared/data/italy';
+import { DEFAULT_PHONE_PREFIX, PHONE_PREFIXES } from '../../shared/data/phone-prefixes';
+import { joinPhone, PHONE_NUMBER_PATTERN, POSTAL_CODE_PATTERN, splitPhone } from '../../shared/utils/phone';
 
 type Section = 'profile' | 'addresses' | 'payment' | 'orders';
 
@@ -34,6 +39,7 @@ export class Account {
   protected readonly icons = {
     angleLeft: faAngleLeft,
     boxOpen: faBoxOpen,
+    chevronDown: faChevronDown,
     card: faCreditCard,
     location: faLocationDot,
     pen: faPen,
@@ -45,11 +51,15 @@ export class Account {
 
   protected readonly cardYears = Array.from({ length: 16 }, (_, i) => CURRENT_YEAR + i);
   protected readonly cardMonths = Array.from({ length: 12 }, (_, i) => i + 1);
+  protected readonly phonePrefixes = PHONE_PREFIXES;
+  protected readonly cities = ITALIAN_CITIES;
+  protected readonly countries = COUNTRIES;
 
   protected readonly authService = inject(AuthService);
   private readonly accountService = inject(AccountService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
 
   protected readonly section = signal<Section>('profile');
 
@@ -57,14 +67,15 @@ export class Account {
 
   protected readonly profileForm = this.fb.nonNullable.group({
     fullName: ['', [Validators.required, Validators.minLength(2)]],
-    phone: [''],
+    phonePrefix: [DEFAULT_PHONE_PREFIX],
+    phoneNumber: ['', Validators.pattern(PHONE_NUMBER_PATTERN)],
   });
   protected readonly savingProfile = signal(false);
-  protected readonly profileSaved = signal(false);
 
   constructor() {
     const user = this.authService.currentUser();
-    this.profileForm.setValue({ fullName: user?.fullName ?? '', phone: user?.phone ?? '' });
+    const { prefix, number } = splitPhone(user?.phone ?? null);
+    this.profileForm.setValue({ fullName: user?.fullName ?? '', phonePrefix: prefix, phoneNumber: number });
 
     this.loadAddresses();
     this.loadPaymentMethods();
@@ -81,15 +92,17 @@ export class Account {
     }
 
     this.savingProfile.set(true);
-    this.profileSaved.set(false);
 
-    const { fullName, phone } = this.profileForm.getRawValue();
-    this.authService.updateProfile({ fullName, phone: phone.trim() || null }).subscribe({
+    const { fullName, phonePrefix, phoneNumber } = this.profileForm.getRawValue();
+    this.authService.updateProfile({ fullName, phone: joinPhone(phonePrefix, phoneNumber) }).subscribe({
       next: () => {
         this.savingProfile.set(false);
-        this.profileSaved.set(true);
+        this.toastService.show('Profile updated.', 'success');
       },
-      error: () => this.savingProfile.set(false),
+      error: () => {
+        this.savingProfile.set(false);
+        this.toastService.show('Could not update profile. Try again.', 'error');
+      },
     });
   }
 
@@ -104,12 +117,13 @@ export class Account {
   protected readonly addressForm = this.fb.nonNullable.group({
     label: ['', Validators.required],
     fullName: ['', [Validators.required, Validators.minLength(2)]],
-    phone: [''],
+    phonePrefix: [DEFAULT_PHONE_PREFIX],
+    phoneNumber: ['', Validators.pattern(PHONE_NUMBER_PATTERN)],
     line1: ['', Validators.required],
     line2: [''],
     city: ['', Validators.required],
-    postalCode: ['', Validators.required],
-    country: ['', Validators.required],
+    postalCode: ['', [Validators.required, Validators.pattern(POSTAL_CODE_PATTERN)]],
+    country: [COUNTRIES[0], Validators.required],
     isDefault: [false],
   });
 
@@ -129,12 +143,13 @@ export class Account {
     this.addressForm.reset({
       label: '',
       fullName: '',
-      phone: '',
+      phonePrefix: DEFAULT_PHONE_PREFIX,
+      phoneNumber: '',
       line1: '',
       line2: '',
       city: '',
       postalCode: '',
-      country: '',
+      country: COUNTRIES[0],
       isDefault: this.addresses().length === 0,
     });
     this.addressFormOpen.set(true);
@@ -142,10 +157,12 @@ export class Account {
 
   protected editAddress(address: Address): void {
     this.editingAddressId.set(address.id);
+    const { prefix, number } = splitPhone(address.phone);
     this.addressForm.setValue({
       label: address.label,
       fullName: address.fullName,
-      phone: address.phone ?? '',
+      phonePrefix: prefix,
+      phoneNumber: number,
       line1: address.line1,
       line2: address.line2 ?? '',
       city: address.city,
@@ -168,9 +185,10 @@ export class Account {
 
     this.savingAddress.set(true);
     const raw = this.addressForm.getRawValue();
+    const { phonePrefix, phoneNumber, ...rest } = raw;
     const data = {
-      ...raw,
-      phone: raw.phone.trim() || null,
+      ...rest,
+      phone: joinPhone(phonePrefix, phoneNumber),
       line2: raw.line2.trim() || null,
     };
     const id = this.editingAddressId();
@@ -178,18 +196,29 @@ export class Account {
       ? this.accountService.updateAddress(id, data)
       : this.accountService.createAddress(data);
 
+    const isEditing = !!id;
     request.subscribe({
       next: () => {
         this.savingAddress.set(false);
         this.addressFormOpen.set(false);
         this.loadAddresses();
+        this.toastService.show(isEditing ? 'Address updated.' : 'Address added.', 'success');
       },
-      error: () => this.savingAddress.set(false),
+      error: () => {
+        this.savingAddress.set(false);
+        this.toastService.show('Could not save this address. Try again.', 'error');
+      },
     });
   }
 
   protected deleteAddress(id: string): void {
-    this.accountService.deleteAddress(id).subscribe({ next: () => this.loadAddresses() });
+    this.accountService.deleteAddress(id).subscribe({
+      next: () => {
+        this.loadAddresses();
+        this.toastService.show('Address removed.', 'success');
+      },
+      error: () => this.toastService.show('Could not remove this address. Try again.', 'error'),
+    });
   }
 
   // ---- payment methods ----
@@ -249,20 +278,34 @@ export class Account {
         this.savingCard.set(false);
         this.cardFormOpen.set(false);
         this.loadPaymentMethods();
+        this.toastService.show('Card added.', 'success');
       },
       error: () => {
         this.savingCard.set(false);
         this.cardError.set('Could not save this card — double-check the details and try again.');
+        this.toastService.show('Could not save this card. Try again.', 'error');
       },
     });
   }
 
   protected setDefaultCard(id: string): void {
-    this.accountService.setDefaultPaymentMethod(id).subscribe({ next: () => this.loadPaymentMethods() });
+    this.accountService.setDefaultPaymentMethod(id).subscribe({
+      next: () => {
+        this.loadPaymentMethods();
+        this.toastService.show('Default payment method updated.', 'success');
+      },
+      error: () => this.toastService.show('Could not update default payment method. Try again.', 'error'),
+    });
   }
 
   protected deleteCard(id: string): void {
-    this.accountService.deletePaymentMethod(id).subscribe({ next: () => this.loadPaymentMethods() });
+    this.accountService.deletePaymentMethod(id).subscribe({
+      next: () => {
+        this.loadPaymentMethods();
+        this.toastService.show('Card removed.', 'success');
+      },
+      error: () => this.toastService.show('Could not remove this card. Try again.', 'error'),
+    });
   }
 
   // ---- nav ----

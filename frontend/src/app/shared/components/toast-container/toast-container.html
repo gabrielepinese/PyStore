@@ -1,0 +1,21 @@
+@if (toastService.toasts().at(0); as toast) {
+  <div class="modal-backdrop">
+    <div class="modal" [class]="'modal--' + toast.type" role="alertdialog" aria-live="assertive">
+      <div class="modal-body">
+        <p class="modal-title">{{ toast.message }}</p>
+        <p class="modal-description">{{ toast.description }}</p>
+      </div>
+
+      <button
+        type="button"
+        class="modal-close"
+        (click)="dismiss(toast.id)"
+        aria-label="Dismiss notification"
+      >
+        <fa-icon [icon]="icons.close" aria-hidden="true" />
+      </button>
+
+      <span class="modal-progress" [style.animation-duration.ms]="toast.duration"></span>
+    </div>
+  </div>
+}

@@ -103,19 +103,46 @@
             </div>
 
             <div class="field">
-              <label for="phone">Phone number</label>
-              <input id="phone" type="tel" formControlName="phone" autocomplete="tel" placeholder="Optional" />
+              <label for="phone">Phone number <span class="label-optional">(optional)</span></label>
+              <div class="phone-field">
+                <span class="phone-prefix-wrap">
+                  <select class="phone-prefix" formControlName="phonePrefix" aria-label="Phone prefix">
+                    @for (p of phonePrefixes; track p.code) {
+                      <option [ngValue]="p.code">{{ p.code }}</option>
+                    }
+                  </select>
+                  <fa-icon class="phone-prefix-chevron" [icon]="icons.chevronDown" aria-hidden="true" />
+                </span>
+                <input
+                  id="phone"
+                  class="phone-number"
+                  type="tel"
+                  formControlName="phoneNumber"
+                  autocomplete="tel"
+                  placeholder="3xx xxx xxxx"
+                  [attr.aria-invalid]="
+                    profileForm.controls.phoneNumber.invalid && profileForm.controls.phoneNumber.touched
+                  "
+                />
+              </div>
+              <p
+                class="field-error"
+                [class.is-visible]="
+                  profileForm.controls.phoneNumber.invalid && profileForm.controls.phoneNumber.touched
+                "
+              >
+                Enter a valid phone number (6-12 digits).
+              </p>
             </div>
 
             <div class="form-actions">
               <button type="submit" class="btn-primary" [disabled]="savingProfile()">
-                Save changes
+                @if (savingProfile()) {
+                  <app-dot-loader />
+                } @else {
+                  Save changes
+                }
               </button>
-              @if (savingProfile()) {
-                <app-dot-loader />
-              } @else if (profileSaved()) {
-                <span class="saved-hint">Saved</span>
-              }
             </div>
           </form>
         </section>
@@ -145,8 +172,35 @@
               </div>
 
               <div class="field">
-                <label for="addr-phone">Phone</label>
-                <input id="addr-phone" type="tel" formControlName="phone" placeholder="Optional" />
+                <label for="addr-phone">Phone <span class="label-optional">(optional)</span></label>
+                <div class="phone-field">
+                  <span class="phone-prefix-wrap">
+                    <select class="phone-prefix" formControlName="phonePrefix" aria-label="Phone prefix">
+                      @for (p of phonePrefixes; track p.code) {
+                        <option [ngValue]="p.code">{{ p.code }}</option>
+                      }
+                    </select>
+                    <fa-icon class="phone-prefix-chevron" [icon]="icons.chevronDown" aria-hidden="true" />
+                  </span>
+                  <input
+                    id="addr-phone"
+                    class="phone-number"
+                    type="tel"
+                    formControlName="phoneNumber"
+                    placeholder="3xx xxx xxxx"
+                    [attr.aria-invalid]="
+                      addressForm.controls.phoneNumber.invalid && addressForm.controls.phoneNumber.touched
+                    "
+                  />
+                </div>
+                <p
+                  class="field-error"
+                  [class.is-visible]="
+                    addressForm.controls.phoneNumber.invalid && addressForm.controls.phoneNumber.touched
+                  "
+                >
+                  Enter a valid phone number (6-12 digits).
+                </p>
               </div>
 
               <div class="field">
@@ -162,17 +216,55 @@
               <div class="field-row">
                 <div class="field">
                   <label for="addr-city">City</label>
-                  <input id="addr-city" type="text" formControlName="city" />
+                  <select
+                    id="addr-city"
+                    formControlName="city"
+                    [attr.aria-invalid]="addressForm.controls.city.invalid && addressForm.controls.city.touched"
+                  >
+                    <option value="" disabled>Select a city</option>
+                    @for (c of cities; track c) {
+                      <option [ngValue]="c">{{ c }}</option>
+                    }
+                  </select>
+                  <p
+                    class="field-error"
+                    [class.is-visible]="addressForm.controls.city.invalid && addressForm.controls.city.touched"
+                  >
+                    Select a city.
+                  </p>
                 </div>
                 <div class="field">
                   <label for="addr-postal">Postal code</label>
-                  <input id="addr-postal" type="text" formControlName="postalCode" />
+                  <input
+                    id="addr-postal"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="5"
+                    formControlName="postalCode"
+                    placeholder="00100"
+                    [attr.aria-invalid]="
+                      addressForm.controls.postalCode.invalid && addressForm.controls.postalCode.touched
+                    "
+                  />
+                  <p
+                    class="field-error"
+                    [class.is-visible]="
+                      addressForm.controls.postalCode.invalid && addressForm.controls.postalCode.touched
+                    "
+                  >
+                    Enter a valid 5-digit postal code.
+                  </p>
                 </div>
               </div>
 
               <div class="field">
                 <label for="addr-country">Country</label>
-                <input id="addr-country" type="text" formControlName="country" />
+                <select id="addr-country" formControlName="country">
+                  @for (c of countries; track c) {
+                    <option [ngValue]="c">{{ c }}</option>
+                  }
+                </select>
+                <p class="field-hint">Shipping is only available in Italy for now.</p>
               </div>
 
               <label class="checkbox-field">
@@ -182,12 +274,15 @@
 
               <div class="form-actions">
                 <button type="submit" class="btn-primary" [disabled]="savingAddress()">
-                  {{ editingAddressId() ? 'Save address' : 'Add address' }}
+                  @if (savingAddress()) {
+                    <app-dot-loader />
+                  } @else {
+                    {{ editingAddressId() ? 'Save address' : 'Add address' }}
+                  }
                 </button>
-                <button type="button" class="btn-text" (click)="cancelAddressForm()">Cancel</button>
-                @if (savingAddress()) {
-                  <app-dot-loader />
-                }
+                <button type="button" class="btn-text" (click)="cancelAddressForm()" [disabled]="savingAddress()">
+                  Cancel
+                </button>
               </div>
             </form>
           }
@@ -297,11 +392,16 @@
               <p class="form-error" [class.is-visible]="!!cardError()">{{ cardError() }}</p>
 
               <div class="form-actions">
-                <button type="submit" class="btn-primary" [disabled]="savingCard()">Add card</button>
-                <button type="button" class="btn-text" (click)="cancelCardForm()">Cancel</button>
-                @if (savingCard()) {
-                  <app-dot-loader />
-                }
+                <button type="submit" class="btn-primary" [disabled]="savingCard()">
+                  @if (savingCard()) {
+                    <app-dot-loader />
+                  } @else {
+                    Add card
+                  }
+                </button>
+                <button type="button" class="btn-text" (click)="cancelCardForm()" [disabled]="savingCard()">
+                  Cancel
+                </button>
               </div>
             </form>
           }
