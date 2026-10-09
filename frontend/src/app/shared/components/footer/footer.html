@@ -2,29 +2,31 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <p class="brand-name">PyStore</p>
-      <p class="brand-tag">A small demo storefront — browse, filter, and check out products across a handful of categories.</p>
+      <p class="brand-tag">{{ 'footer.tagline' | transloco }}</p>
     </div>
 
-    <nav class="footer-col" aria-label="Shop">
-      <h3>Shop</h3>
-      <a routerLink="/dashboard">All products</a>
+    <nav class="footer-col" [attr.aria-label]="'footer.shopHeading' | transloco">
+      <h3>{{ 'footer.shopHeading' | transloco }}</h3>
+      <a routerLink="/dashboard">{{ 'footer.allProducts' | transloco }}</a>
       @for (category of categories(); track category) {
         <a routerLink="/dashboard" [queryParams]="{ category }">{{ category }}</a>
       }
     </nav>
 
-    <nav class="footer-col" aria-label="Account">
-      <h3>Account</h3>
+    <nav class="footer-col" [attr.aria-label]="'footer.accountHeading' | transloco">
+      <h3>{{ 'footer.accountHeading' | transloco }}</h3>
       @if (authService.isAuthenticated()) {
-        <button type="button" class="link-btn" (click)="authService.logout()">Sign out</button>
+        <button type="button" class="link-btn" (click)="authService.logout()">
+          {{ 'common.signOut' | transloco }}
+        </button>
       } @else {
-        <a routerLink="/login">Sign in</a>
-        <a routerLink="/register">Create account</a>
+        <a routerLink="/login">{{ 'common.signIn' | transloco }}</a>
+        <a routerLink="/register">{{ 'common.createAccount' | transloco }}</a>
       }
     </nav>
   </div>
 
   <div class="footer-bottom">
-    <p>© {{ year }} PyStore — demo project, not a real store.</p>
+    <p>{{ 'footer.copyright' | transloco: { year } }}</p>
   </div>
 </footer>

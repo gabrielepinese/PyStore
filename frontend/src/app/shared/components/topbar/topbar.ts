@@ -2,12 +2,14 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../../core/auth/auth.service';
 import { CartService } from '../../../core/cart/cart.service';
+import { LANG_STORAGE_KEY } from '../../../core/i18n/lang.constants';
 
 @Component({
   selector: 'app-topbar',
-  imports: [RouterLink, FaIconComponent],
+  imports: [RouterLink, FaIconComponent, TranslocoPipe],
   templateUrl: './topbar.html',
   styleUrl: './topbar.scss',
 })
@@ -19,7 +21,13 @@ export class Topbar {
 
   protected readonly authService = inject(AuthService);
   protected readonly cartService = inject(CartService);
+  protected readonly transloco = inject(TranslocoService);
   private readonly router = inject(Router);
+
+  protected setLang(lang: string): void {
+    this.transloco.setActiveLang(lang);
+    localStorage.setItem(LANG_STORAGE_KEY, lang);
+  }
 
   /** Lets the host page control the input (e.g. the dashboard's live filter); defaults to empty. */
   readonly searchValue = input('');

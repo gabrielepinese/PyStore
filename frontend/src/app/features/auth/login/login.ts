@@ -4,13 +4,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Button } from '../../../shared/components/button/button';
 import { DotLoader } from '../../../shared/components/dot-loader/dot-loader';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, Button, DotLoader, FaIconComponent],
+  imports: [ReactiveFormsModule, RouterLink, Button, DotLoader, FaIconComponent, TranslocoPipe],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -18,6 +19,7 @@ export class Login {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly transloco = inject(TranslocoService);
 
   protected readonly icons = { angleLeft: faAngleLeft, eye: faEye, eyeSlash: faEyeSlash };
 
@@ -51,7 +53,9 @@ export class Login {
       error: (err: HttpErrorResponse) => {
         this.isSubmitting.set(false);
         this.errorMessage.set(
-          err.status === 401 ? 'Invalid email or password.' : 'Login failed. Please try again.',
+          this.transloco.translate(
+            err.status === 401 ? 'auth.login.errorInvalidCredentials' : 'auth.login.errorGeneric',
+          ),
         );
       },
     });

@@ -7,17 +7,19 @@
 <div class="page">
   <section class="hero">
     <div class="hero-copy">
-      <p class="eyebrow">Good to see you</p>
+      <p class="eyebrow">{{ 'dashboard.goodToSeeYou' | transloco }}</p>
       <h1>
-        Welcome{{
-          authService.currentUser()?.fullName ? ', ' + authService.currentUser()?.fullName : ''
-        }}
+        @if (authService.currentUser()?.fullName; as name) {
+          {{ 'dashboard.welcomeNamed' | transloco: { name } }}
+        } @else {
+          {{ 'dashboard.welcome' | transloco }}
+        }
       </h1>
       <p class="subtitle">
         @if (authService.isAuthenticated()) {
-          Fresh picks curated from what you've been browsing.
+          {{ 'dashboard.subtitleAuth' | transloco }}
         } @else {
-          Browse the catalog freely — sign in to save favourites and fill your cart.
+          {{ 'dashboard.subtitleGuest' | transloco }}
         }
       </p>
     </div>
@@ -49,11 +51,16 @@
     <section class="overview">
       <div class="section-header section-header-row">
         <div>
-          <h2>Shop by category</h2>
-          <p>{{ totalProducts() }} products across {{ summaries().length }} categories</p>
+          <h2>{{ 'dashboard.shopByCategory' | transloco }}</h2>
+          <p>
+            {{
+              'dashboard.productsAcrossCategories'
+                | transloco: { count: totalProducts(), categories: summaries().length }
+            }}
+          </p>
         </div>
         <button type="button" class="link-btn" (click)="selectCategory('All')">
-          Browse everything <fa-icon [icon]="icons.angleRight" aria-hidden="true" />
+          {{ 'dashboard.browseEverything' | transloco }} <fa-icon [icon]="icons.angleRight" aria-hidden="true" />
         </button>
       </div>
 
@@ -62,7 +69,7 @@
           <app-dot-loader />
         </div>
       } @else if (categoriesError()) {
-        <p class="state-row error">Couldn't load categories. Is products-service running?</p>
+        <p class="state-row error">{{ 'dashboard.categoriesLoadError' | transloco }}</p>
       } @else {
         <div class="bento">
           @for (tile of tiles(); track tile.name) {
@@ -72,7 +79,9 @@
               [class]="'tile size-' + tile.size"
               [style.--tile-bg]="tile.background"
               [style.--tile-fg]="tile.foreground"
-              [attr.aria-label]="tile.name + ', ' + tile.productCount + ' products'"
+              [attr.aria-label]="
+                'dashboard.tileAriaLabel' | transloco: { name: tile.name, count: tile.productCount }
+              "
               (click)="selectCategory(tile.name)"
             >
               <span class="shapes" aria-hidden="true">
@@ -82,13 +91,13 @@
               </span>
 
               @if (tile.onSaleCount > 0) {
-                <span class="tile-flag">{{ tile.onSaleCount }} on sale</span>
+                <span class="tile-flag">{{ 'dashboard.onSale' | transloco: { count: tile.onSaleCount } }}</span>
               }
 
               <span class="tile-body">
                 <span class="tile-count"
                   >{{ tile.productCount }}
-                  {{ tile.productCount === 1 ? 'product' : 'products' }}</span
+                  {{ (tile.productCount === 1 ? 'common.product' : 'common.products') | transloco }}</span
                 >
                 <span class="tile-name">{{ tile.name }}</span>
                 <span class="tile-meta">
@@ -99,7 +108,7 @@
                   tile.featuredProduct &&
                   (tile.size === 'lg' || tile.size === 'full' || tile.size === 'tall')
                 ) {
-                  <span class="tile-featured">Featured: {{ tile.featuredProduct }}</span>
+                  <span class="tile-featured">{{ 'dashboard.featured' | transloco: { name: tile.featuredProduct } }}</span>
                 }
               </span>
 
@@ -113,15 +122,19 @@
     <section class="listing">
       <div class="listing-head">
         <button type="button" class="back-btn" (click)="goToOverview()">
-          <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> All categories
+          <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> {{ 'common.allCategories' | transloco }}
         </button>
         <div class="section-header">
-          <h2>{{ listTitle() }}</h2>
+          <h2>
+            {{
+              listTitle() ?? ((searchTerm() ? 'dashboard.searchResultsTitle' : 'dashboard.allProductsTitle') | transloco)
+            }}
+          </h2>
           <p>
             @if (searchTerm()) {
-              Results for "{{ searchTerm() }}" ·
+              {{ 'dashboard.resultsFor' | transloco: { term: searchTerm() } }} ·
             }
-            {{ total() }} {{ total() === 1 ? 'product' : 'products' }}
+            {{ total() }} {{ (total() === 1 ? 'common.product' : 'common.products') | transloco }}
           </p>
         </div>
       </div>
@@ -130,8 +143,8 @@
         <aside class="sidebar">
         <div class="sidebar-scroll">
           <div class="sidebar-section">
-            <h3 class="sidebar-title">Categories</h3>
-            <nav class="category-list" aria-label="Product categories">
+            <h3 class="sidebar-title">{{ 'dashboard.categoriesHeading' | transloco }}</h3>
+            <nav class="category-list" [attr.aria-label]="'dashboard.categoriesAriaLabel' | transloco">
               @for (category of categoryNames(); track category) {
                 <button
                   type="button"
@@ -147,7 +160,7 @@
           </div>
 
           <div class="sidebar-section">
-            <h3 class="sidebar-title">Sort by</h3>
+            <h3 class="sidebar-title">{{ 'dashboard.sortByHeading' | transloco }}</h3>
             <div class="select-dropdown">
               <button
                 type="button"
@@ -158,7 +171,7 @@
                 (click)="toggleSortMenu()"
                 (keydown.escape)="sortMenuOpen.set(false)"
               >
-                <span>{{ currentSortLabel() }}</span>
+                <span>{{ sortLabel(filters().sort) }}</span>
                 <fa-icon [icon]="icons.chevronDown" aria-hidden="true" />
               </button>
 
@@ -173,7 +186,7 @@
                         [class.is-active]="filters().sort === option.value"
                         (click)="selectSort(option.value)"
                       >
-                        {{ option.label }}
+                        {{ option.labelKey | transloco }}
                       </button>
                     </li>
                   }
@@ -183,7 +196,7 @@
           </div>
 
           <div class="sidebar-section">
-            <h3 class="sidebar-title">Price</h3>
+            <h3 class="sidebar-title">{{ 'dashboard.priceHeading' | transloco }}</h3>
             <div class="range-filter">
               <div class="range-values">
                 <span>${{ priceSliderMin() }}</span>
@@ -212,7 +225,7 @@
                   [min]="priceBounds().min"
                   [max]="priceBounds().max"
                   [value]="priceSliderMin()"
-                  aria-label="Minimum price"
+                  [attr.aria-label]="'dashboard.minPriceAria' | transloco"
                   (input)="onMinPriceSlider($any($event.target).value)"
                 />
                 <input
@@ -221,7 +234,7 @@
                   [min]="priceBounds().min"
                   [max]="priceBounds().max"
                   [value]="priceSliderMax()"
-                  aria-label="Maximum price"
+                  [attr.aria-label]="'dashboard.maxPriceAria' | transloco"
                   (input)="onMaxPriceSlider($any($event.target).value)"
                 />
               </div>
@@ -229,10 +242,16 @@
           </div>
 
           <div class="sidebar-section">
-            <h3 class="sidebar-title">Rating</h3>
+            <h3 class="sidebar-title">{{ 'dashboard.ratingHeading' | transloco }}</h3>
             <div class="range-filter">
               <div class="range-values">
-                <span>{{ ratingSliderValue() === 0 ? 'Any' : ratingSliderValue() + '+ stars' }}</span>
+                <span>
+                  {{
+                    ratingSliderValue() === 0
+                      ? ('dashboard.ratingAny' | transloco)
+                      : ('dashboard.ratingPlus' | transloco: { value: ratingSliderValue() })
+                  }}
+                </span>
               </div>
               <div class="range-track">
                 <div class="range-fill" style="left: 0%" [style.right.%]="100 - ratingFillPercent()"></div>
@@ -243,7 +262,7 @@
                   max="5"
                   step="0.5"
                   [value]="ratingSliderValue()"
-                  aria-label="Minimum rating"
+                  [attr.aria-label]="'dashboard.minRatingAria' | transloco"
                   (input)="onRatingSlider($any($event.target).value)"
                 />
               </div>
@@ -251,7 +270,7 @@
           </div>
 
           <div class="sidebar-section">
-            <h3 class="sidebar-title">Offers</h3>
+            <h3 class="sidebar-title">{{ 'dashboard.offersHeading' | transloco }}</h3>
             <div class="check-list">
               <button
                 type="button"
@@ -261,7 +280,7 @@
                 (click)="toggleOnSale()"
               >
                 <span class="checkbox" aria-hidden="true"></span>
-                <span>On sale</span>
+                <span>{{ 'dashboard.onSaleFilter' | transloco }}</span>
                 @if (facets(); as f) {
                   <span class="count">{{ f.onSaleCount }}</span>
                 }
@@ -283,7 +302,7 @@
           </div>
 
           <div class="sidebar-section">
-            <h3 class="sidebar-title">Availability</h3>
+            <h3 class="sidebar-title">{{ 'dashboard.availabilityHeading' | transloco }}</h3>
             <div class="check-list">
               <button
                 type="button"
@@ -293,14 +312,14 @@
                 (click)="toggleInStock()"
               >
                 <span class="checkbox" aria-hidden="true"></span>
-                <span>In stock only</span>
+                <span>{{ 'dashboard.inStockOnly' | transloco }}</span>
               </button>
             </div>
           </div>
 
           @if (activeFilters().length > 0) {
             <button type="button" class="link-btn clear-all" (click)="clearFilters()">
-              Clear all filters
+              {{ 'dashboard.clearAllFilters' | transloco }}
             </button>
           }
         </div>
@@ -308,15 +327,15 @@
 
         <div class="listing-main">
           @if (activeFilters().length > 0) {
-            <div class="active-filters" aria-label="Active filters">
+            <div class="active-filters" [attr.aria-label]="'dashboard.activeFiltersAria' | transloco">
               @for (chip of activeFilters(); track chip.key + (chip.value ?? '')) {
                 <button
                   type="button"
                   class="active-chip"
                   (click)="removeFilter(chip)"
-                  [attr.aria-label]="'Remove filter ' + chip.label"
+                  [attr.aria-label]="'dashboard.removeFilterAria' | transloco: { label: chipLabel(chip) }"
                 >
-                  {{ chip.label }} <fa-icon [icon]="icons.xmark" aria-hidden="true" />
+                  {{ chipLabel(chip) }} <fa-icon [icon]="icons.xmark" aria-hidden="true" />
                 </button>
               }
             </div>
@@ -329,7 +348,7 @@
             [attr.aria-busy]="isLoading()"
           >
             @if (loadError()) {
-              <p class="state-row error">Couldn't load products. Is products-service running?</p>
+              <p class="state-row error">{{ 'dashboard.couldntLoadProducts' | transloco }}</p>
             } @else if (products().length === 0 && isLoading()) {
               <div class="product-list" aria-hidden="true">
                 @for (slot of skeletonSlots(); track slot) {
@@ -338,10 +357,10 @@
               </div>
             } @else if (products().length === 0) {
               <div class="state-row empty">
-                <p>No products match your {{ activeFilters().length > 0 ? 'filters' : 'search' }}.</p>
+                <p>{{ (activeFilters().length > 0 ? 'dashboard.noProductsFilters' : 'dashboard.noProductsSearch') | transloco }}</p>
                 @if (activeFilters().length > 0) {
                   <button type="button" class="link-btn" (click)="clearFilters()">
-                    Clear filters
+                    {{ 'dashboard.clearFilters' | transloco }}
                   </button>
                 }
               </div>
@@ -362,7 +381,7 @@
                       <a
                         class="row-link"
                         [routerLink]="['/products', product.id]"
-                        [attr.aria-label]="'View details for ' + product.name"
+                        [attr.aria-label]="'dashboard.viewDetailsAria' | transloco: { name: product.name }"
                       ></a>
 
                       <div class="row-thumb" [style.background]="product.accent">
@@ -383,7 +402,7 @@
                           <div
                             class="rating"
                             [attr.aria-label]="
-                              product.rating + ' out of 5 stars, ' + product.reviews + ' reviews'
+                              'dashboard.ratingAria' | transloco: { rating: product.rating, reviews: product.reviews }
                             "
                           >
                             @for (star of stars(product.rating); track $index) {
@@ -399,7 +418,7 @@
 
                         <div class="row-meta">
                           <span class="category-label">{{ product.category }}</span>
-                          <span class="stock">{{ product.stock }} left in stock</span>
+                          <span class="stock">{{ 'dashboard.stockLeft' | transloco: { count: product.stock } }}</span>
                         </div>
                       </div>
 
@@ -412,13 +431,13 @@
 
                         <div class="row-actions">
                           <button type="button" class="add-to-cart" (click)="addToCart()">
-                            Add to cart
+                            {{ 'common.addToCart' | transloco }}
                           </button>
 
                           <button
                             type="button"
                             class="icon-action"
-                            aria-label="Share product"
+                            [attr.aria-label]="'dashboard.shareProductAria' | transloco"
                             (click)="shareProduct(product)"
                           >
                             <fa-icon [icon]="icons.share" aria-hidden="true" />
@@ -430,7 +449,9 @@
                             [class.is-active]="isWishlisted(product.id)"
                             [attr.aria-pressed]="isWishlisted(product.id)"
                             [attr.aria-label]="
-                              isWishlisted(product.id) ? 'Remove from wishlist' : 'Add to wishlist'
+                              (isWishlisted(product.id)
+                                ? 'dashboard.removeFromWishlistAria'
+                                : 'dashboard.addToWishlistAria') | transloco
                             "
                             (click)="toggleWishlist(product.id)"
                           >
@@ -449,11 +470,11 @@
               </div>
 
               @if (totalPages() > 1) {
-                <nav class="pagination" aria-label="Product pages">
+                <nav class="pagination" [attr.aria-label]="'dashboard.paginationAria' | transloco">
                   <button
                     type="button"
                     class="page-arrow"
-                    aria-label="Previous page"
+                    [attr.aria-label]="'dashboard.previousPageAria' | transloco"
                     (click)="goToPreviousPage()"
                     [disabled]="currentPage() === 1"
                   >
@@ -475,7 +496,7 @@
                   <button
                     type="button"
                     class="page-arrow"
-                    aria-label="Next page"
+                    [attr.aria-label]="'dashboard.nextPageAria' | transloco"
                     (click)="goToNextPage()"
                     [disabled]="currentPage() === totalPages()"
                   >

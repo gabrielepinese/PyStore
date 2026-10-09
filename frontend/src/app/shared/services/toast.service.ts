@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
 
 export type ToastType = 'success' | 'error' | 'info';
 
@@ -10,14 +11,10 @@ export interface Toast {
   duration: number;
 }
 
-const DEFAULT_DESCRIPTIONS: Record<ToastType, string> = {
-  success: 'Continua a navigare.',
-  error: 'Riprova o contattaci se il problema persiste.',
-  info: 'Continua a navigare.',
-};
-
 @Injectable({ providedIn: 'root' })
 export class ToastService {
+  private readonly transloco = inject(TranslocoService);
+
   private readonly _toasts = signal<Toast[]>([]);
   readonly toasts = this._toasts.asReadonly();
 
@@ -27,7 +24,13 @@ export class ToastService {
     const id = this.nextId++;
     this._toasts.update((list) => [
       ...list,
-      { id, message, description: description ?? DEFAULT_DESCRIPTIONS[type], type, duration },
+      {
+        id,
+        message,
+        description: description ?? this.transloco.translate(`toast.defaultDescription.${type}`),
+        type,
+        duration,
+      },
     ]);
     setTimeout(() => this.dismiss(id), duration);
   }

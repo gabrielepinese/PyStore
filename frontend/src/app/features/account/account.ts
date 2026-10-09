@@ -14,6 +14,7 @@ import {
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AccountService } from '../../core/account/account.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { Address } from '../../core/models/address.model';
@@ -31,7 +32,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 
 @Component({
   selector: 'app-account',
-  imports: [ReactiveFormsModule, FaIconComponent, DotLoader, Topbar],
+  imports: [ReactiveFormsModule, FaIconComponent, DotLoader, Topbar, TranslocoPipe],
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })
@@ -60,6 +61,7 @@ export class Account {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
+  private readonly transloco = inject(TranslocoService);
 
   protected readonly section = signal<Section>('profile');
 
@@ -97,11 +99,11 @@ export class Account {
     this.authService.updateProfile({ fullName, phone: joinPhone(phonePrefix, phoneNumber) }).subscribe({
       next: () => {
         this.savingProfile.set(false);
-        this.toastService.show('Profile updated.', 'success');
+        this.toastService.show(this.transloco.translate('toast.profileUpdated'), 'success');
       },
       error: () => {
         this.savingProfile.set(false);
-        this.toastService.show('Could not update profile. Try again.', 'error');
+        this.toastService.show(this.transloco.translate('toast.profileUpdateFailed'), 'error');
       },
     });
   }
@@ -202,11 +204,14 @@ export class Account {
         this.savingAddress.set(false);
         this.addressFormOpen.set(false);
         this.loadAddresses();
-        this.toastService.show(isEditing ? 'Address updated.' : 'Address added.', 'success');
+        this.toastService.show(
+          this.transloco.translate(isEditing ? 'toast.addressUpdated' : 'toast.addressAdded'),
+          'success',
+        );
       },
       error: () => {
         this.savingAddress.set(false);
-        this.toastService.show('Could not save this address. Try again.', 'error');
+        this.toastService.show(this.transloco.translate('toast.addressSaveFailed'), 'error');
       },
     });
   }
@@ -215,9 +220,9 @@ export class Account {
     this.accountService.deleteAddress(id).subscribe({
       next: () => {
         this.loadAddresses();
-        this.toastService.show('Address removed.', 'success');
+        this.toastService.show(this.transloco.translate('toast.addressRemoved'), 'success');
       },
-      error: () => this.toastService.show('Could not remove this address. Try again.', 'error'),
+      error: () => this.toastService.show(this.transloco.translate('toast.addressRemoveFailed'), 'error'),
     });
   }
 
@@ -278,12 +283,12 @@ export class Account {
         this.savingCard.set(false);
         this.cardFormOpen.set(false);
         this.loadPaymentMethods();
-        this.toastService.show('Card added.', 'success');
+        this.toastService.show(this.transloco.translate('toast.cardAdded'), 'success');
       },
       error: () => {
         this.savingCard.set(false);
-        this.cardError.set('Could not save this card — double-check the details and try again.');
-        this.toastService.show('Could not save this card. Try again.', 'error');
+        this.cardError.set(this.transloco.translate('account.payment.cardErrorDetailed'));
+        this.toastService.show(this.transloco.translate('toast.cardSaveFailed'), 'error');
       },
     });
   }
@@ -292,9 +297,10 @@ export class Account {
     this.accountService.setDefaultPaymentMethod(id).subscribe({
       next: () => {
         this.loadPaymentMethods();
-        this.toastService.show('Default payment method updated.', 'success');
+        this.toastService.show(this.transloco.translate('toast.defaultPaymentUpdated'), 'success');
       },
-      error: () => this.toastService.show('Could not update default payment method. Try again.', 'error'),
+      error: () =>
+        this.toastService.show(this.transloco.translate('toast.defaultPaymentUpdateFailed'), 'error'),
     });
   }
 
@@ -302,9 +308,9 @@ export class Account {
     this.accountService.deletePaymentMethod(id).subscribe({
       next: () => {
         this.loadPaymentMethods();
-        this.toastService.show('Card removed.', 'success');
+        this.toastService.show(this.transloco.translate('toast.cardRemoved'), 'success');
       },
-      error: () => this.toastService.show('Could not remove this card. Try again.', 'error'),
+      error: () => this.toastService.show(this.transloco.translate('toast.cardRemoveFailed'), 'error'),
     });
   }
 

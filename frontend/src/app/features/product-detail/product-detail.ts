@@ -15,6 +15,7 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { DatePipe, Location } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/auth/auth.service';
 import { CartService } from '../../core/cart/cart.service';
 import { Product, Review } from '../../core/models/product.model';
@@ -46,7 +47,7 @@ interface ImageLayer {
 }
 
 interface ProductView {
-  label: string;
+  key: string;
   layers: ImageLayer[];
 }
 
@@ -54,30 +55,30 @@ interface ProductView {
 // composition over the accent color, standing in for a separate seller photo
 // (not the same image rotated).
 const PRODUCT_VIEWS: ProductView[] = [
-  { label: 'Front', layers: [{ top: '50%', left: '50%', size: '55%', opacity: 0.18 }] },
+  { key: 'front', layers: [{ top: '50%', left: '50%', size: '55%', opacity: 0.18 }] },
   {
-    label: 'Side',
+    key: 'side',
     layers: [
       { top: '35%', left: '68%', size: '42%', opacity: 0.22 },
       { top: '75%', left: '28%', size: '26%', opacity: 0.14 },
     ],
   },
   {
-    label: 'Back',
+    key: 'back',
     layers: [
       { top: '25%', left: '25%', size: '38%', opacity: 0.16 },
       { top: '70%', left: '65%', size: '55%', opacity: 0.2 },
     ],
   },
   {
-    label: 'Detail',
+    key: 'detail',
     layers: [
       { top: '50%', left: '50%', size: '85%', opacity: 0.12 },
       { top: '50%', left: '50%', size: '30%', opacity: 0.3 },
     ],
   },
   {
-    label: 'Packaging',
+    key: 'packaging',
     layers: [
       { top: '20%', left: '50%', size: '30%', opacity: 0.25 },
       { top: '60%', left: '30%', size: '20%', opacity: 0.18 },
@@ -85,18 +86,18 @@ const PRODUCT_VIEWS: ProductView[] = [
     ],
   },
   {
-    label: 'In use',
+    key: 'inUse',
     layers: [
       { top: '40%', left: '40%', size: '50%', opacity: 0.2 },
       { top: '75%', left: '80%', size: '18%', opacity: 0.3 },
     ],
   },
   {
-    label: 'Top',
+    key: 'top',
     layers: [{ top: '50%', left: '50%', size: '70%', opacity: 0.16 }],
   },
   {
-    label: 'Scale',
+    key: 'scale',
     layers: [
       { top: '30%', left: '30%', size: '22%', opacity: 0.28 },
       { top: '65%', left: '65%', size: '45%', opacity: 0.14 },
@@ -106,7 +107,7 @@ const PRODUCT_VIEWS: ProductView[] = [
 
 @Component({
   selector: 'app-product-detail',
-  imports: [FaIconComponent, DotLoader, Topbar, DatePipe],
+  imports: [FaIconComponent, DotLoader, Topbar, DatePipe, TranslocoPipe],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
 })
@@ -134,6 +135,7 @@ export class ProductDetail {
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
   protected readonly authService = inject(AuthService);
+  private readonly transloco = inject(TranslocoService);
 
   protected readonly product = signal<Product | null>(null);
   protected readonly isLoading = signal(true);
@@ -186,6 +188,10 @@ export class ProductDetail {
 
   protected readonly stars = (rating: number) =>
     Array.from({ length: 5 }, (_, i) => (i < Math.round(rating) ? 'full' : 'empty'));
+
+  protected viewLabel(key: string): string {
+    return this.transloco.translate(`productDetail.views.${key}`);
+  }
 
   protected setTab(tab: Tab): void {
     this.activeTab.set(tab);

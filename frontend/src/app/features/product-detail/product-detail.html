@@ -2,7 +2,7 @@
 
 <div class="page">
   <button type="button" class="back-link" (click)="goBack()">
-    <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> Back to products
+    <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> {{ 'common.backToProducts' | transloco }}
   </button>
 
   @if (isLoading()) {
@@ -10,17 +10,17 @@
       <app-dot-loader />
     </div>
   } @else if (loadError() || !product()) {
-    <p class="state-row error">Couldn't load this product.</p>
+    <p class="state-row error">{{ 'productDetail.couldntLoad' | transloco }}</p>
   } @else {
     @let p = product()!;
 
-    <nav class="breadcrumb" aria-label="Breadcrumb">{{ p.category }} / {{ p.name }}</nav>
+    <nav class="breadcrumb" [attr.aria-label]="'productDetail.breadcrumbAria' | transloco">{{ p.category }} / {{ p.name }}</nav>
 
     <div class="detail">
       <div
         class="gallery"
         role="group"
-        aria-label="Product views"
+        [attr.aria-label]="'productDetail.productViewsAria' | transloco"
         tabindex="0"
         (keydown.arrowup)="prevView()"
         (keydown.arrowdown)="nextView()"
@@ -28,13 +28,13 @@
         (keydown.arrowright)="nextView()"
       >
         <div class="thumbs">
-          @for (view of views; track view.label; let i = $index) {
+          @for (view of views; track view.key; let i = $index) {
             <button
               type="button"
               class="thumb"
               [class.is-active]="i === activeView()"
               [style.background]="p.accent"
-              [attr.aria-label]="'Show ' + view.label + ' view'"
+              [attr.aria-label]="'productDetail.showViewAria' | transloco: { view: viewLabel(view.key) }"
               [attr.aria-current]="i === activeView()"
               (click)="goToView(i)"
               (mouseenter)="goToView(i)"
@@ -72,7 +72,7 @@
       </div>
 
       <div class="info">
-        <p class="product-code">Product code: {{ p.id }}</p>
+        <p class="product-code">{{ 'productDetail.productCode' | transloco: { id: p.id } }}</p>
         <h1 class="name">{{ p.name }}</h1>
 
         <div class="price-rating">
@@ -82,26 +82,26 @@
           }
           <div
             class="rating"
-            [attr.aria-label]="p.rating + ' out of 5 stars, ' + p.reviews + ' reviews'"
+            [attr.aria-label]="'productDetail.ratingAria' | transloco: { rating: p.rating, reviews: p.reviews }"
           >
             @for (star of stars(p.rating); track $index) {
               <fa-icon [icon]="icons.star" [class.is-full]="star === 'full'" aria-hidden="true" />
             }
-            <span class="reviews">{{ p.reviews }} reviews</span>
+            <span class="reviews">{{ 'productDetail.reviewsSuffix' | transloco: { count: p.reviews } }}</span>
           </div>
         </div>
 
         <hr />
 
-        <p class="description">{{ p.description ?? 'No description available for this product.' }}</p>
+        <p class="description">{{ p.description ?? ('productDetail.noDescription' | transloco) }}</p>
 
         <hr />
 
         <p class="stock-line">
           @if (p.stock > 0) {
-            {{ p.stock }} in stock
+            {{ 'productDetail.inStock' | transloco: { count: p.stock } }}
           } @else {
-            Out of stock
+            {{ 'productDetail.outOfStock' | transloco }}
           }
         </p>
 
@@ -112,7 +112,7 @@
             [disabled]="p.stock === 0"
             (click)="addToCart()"
           >
-            {{ addedToCart() ? 'Added' : 'Add to cart' }}
+            {{ (addedToCart() ? 'productDetail.added' : 'common.addToCart') | transloco }}
           </button>
 
           <button
@@ -123,7 +123,7 @@
             (click)="toggleWishlist()"
           >
             <fa-icon [icon]="isWishlisted() ? icons.heartSolid : icons.heartRegular" aria-hidden="true" />
-            {{ isWishlisted() ? 'In wishlist' : 'Add to wishlist' }}
+            {{ (isWishlisted() ? 'productDetail.inWishlist' : 'productDetail.addToWishlist') | transloco }}
           </button>
         </div>
       </div>
@@ -139,7 +139,7 @@
           [attr.aria-selected]="activeTab() === 'details'"
           (click)="setTab('details')"
         >
-          Details
+          {{ 'productDetail.tabDetails' | transloco }}
         </button>
         <button
           type="button"
@@ -149,7 +149,7 @@
           [attr.aria-selected]="activeTab() === 'shipping'"
           (click)="setTab('shipping')"
         >
-          Shipping &amp; returns
+          {{ 'productDetail.tabShipping' | transloco }}
         </button>
         <button
           type="button"
@@ -159,7 +159,7 @@
           [attr.aria-selected]="activeTab() === 'reviews'"
           (click)="setTab('reviews')"
         >
-          Reviews
+          {{ 'productDetail.tabReviews' | transloco }}
         </button>
       </div>
 
@@ -167,7 +167,7 @@
         <div class="details-panel">
           @if (aboutBullets().length) {
             <div class="about-section">
-              <h3>About this item</h3>
+              <h3>{{ 'productDetail.aboutThisItem' | transloco }}</h3>
               <ul class="about-list">
                 @for (bullet of aboutBullets(); track $index) {
                   <li>{{ bullet }}</li>
@@ -177,12 +177,12 @@
           }
 
           <div class="spec-section">
-            <h3>Product information</h3>
+            <h3>{{ 'productDetail.productInformation' | transloco }}</h3>
             <div class="spec-grid">
               <div class="spec-card">
                 <span class="spec-icon"><fa-icon [icon]="icons.barcode" aria-hidden="true" /></span>
                 <div class="spec-content">
-                  <span class="spec-label">SKU</span>
+                  <span class="spec-label">{{ 'productDetail.sku' | transloco }}</span>
                   <span class="spec-value">{{ p.id }}</span>
                 </div>
               </div>
@@ -190,7 +190,7 @@
               <div class="spec-card">
                 <span class="spec-icon"><fa-icon [icon]="icons.folder" aria-hidden="true" /></span>
                 <div class="spec-content">
-                  <span class="spec-label">Category</span>
+                  <span class="spec-label">{{ 'productDetail.category' | transloco }}</span>
                   <span class="spec-value">{{ p.category }}</span>
                 </div>
               </div>
@@ -199,7 +199,7 @@
                 <div class="spec-card">
                   <span class="spec-icon"><fa-icon [icon]="icons.award" aria-hidden="true" /></span>
                   <div class="spec-content">
-                    <span class="spec-label">Badge</span>
+                    <span class="spec-label">{{ 'productDetail.badge' | transloco }}</span>
                     <span class="spec-value">{{ p.badge }}</span>
                   </div>
                 </div>
@@ -208,7 +208,7 @@
               <div class="spec-card">
                 <span class="spec-icon"><fa-icon [icon]="icons.tag" aria-hidden="true" /></span>
                 <div class="spec-content">
-                  <span class="spec-label">Price</span>
+                  <span class="spec-label">{{ 'productDetail.price' | transloco }}</span>
                   <span class="spec-value">
                     ${{ p.price }}
                     @if (p.originalPrice) {
@@ -221,17 +221,23 @@
               <div class="spec-card">
                 <span class="spec-icon"><fa-icon [icon]="icons.star" aria-hidden="true" /></span>
                 <div class="spec-content">
-                  <span class="spec-label">Rating</span>
-                  <span class="spec-value">{{ p.rating }} / 5 <span class="spec-sub">({{ p.reviews }} reviews)</span></span>
+                  <span class="spec-label">{{ 'productDetail.ratingLabel' | transloco }}</span>
+                  <span class="spec-value"
+                    >{{ p.rating }} / 5
+                    <span class="spec-sub">({{ 'productDetail.reviewsSuffix' | transloco: { count: p.reviews } }})</span></span
+                  >
                 </div>
               </div>
 
               <div class="spec-card">
                 <span class="spec-icon"><fa-icon [icon]="icons.boxOpen" aria-hidden="true" /></span>
                 <div class="spec-content">
-                  <span class="spec-label">Availability</span>
+                  <span class="spec-label">{{ 'productDetail.availability' | transloco }}</span>
                   <span class="spec-value" [class.is-in-stock]="p.stock > 0" [class.is-out-stock]="p.stock === 0">
-                    {{ p.stock > 0 ? p.stock + ' in stock' : 'Out of stock' }}
+                    {{
+                      (p.stock > 0 ? 'productDetail.inStock' : 'productDetail.outOfStock')
+                        | transloco: { count: p.stock }
+                    }}
                   </span>
                 </div>
               </div>
@@ -239,7 +245,7 @@
               <div class="spec-card">
                 <span class="spec-icon"><fa-icon [icon]="icons.calendar" aria-hidden="true" /></span>
                 <div class="spec-content">
-                  <span class="spec-label">Added</span>
+                  <span class="spec-label">{{ 'productDetail.addedDateLabel' | transloco }}</span>
                   <span class="spec-value">{{ p.createdAt | date: 'mediumDate' }}</span>
                 </div>
               </div>
@@ -250,19 +256,19 @@
         <div class="shipping-panel">
           <div class="shipping-options">
             <div class="shipping-option">
-              <h4>Standard shipping</h4>
-              <p>3–5 business days · Free on orders over $35</p>
+              <h4>{{ 'productDetail.shipping.standardTitle' | transloco }}</h4>
+              <p>{{ 'productDetail.shipping.standardDesc' | transloco }}</p>
             </div>
             <div class="shipping-option">
-              <h4>Express shipping</h4>
-              <p>1–2 business days · $8.99</p>
+              <h4>{{ 'productDetail.shipping.expressTitle' | transloco }}</h4>
+              <p>{{ 'productDetail.shipping.expressDesc' | transloco }}</p>
             </div>
           </div>
           <div class="shipping-policies">
-            <h4>Returns</h4>
-            <p>Free returns within 30 days of delivery. Item must be unused and in its original packaging.</p>
-            <h4>Packaging</h4>
-            <p>Ships in plastic-free, recyclable packaging.</p>
+            <h4>{{ 'productDetail.shipping.returnsTitle' | transloco }}</h4>
+            <p>{{ 'productDetail.shipping.returnsDesc' | transloco }}</p>
+            <h4>{{ 'productDetail.shipping.packagingTitle' | transloco }}</h4>
+            <p>{{ 'productDetail.shipping.packagingDesc' | transloco }}</p>
           </div>
         </div>
       } @else {
@@ -271,18 +277,18 @@
             <div class="reviews-overview">
               <div class="overview-score">
                 <span class="score">{{ summary.averageRating.toFixed(1) }}</span>
-                <div class="stars" [attr.aria-label]="summary.averageRating + ' out of 5 stars'">
+                <div class="stars" [attr.aria-label]="'productDetail.ratingAria' | transloco: { rating: summary.averageRating, reviews: summary.reviewCount }">
                   @for (star of stars(summary.averageRating); track $index) {
                     <fa-icon [icon]="icons.star" [class.is-full]="star === 'full'" aria-hidden="true" />
                   }
                 </div>
-                <span class="count">{{ summary.reviewCount }} global ratings</span>
+                <span class="count">{{ 'productDetail.globalRatings' | transloco: { count: summary.reviewCount } }}</span>
               </div>
 
               <div class="breakdown">
                 @for (row of breakdownRows(summary); track row.star) {
                   <div class="breakdown-row">
-                    <span class="breakdown-label">{{ row.star }} star</span>
+                    <span class="breakdown-label">{{ 'productDetail.starLabel' | transloco: { star: row.star } }}</span>
                     <div class="breakdown-bar"><span [style.width.%]="row.percent"></span></div>
                     <span class="breakdown-pct">{{ row.percent }}%</span>
                   </div>
@@ -307,7 +313,7 @@
               </article>
             } @empty {
               @if (!reviewsLoading()) {
-                <p class="no-reviews">No reviews yet for this product.</p>
+                <p class="no-reviews">{{ 'productDetail.noReviewsYet' | transloco }}</p>
               }
             }
           </div>
@@ -317,7 +323,9 @@
               <app-dot-loader />
             </div>
           } @else if (hasMoreReviews()) {
-            <button type="button" class="load-more" (click)="loadMoreReviews()">Load more reviews</button>
+            <button type="button" class="load-more" (click)="loadMoreReviews()">
+              {{ 'productDetail.loadMoreReviews' | transloco }}
+            </button>
           }
         </div>
       }

@@ -2,20 +2,20 @@
 
 <div class="page">
   <button type="button" class="back-link" (click)="goBack()">
-    <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> Back to dashboard
+    <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> {{ 'common.backToDashboard' | transloco }}
   </button>
 
   <div class="account-header">
     <span class="header-avatar">{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</span>
     <div class="header-text">
-      <p class="header-greeting">Hello,</p>
+      <p class="header-greeting">{{ 'account.hello' | transloco }}</p>
       <h1 class="page-title">{{ authService.currentUser()?.fullName }}</h1>
       <p class="header-email">{{ authService.currentUser()?.email }}</p>
     </div>
   </div>
 
   <div class="account-body">
-    <nav class="account-nav" aria-label="Account sections">
+    <nav class="account-nav" [attr.aria-label]="'account.sectionsAria' | transloco">
       <button
         type="button"
         class="nav-item"
@@ -24,8 +24,8 @@
       >
         <span class="nav-icon"><fa-icon [icon]="icons.user" aria-hidden="true" /></span>
         <span>
-          <strong>Login &amp; security</strong>
-          <small>Name, phone number</small>
+          <strong>{{ 'account.nav.loginSecurity' | transloco }}</strong>
+          <small>{{ 'account.nav.loginSecurityHint' | transloco }}</small>
         </span>
       </button>
 
@@ -37,8 +37,8 @@
       >
         <span class="nav-icon"><fa-icon [icon]="icons.location" aria-hidden="true" /></span>
         <span>
-          <strong>Your addresses</strong>
-          <small>Edit or add a delivery address</small>
+          <strong>{{ 'account.nav.addresses' | transloco }}</strong>
+          <small>{{ 'account.nav.addressesHint' | transloco }}</small>
         </span>
       </button>
 
@@ -50,8 +50,8 @@
       >
         <span class="nav-icon"><fa-icon [icon]="icons.card" aria-hidden="true" /></span>
         <span>
-          <strong>Payment options</strong>
-          <small>Saved debit/credit cards</small>
+          <strong>{{ 'account.nav.payment' | transloco }}</strong>
+          <small>{{ 'account.nav.paymentHint' | transloco }}</small>
         </span>
       </button>
 
@@ -63,8 +63,8 @@
       >
         <span class="nav-icon"><fa-icon [icon]="icons.boxOpen" aria-hidden="true" /></span>
         <span>
-          <strong>Your orders</strong>
-          <small>Track, return, or buy again</small>
+          <strong>{{ 'account.nav.orders' | transloco }}</strong>
+          <small>{{ 'account.nav.ordersHint' | transloco }}</small>
         </span>
       </button>
     </nav>
@@ -72,17 +72,17 @@
     <div class="account-panel">
       @if (section() === 'profile') {
         <section class="panel-card">
-          <h2>Login &amp; security</h2>
-          <p class="panel-hint">Email can't be changed here — contact support if you need that updated.</p>
+          <h2>{{ 'account.profile.heading' | transloco }}</h2>
+          <p class="panel-hint">{{ 'account.profile.emailCantChange' | transloco }}</p>
 
           <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
             <div class="field">
-              <label>Email</label>
+              <label>{{ 'account.profile.emailLabel' | transloco }}</label>
               <input type="email" [value]="authService.currentUser()?.email" disabled />
             </div>
 
             <div class="field">
-              <label for="fullName">Name</label>
+              <label for="fullName">{{ 'account.profile.nameLabel' | transloco }}</label>
               <input
                 id="fullName"
                 type="text"
@@ -98,15 +98,22 @@
                   profileForm.controls.fullName.invalid && profileForm.controls.fullName.touched
                 "
               >
-                Enter your full name.
+                {{ 'account.profile.nameError' | transloco }}
               </p>
             </div>
 
             <div class="field">
-              <label for="phone">Phone number <span class="label-optional">(optional)</span></label>
+              <label for="phone"
+                >{{ 'account.profile.phoneLabel' | transloco }}
+                <span class="label-optional">{{ 'common.optional' | transloco }}</span></label
+              >
               <div class="phone-field">
                 <span class="phone-prefix-wrap">
-                  <select class="phone-prefix" formControlName="phonePrefix" aria-label="Phone prefix">
+                  <select
+                    class="phone-prefix"
+                    formControlName="phonePrefix"
+                    [attr.aria-label]="'account.phonePrefixAria' | transloco"
+                  >
                     @for (p of phonePrefixes; track p.code) {
                       <option [ngValue]="p.code">{{ p.code }}</option>
                     }
@@ -131,7 +138,7 @@
                   profileForm.controls.phoneNumber.invalid && profileForm.controls.phoneNumber.touched
                 "
               >
-                Enter a valid phone number (6-12 digits).
+                {{ 'account.profile.phoneError' | transloco }}
               </p>
             </div>
 
@@ -140,7 +147,7 @@
                 @if (savingProfile()) {
                   <app-dot-loader />
                 } @else {
-                  Save changes
+                  {{ 'account.profile.saveChanges' | transloco }}
                 }
               </button>
             </div>
@@ -151,10 +158,10 @@
       @if (section() === 'addresses') {
         <section class="panel-card">
           <div class="panel-head">
-            <h2>Your addresses</h2>
+            <h2>{{ 'account.addresses.heading' | transloco }}</h2>
             @if (!addressFormOpen()) {
               <button type="button" class="btn-secondary" (click)="openNewAddressForm()">
-                <fa-icon [icon]="icons.plus" aria-hidden="true" /> Add address
+                <fa-icon [icon]="icons.plus" aria-hidden="true" /> {{ 'account.addresses.addAddress' | transloco }}
               </button>
             }
           </div>
@@ -162,20 +169,32 @@
           @if (addressFormOpen()) {
             <form class="entity-form" [formGroup]="addressForm" (ngSubmit)="saveAddress()" novalidate>
               <div class="field">
-                <label for="addr-label">Label</label>
-                <input id="addr-label" type="text" formControlName="label" placeholder="Home, Work..." />
+                <label for="addr-label">{{ 'account.addresses.labelField' | transloco }}</label>
+                <input
+                  id="addr-label"
+                  type="text"
+                  formControlName="label"
+                  [placeholder]="'account.addresses.labelPlaceholder' | transloco"
+                />
               </div>
 
               <div class="field">
-                <label for="addr-fullName">Full name</label>
+                <label for="addr-fullName">{{ 'account.addresses.fullNameLabel' | transloco }}</label>
                 <input id="addr-fullName" type="text" formControlName="fullName" />
               </div>
 
               <div class="field">
-                <label for="addr-phone">Phone <span class="label-optional">(optional)</span></label>
+                <label for="addr-phone"
+                  >{{ 'account.addresses.phoneLabel' | transloco }}
+                  <span class="label-optional">{{ 'common.optional' | transloco }}</span></label
+                >
                 <div class="phone-field">
                   <span class="phone-prefix-wrap">
-                    <select class="phone-prefix" formControlName="phonePrefix" aria-label="Phone prefix">
+                    <select
+                      class="phone-prefix"
+                      formControlName="phonePrefix"
+                      [attr.aria-label]="'account.phonePrefixAria' | transloco"
+                    >
                       @for (p of phonePrefixes; track p.code) {
                         <option [ngValue]="p.code">{{ p.code }}</option>
                       }
@@ -199,29 +218,34 @@
                     addressForm.controls.phoneNumber.invalid && addressForm.controls.phoneNumber.touched
                   "
                 >
-                  Enter a valid phone number (6-12 digits).
+                  {{ 'account.profile.phoneError' | transloco }}
                 </p>
               </div>
 
               <div class="field">
-                <label for="addr-line1">Address line 1</label>
+                <label for="addr-line1">{{ 'account.addresses.line1Label' | transloco }}</label>
                 <input id="addr-line1" type="text" formControlName="line1" />
               </div>
 
               <div class="field">
-                <label for="addr-line2">Address line 2</label>
-                <input id="addr-line2" type="text" formControlName="line2" placeholder="Optional" />
+                <label for="addr-line2">{{ 'account.addresses.line2Label' | transloco }}</label>
+                <input
+                  id="addr-line2"
+                  type="text"
+                  formControlName="line2"
+                  [placeholder]="'account.addresses.line2Placeholder' | transloco"
+                />
               </div>
 
               <div class="field-row">
                 <div class="field">
-                  <label for="addr-city">City</label>
+                  <label for="addr-city">{{ 'account.addresses.cityLabel' | transloco }}</label>
                   <select
                     id="addr-city"
                     formControlName="city"
                     [attr.aria-invalid]="addressForm.controls.city.invalid && addressForm.controls.city.touched"
                   >
-                    <option value="" disabled>Select a city</option>
+                    <option value="" disabled>{{ 'account.addresses.selectCity' | transloco }}</option>
                     @for (c of cities; track c) {
                       <option [ngValue]="c">{{ c }}</option>
                     }
@@ -230,11 +254,11 @@
                     class="field-error"
                     [class.is-visible]="addressForm.controls.city.invalid && addressForm.controls.city.touched"
                   >
-                    Select a city.
+                    {{ 'account.addresses.cityError' | transloco }}
                   </p>
                 </div>
                 <div class="field">
-                  <label for="addr-postal">Postal code</label>
+                  <label for="addr-postal">{{ 'account.addresses.postalLabel' | transloco }}</label>
                   <input
                     id="addr-postal"
                     type="text"
@@ -252,24 +276,24 @@
                       addressForm.controls.postalCode.invalid && addressForm.controls.postalCode.touched
                     "
                   >
-                    Enter a valid 5-digit postal code.
+                    {{ 'account.addresses.postalError' | transloco }}
                   </p>
                 </div>
               </div>
 
               <div class="field">
-                <label for="addr-country">Country</label>
+                <label for="addr-country">{{ 'account.addresses.countryLabel' | transloco }}</label>
                 <select id="addr-country" formControlName="country">
                   @for (c of countries; track c) {
                     <option [ngValue]="c">{{ c }}</option>
                   }
                 </select>
-                <p class="field-hint">Shipping is only available in Italy for now.</p>
+                <p class="field-hint">{{ 'account.addresses.shippingHint' | transloco }}</p>
               </div>
 
               <label class="checkbox-field">
                 <input type="checkbox" formControlName="isDefault" />
-                <span>Set as default address</span>
+                <span>{{ 'account.addresses.setDefault' | transloco }}</span>
               </label>
 
               <div class="form-actions">
@@ -277,11 +301,14 @@
                   @if (savingAddress()) {
                     <app-dot-loader />
                   } @else {
-                    {{ editingAddressId() ? 'Save address' : 'Add address' }}
+                    {{
+                      (editingAddressId() ? 'account.addresses.saveAddress' : 'account.addresses.addAddress')
+                        | transloco
+                    }}
                   }
                 </button>
                 <button type="button" class="btn-text" (click)="cancelAddressForm()" [disabled]="savingAddress()">
-                  Cancel
+                  {{ 'common.cancel' | transloco }}
                 </button>
               </div>
             </form>
@@ -294,7 +321,7 @@
           } @else if (addresses().length === 0 && !addressFormOpen()) {
             <div class="empty-hint">
               <fa-icon [icon]="icons.location" aria-hidden="true" />
-              <p>No saved addresses yet.</p>
+              <p>{{ 'account.addresses.noSaved' | transloco }}</p>
             </div>
           } @else {
             <div class="entity-grid">
@@ -302,7 +329,7 @@
                 <article class="entity-card" [class.is-default]="address.isDefault">
                   @if (address.isDefault) {
                     <span class="default-badge"
-                      ><fa-icon [icon]="icons.star" aria-hidden="true" /> Default</span
+                      ><fa-icon [icon]="icons.star" aria-hidden="true" /> {{ 'account.addresses.default' | transloco }}</span
                     >
                   }
                   <div class="entity-card-head">
@@ -319,10 +346,10 @@
 
                   <div class="entity-actions">
                     <button type="button" class="icon-text-btn" (click)="editAddress(address)">
-                      <fa-icon [icon]="icons.pen" aria-hidden="true" /> Edit
+                      <fa-icon [icon]="icons.pen" aria-hidden="true" /> {{ 'account.addresses.edit' | transloco }}
                     </button>
                     <button type="button" class="icon-text-btn is-danger" (click)="deleteAddress(address.id)">
-                      <fa-icon [icon]="icons.trash" aria-hidden="true" /> Remove
+                      <fa-icon [icon]="icons.trash" aria-hidden="true" /> {{ 'account.addresses.remove' | transloco }}
                     </button>
                   </div>
                 </article>
@@ -335,21 +362,21 @@
       @if (section() === 'payment') {
         <section class="panel-card">
           <div class="panel-head">
-            <h2>Payment options</h2>
+            <h2>{{ 'account.payment.heading' | transloco }}</h2>
             @if (!cardFormOpen()) {
               <button type="button" class="btn-secondary" (click)="openNewCardForm()">
-                <fa-icon [icon]="icons.plus" aria-hidden="true" /> Add card
+                <fa-icon [icon]="icons.plus" aria-hidden="true" /> {{ 'account.payment.addCard' | transloco }}
               </button>
             }
           </div>
           <p class="panel-hint">
-            Only the card brand and last 4 digits are stored — never the full number.
+            {{ 'account.payment.onlyBrandStored' | transloco }}
           </p>
 
           @if (cardFormOpen()) {
             <form class="entity-form" [formGroup]="cardForm" (ngSubmit)="saveCard()" novalidate>
               <div class="field">
-                <label for="card-number">Card number</label>
+                <label for="card-number">{{ 'account.payment.cardNumberLabel' | transloco }}</label>
                 <input
                   id="card-number"
                   type="text"
@@ -361,13 +388,13 @@
               </div>
 
               <div class="field">
-                <label for="card-name">Cardholder name</label>
+                <label for="card-name">{{ 'account.payment.cardholderLabel' | transloco }}</label>
                 <input id="card-name" type="text" formControlName="cardholderName" autocomplete="cc-name" />
               </div>
 
               <div class="field-row">
                 <div class="field">
-                  <label for="card-month">Expiry month</label>
+                  <label for="card-month">{{ 'account.payment.expMonthLabel' | transloco }}</label>
                   <select id="card-month" formControlName="expMonth">
                     @for (month of cardMonths; track month) {
                       <option [ngValue]="month">{{ month }}</option>
@@ -375,7 +402,7 @@
                   </select>
                 </div>
                 <div class="field">
-                  <label for="card-year">Expiry year</label>
+                  <label for="card-year">{{ 'account.payment.expYearLabel' | transloco }}</label>
                   <select id="card-year" formControlName="expYear">
                     @for (year of cardYears; track year) {
                       <option [ngValue]="year">{{ year }}</option>
@@ -386,7 +413,7 @@
 
               <label class="checkbox-field">
                 <input type="checkbox" formControlName="isDefault" />
-                <span>Set as default payment method</span>
+                <span>{{ 'account.payment.setDefault' | transloco }}</span>
               </label>
 
               <p class="form-error" [class.is-visible]="!!cardError()">{{ cardError() }}</p>
@@ -396,11 +423,11 @@
                   @if (savingCard()) {
                     <app-dot-loader />
                   } @else {
-                    Add card
+                    {{ 'account.payment.addCard' | transloco }}
                   }
                 </button>
                 <button type="button" class="btn-text" (click)="cancelCardForm()" [disabled]="savingCard()">
-                  Cancel
+                  {{ 'common.cancel' | transloco }}
                 </button>
               </div>
             </form>
@@ -413,7 +440,7 @@
           } @else if (cards().length === 0 && !cardFormOpen()) {
             <div class="empty-hint">
               <fa-icon [icon]="icons.card" aria-hidden="true" />
-              <p>No saved payment methods yet.</p>
+              <p>{{ 'account.payment.noSaved' | transloco }}</p>
             </div>
           } @else {
             <div class="entity-grid">
@@ -421,7 +448,7 @@
                 <article class="entity-card card-entity" [class.is-default]="card.isDefault">
                   @if (card.isDefault) {
                     <span class="default-badge"
-                      ><fa-icon [icon]="icons.star" aria-hidden="true" /> Default</span
+                      ><fa-icon [icon]="icons.star" aria-hidden="true" /> {{ 'account.addresses.default' | transloco }}</span
                     >
                   }
 
@@ -442,11 +469,11 @@
                   <div class="entity-actions">
                     @if (!card.isDefault) {
                       <button type="button" class="icon-text-btn" (click)="setDefaultCard(card.id)">
-                        <fa-icon [icon]="icons.star" aria-hidden="true" /> Make default
+                        <fa-icon [icon]="icons.star" aria-hidden="true" /> {{ 'account.payment.makeDefault' | transloco }}
                       </button>
                     }
                     <button type="button" class="icon-text-btn is-danger" (click)="deleteCard(card.id)">
-                      <fa-icon [icon]="icons.trash" aria-hidden="true" /> Remove
+                      <fa-icon [icon]="icons.trash" aria-hidden="true" /> {{ 'account.payment.remove' | transloco }}
                     </button>
                   </div>
                 </article>
@@ -458,11 +485,11 @@
 
       @if (section() === 'orders') {
         <section class="panel-card">
-          <h2>Your orders</h2>
+          <h2>{{ 'account.orders.heading' | transloco }}</h2>
           <div class="coming-soon">
             <fa-icon [icon]="icons.boxOpen" aria-hidden="true" />
-            <p>Order tracking is coming soon.</p>
-            <p class="panel-hint">You'll be able to view order history and track deliveries here.</p>
+            <p>{{ 'account.orders.comingSoon' | transloco }}</p>
+            <p class="panel-hint">{{ 'account.orders.comingSoonHint' | transloco }}</p>
           </div>
         </section>
       }

@@ -10,7 +10,7 @@
         type="button"
         class="modal-close"
         (click)="dismiss(toast.id)"
-        aria-label="Dismiss notification"
+        [attr.aria-label]="'toastContainer.dismissAria' | transloco"
       >
         <fa-icon [icon]="icons.close" aria-hidden="true" />
       </button>

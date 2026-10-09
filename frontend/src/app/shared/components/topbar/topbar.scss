@@ -75,6 +75,33 @@
   margin-left: auto;
 }
 
+.lang-switch {
+  display: flex;
+  border: 1px solid #B3B4B8;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.lang-btn {
+  border: none;
+  background: #fff;
+  color: #6B6C6E;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+
+  &.is-active {
+    background: #735F58;
+    color: #F6F2EF;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #735F58;
+    outline-offset: 2px;
+  }
+}
+
 .icon-btn {
   position: relative;
   display: inline-flex;

@@ -12,6 +12,7 @@ import {
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/auth/auth.service';
 import { CartService } from '../../core/cart/cart.service';
 import {
@@ -89,35 +90,20 @@ interface PromoBadge {
   message: string;
 }
 
-const PROMO_BADGES: Record<string, PromoBadge> = {
-  sale: { label: 'Sale', message: "Limited-time price drop — won't last" },
-  bestseller: { label: 'Bestseller', message: 'Loved by thousands of shoppers' },
-};
+const PROMO_KEYS = new Set(['sale', 'bestseller']);
+const BLURB_CATEGORIES = new Set(['electronics', 'fashion', 'home', 'beauty', 'sports', 'toys']);
 
-function promoBadge(badge: string | null): PromoBadge | null {
-  return badge ? (PROMO_BADGES[badge.toLowerCase()] ?? null) : null;
-}
-
-const CATEGORY_BLURBS: Record<string, string> = {
-  electronics: 'Reliable tech, built to keep up with your day.',
-  fashion: 'A versatile piece that pairs with anything in your closet.',
-  home: 'Everyday comfort with a design that fits any room.',
-  beauty: 'Gentle, effective, and a favorite among regulars.',
-  sports: 'Durable gear made for frequent use.',
-  toys: 'Hours of fun, built to survive the playroom.',
-};
-
-const DEFAULT_BLURB = 'Solid quality at a fair price — a dependable pick.';
-
-function shortDescription(product: Product): string {
-  const promo = promoBadge(product.badge);
-  if (promo) return promo.message;
-  return product.description ?? CATEGORY_BLURBS[product.category.toLowerCase()] ?? DEFAULT_BLURB;
+interface ActiveFilterChip {
+  key: FilterKey;
+  value?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  minRating?: number;
 }
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DotLoader, ProductCardSkeleton, RouterLink, FaIconComponent, Topbar],
+  imports: [DotLoader, ProductCardSkeleton, RouterLink, FaIconComponent, Topbar, TranslocoPipe],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -139,6 +125,7 @@ export class Dashboard {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly productService = inject(ProductService);
+  private readonly transloco = inject(TranslocoService);
 
   // ---- search ----
   // Seeded from ?search=, e.g. when the topbar sends a search here from another page.
@@ -155,10 +142,10 @@ export class Dashboard {
     () => this.selectedCategory() !== null || this.searchTerm() !== '',
   );
   protected readonly activeCategory = computed(() => this.selectedCategory() ?? ALL);
+  /** Raw category name, or null to mean "show the generic title" (decided at display time so it stays in sync with the active language). */
   protected readonly listTitle = computed(() => {
     const category = this.selectedCategory();
-    if (category && category !== ALL) return category;
-    return this.searchTerm() ? 'Search results' : 'All products';
+    return category && category !== ALL ? category : null;
   });
 
   // ---- categories overview ----
@@ -191,18 +178,20 @@ export class Dashboard {
   // ---- filters ----
   protected readonly filters = signal<Filters>(DEFAULT_FILTERS);
   protected readonly facets = signal<ProductFacets | null>(null);
-  protected readonly sortOptions: { value: ProductSort; label: string }[] = [
-    { value: 'newest', label: 'Newest' },
-    { value: 'popular', label: 'Most popular' },
-    { value: 'rating', label: 'Top rated' },
-    { value: 'discount', label: 'Biggest discount' },
-    { value: 'price_asc', label: 'Price: low to high' },
-    { value: 'price_desc', label: 'Price: high to low' },
+  protected readonly sortOptions: { value: ProductSort; labelKey: string }[] = [
+    { value: 'newest', labelKey: 'dashboard.sort.newest' },
+    { value: 'popular', labelKey: 'dashboard.sort.popular' },
+    { value: 'rating', labelKey: 'dashboard.sort.rating' },
+    { value: 'discount', labelKey: 'dashboard.sort.discount' },
+    { value: 'price_asc', labelKey: 'dashboard.sort.priceAsc' },
+    { value: 'price_desc', labelKey: 'dashboard.sort.priceDesc' },
   ];
   protected readonly sortMenuOpen = signal(false);
-  protected readonly currentSortLabel = computed(
-    () => this.sortOptions.find((o) => o.value === this.filters().sort)?.label ?? '',
-  );
+
+  protected sortLabel(value: ProductSort): string {
+    const option = this.sortOptions.find((o) => o.value === value);
+    return option ? this.transloco.translate(option.labelKey) : '';
+  }
   // Booking-style range sliders. Bounds come from the live facets (falling
   // back to a wide default before they load); the slider's resting position
   // at either bound means "no constraint there", same as the old null state.
@@ -253,22 +242,37 @@ export class Dashboard {
 
   protected readonly activeFilters = computed(() => {
     const f = this.filters();
-    const chips: { key: FilterKey; label: string; value?: string }[] = [];
+    const chips: ActiveFilterChip[] = [];
     if (f.minPrice != null || f.maxPrice != null) {
-      const label =
-        f.minPrice != null && f.maxPrice != null
-          ? `$${f.minPrice} – $${f.maxPrice}`
-          : f.minPrice != null
-            ? `From $${f.minPrice}`
-            : `Up to $${f.maxPrice}`;
-      chips.push({ key: 'price', label });
+      chips.push({ key: 'price', minPrice: f.minPrice ?? undefined, maxPrice: f.maxPrice ?? undefined });
     }
-    if (f.minRating != null) chips.push({ key: 'minRating', label: `${f.minRating}+ stars` });
-    if (f.onSale) chips.push({ key: 'onSale', label: 'On sale' });
-    if (f.inStock) chips.push({ key: 'inStock', label: 'In stock' });
-    for (const badge of f.badges) chips.push({ key: 'badge', label: badge, value: badge });
+    if (f.minRating != null) chips.push({ key: 'minRating', minRating: f.minRating });
+    if (f.onSale) chips.push({ key: 'onSale' });
+    if (f.inStock) chips.push({ key: 'inStock' });
+    for (const badge of f.badges) chips.push({ key: 'badge', value: badge });
     return chips;
   });
+
+  protected chipLabel(chip: ActiveFilterChip): string {
+    switch (chip.key) {
+      case 'price':
+        if (chip.minPrice != null && chip.maxPrice != null) {
+          return this.transloco.translate('dashboard.priceRange', { min: chip.minPrice, max: chip.maxPrice });
+        }
+        if (chip.minPrice != null) {
+          return this.transloco.translate('dashboard.priceFrom', { min: chip.minPrice });
+        }
+        return this.transloco.translate('dashboard.priceUpTo', { max: chip.maxPrice });
+      case 'minRating':
+        return this.transloco.translate('dashboard.ratingPlus', { value: chip.minRating });
+      case 'onSale':
+        return this.transloco.translate('dashboard.onSaleFilter');
+      case 'inStock':
+        return this.transloco.translate('dashboard.inStockOnly');
+      case 'badge':
+        return chip.value!;
+    }
+  }
 
   // ---- product list ----
   protected readonly products = signal<Product[]>([]);
@@ -366,8 +370,24 @@ export class Dashboard {
   protected readonly stars = (rating: number) =>
     Array.from({ length: 5 }, (_, i) => (i < Math.round(rating) ? 'full' : 'empty'));
 
-  protected readonly promoBadge = (badge: string | null) => promoBadge(badge);
-  protected readonly shortDescription = (product: Product) => shortDescription(product);
+  protected promoBadge(badge: string | null): PromoBadge | null {
+    if (!badge) return null;
+    const key = badge.toLowerCase();
+    if (!PROMO_KEYS.has(key)) return null;
+    return {
+      label: this.transloco.translate(`dashboard.promo.${key}.label`),
+      message: this.transloco.translate(`dashboard.promo.${key}.message`),
+    };
+  }
+
+  protected shortDescription(product: Product): string {
+    const promo = this.promoBadge(product.badge);
+    if (promo) return promo.message;
+    if (product.description) return product.description;
+    const category = product.category.toLowerCase();
+    const key = BLURB_CATEGORIES.has(category) ? `dashboard.blurb.${category}` : 'dashboard.blurb.default';
+    return this.transloco.translate(key);
+  }
 
   protected shareProduct(product: Product): void {
     const url = `${location.origin}/products/${product.id}`;
@@ -458,7 +478,7 @@ export class Dashboard {
     this.patchFilters({ badges });
   }
 
-  protected removeFilter(chip: { key: FilterKey; value?: string }): void {
+  protected removeFilter(chip: ActiveFilterChip): void {
     switch (chip.key) {
       case 'price':
         return this.patchFilters({ minPrice: null, maxPrice: null });

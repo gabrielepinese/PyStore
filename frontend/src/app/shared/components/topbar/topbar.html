@@ -5,7 +5,7 @@
       class="brand"
       routerLink="/dashboard"
       (click)="onBrandClick()"
-      aria-label="PyStore — back to categories"
+      [attr.aria-label]="'topbar.brandAriaLabel' | transloco"
     >
       PyStore
     </button>
@@ -14,19 +14,42 @@
       <fa-icon [icon]="icons.search" aria-hidden="true" />
       <input
         type="search"
-        placeholder="Search products..."
+        [placeholder]="'topbar.searchPlaceholder' | transloco"
         [value]="searchValue()"
         (input)="onSearchInput($any($event.target).value)"
         (keydown.enter)="onSearchSubmit($any($event.target).value)"
-        aria-label="Search products"
+        [attr.aria-label]="'topbar.searchAriaLabel' | transloco"
       />
     </div>
 
     <div class="topbar-actions">
+      <div class="lang-switch" role="group" [attr.aria-label]="'topbar.switchToEnglish' | transloco">
+        <button
+          type="button"
+          class="lang-btn"
+          [class.is-active]="transloco.getActiveLang() === 'en'"
+          [attr.aria-label]="'topbar.switchToEnglish' | transloco"
+          (click)="setLang('en')"
+        >
+          EN
+        </button>
+        <button
+          type="button"
+          class="lang-btn"
+          [class.is-active]="transloco.getActiveLang() === 'it'"
+          [attr.aria-label]="'topbar.switchToItalian' | transloco"
+          (click)="setLang('it')"
+        >
+          IT
+        </button>
+      </div>
+
       <button
         type="button"
         class="icon-btn"
-        [attr.aria-label]="authService.isAuthenticated() ? 'Cart' : 'Cart — sign in required'"
+        [attr.aria-label]="
+          (authService.isAuthenticated() ? 'topbar.cartAriaLabel' : 'topbar.cartAriaLabelGuest') | transloco
+        "
         (click)="openCart()"
       >
         <fa-icon [icon]="icons.cart" aria-hidden="true" />
@@ -40,15 +63,20 @@
           <a
             class="avatar"
             routerLink="/account"
-            [attr.aria-label]="'Account settings for ' + (authService.currentUser()?.fullName ?? 'you')"
+            [attr.aria-label]="
+              'topbar.accountAriaLabel'
+                | transloco: { name: authService.currentUser()?.fullName ?? ('topbar.youFallback' | transloco) }
+            "
             >{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</a
           >
-          <button type="button" class="signout" (click)="authService.logout()">Sign out</button>
+          <button type="button" class="signout" (click)="authService.logout()">
+            {{ 'common.signOut' | transloco }}
+          </button>
         </div>
       } @else {
         <div class="user">
-          <a class="signout" routerLink="/register">Create account</a>
-          <a class="signin" routerLink="/login">Sign in</a>
+          <a class="signout" routerLink="/register">{{ 'common.createAccount' | transloco }}</a>
+          <a class="signin" routerLink="/login">{{ 'common.signIn' | transloco }}</a>
         </div>
       }
     </div>
