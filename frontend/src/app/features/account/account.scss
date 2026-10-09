@@ -1,0 +1,660 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f6f2ef;
+  font-family: system-ui, sans-serif;
+  color: #1a1a1a;
+}
+
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #6b6c6e;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: #1a1a1a;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #735f58;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.header-avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #735f58, #3f3330);
+  color: #f6f2ef;
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+.header-text {
+  min-width: 0;
+}
+
+.header-greeting {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b6c6e;
+}
+
+.page-title {
+  margin: 2px 0 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.header-email {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  color: #6b6c6e;
+}
+
+.account-body {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.account-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.6rem 0.7rem;
+  border: none;
+  border-radius: 2px;
+  background: none;
+  color: #1a1a1a;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  small {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: #6b6c6e;
+    transition: color 0.15s ease;
+  }
+
+  &:hover {
+    background: #ece4df;
+
+    .nav-icon {
+      background: #e4e2e0;
+    }
+  }
+
+  &.is-active {
+    background: #735f58;
+
+    small {
+      color: #d0bfb2;
+    }
+
+    strong {
+      color: #f6f2ef;
+    }
+
+    .nav-icon {
+      background: #5a4842;
+      color: #f6f2ef;
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid #735f58;
+    outline-offset: 2px;
+  }
+}
+
+.nav-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f6f2ef;
+  color: #735f58;
+  font-size: 0.95rem;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.panel-card {
+  padding: 28px;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #fff;
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.panel-hint {
+  margin: 0 0 20px;
+  font-size: 0.85rem;
+  color: #6b6c6e;
+}
+
+// ---- forms (profile edit, address/card forms) ----
+
+form {
+  display: grid;
+  row-gap: 16px;
+  max-width: 420px;
+}
+
+.entity-form {
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #fbfaf9;
+}
+
+.field {
+  display: grid;
+  row-gap: 6px;
+
+  label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b6c6e;
+  }
+
+  input,
+  select {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 42px;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid #b3b4b8;
+    border-radius: 2px;
+    background: #fff;
+    font: inherit;
+    font-size: 0.88rem;
+    color: #1a1a1a;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+      border-color: #735f58;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #735f58;
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      color: #6b6c6e;
+      background: #ece4df;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field-error {
+  margin: 0;
+  color: #8b1a0a;
+  font-size: 0.75rem;
+  min-height: 14px;
+  visibility: hidden;
+
+  &.is-visible {
+    visibility: visible;
+  }
+}
+
+.form-error {
+  margin: 0;
+  color: #8b1a0a;
+  font-size: 0.8rem;
+  min-height: 16px;
+  visibility: hidden;
+
+  &.is-visible {
+    visibility: visible;
+  }
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #1a1a1a;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-primary {
+  padding: 0.65rem 1.4rem;
+  border: 1px solid #735f58;
+  border-radius: 2px;
+  background: #735f58;
+  color: #f6f2ef;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: #5a4842;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+  }
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.55rem 1rem;
+  border: 1px solid #735f58;
+  border-radius: 2px;
+  background: transparent;
+  color: #735f58;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background: #735f58;
+    color: #f6f2ef;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #1a1a1a;
+    outline-offset: 2px;
+  }
+}
+
+.btn-text {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #6b6c6e;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    color: #1a1a1a;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #735f58;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+.saved-hint {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2e7d4f;
+}
+
+// ---- address / card entity cards ----
+
+.state-row {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 0;
+  color: #6b6c6e;
+  font-size: 0.88rem;
+  text-align: center;
+
+  fa-icon {
+    font-size: 1.6rem;
+    color: #d0bfb2;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.entity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.entity-card {
+  position: relative;
+  padding: 18px;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #fff;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  }
+
+  &.is-default {
+    border-color: #d0bfb2;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  p {
+    margin: 0 0 2px;
+    font-size: 0.82rem;
+    color: #6b6c6e;
+    line-height: 1.4;
+  }
+}
+
+.entity-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.entity-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f6f2ef;
+  color: #735f58;
+  font-size: 0.78rem;
+}
+
+.default-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: #d0bfb2;
+  color: #5a4842;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+
+  fa-icon {
+    font-size: 0.7rem;
+  }
+}
+
+// ---- payment card visual ----
+// Deliberately styled to read as a physical card (gradient, monospace
+// number, chip icon) rather than another plain data row — it's the one
+// piece of content on this page people recognize on sight.
+
+.card-entity {
+  padding-top: 18px;
+}
+
+.card-visual {
+  position: relative;
+  padding: 18px 16px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #5a4842, #2a2220);
+  color: #f6f2ef;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.card-visual-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-chip-icon {
+  font-size: 1.4rem;
+  color: #d0bfb2;
+  opacity: 0.9;
+}
+
+.card-number {
+  margin: 18px 0 14px;
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+}
+
+.card-visual-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.72rem;
+}
+
+.card-holder {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  opacity: 0.85;
+}
+
+.card-expiry {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.card-brand {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+
+.entity-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.icon-text-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #735f58;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    color: #5a4842;
+  }
+
+  &.is-danger {
+    color: #8b1a0a;
+
+    &:hover {
+      color: #5e1206;
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid #735f58;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+// ---- orders placeholder ----
+
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 0;
+  text-align: center;
+
+  fa-icon {
+    font-size: 2rem;
+    color: #d0bfb2;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .panel-hint {
+    margin-top: 2px;
+    font-weight: 400;
+  }
+}
+
+@media (max-width: 760px) {
+  .account-body {
+    grid-template-columns: 1fr;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}

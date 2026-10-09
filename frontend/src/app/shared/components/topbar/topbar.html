@@ -37,7 +37,12 @@
 
       @if (authService.isAuthenticated()) {
         <div class="user">
-          <span class="avatar">{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</span>
+          <a
+            class="avatar"
+            routerLink="/account"
+            [attr.aria-label]="'Account settings for ' + (authService.currentUser()?.fullName ?? 'you')"
+            >{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</a
+          >
           <button type="button" class="signout" (click)="authService.logout()">Sign out</button>
         </div>
       } @else {

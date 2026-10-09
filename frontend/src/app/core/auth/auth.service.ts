@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthResponse, LoginRequest, RegisterRequest, TokenResponse } from '../models/auth.model';
-import { User } from '../models/user.model';
+import { User, UserUpdate } from '../models/user.model';
 import { TokenStorageService } from './token-storage.service';
 
 @Injectable({ providedIn: 'root' })
@@ -36,6 +36,12 @@ export class AuthService {
   loadCurrentUser(): Observable<User> {
     return this.http
       .get<User>(`${this.baseUrl}/me`)
+      .pipe(tap((user) => this.currentUserSignal.set(user)));
+  }
+
+  updateProfile(data: UserUpdate): Observable<User> {
+    return this.http
+      .patch<User>(`${this.baseUrl}/me`, data)
       .pipe(tap((user) => this.currentUserSignal.set(user)));
   }
 

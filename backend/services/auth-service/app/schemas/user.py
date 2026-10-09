@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 
@@ -13,4 +13,16 @@ class UserRead(BaseModel):
     id: str
     email: str
     full_name: str
+    phone: str | None = None
     created_at: datetime
+
+
+class UserUpdate(BaseModel):
+    """Profile fields the user can edit themselves. Email is intentionally
+    excluded — changing it would need re-verification, which this demo
+    doesn't implement."""
+
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+    full_name: str = Field(min_length=2)
+    phone: str | None = None

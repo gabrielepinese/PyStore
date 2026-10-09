@@ -5,12 +5,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.auth import router as auth_router
+from app.api.routes.profile import router as profile_router
 from app.core.config import get_settings
 from app.db.base import Base
 from app.db.session import engine
 
 # Import models so they register on Base.metadata before create_all runs.
-from app.models import refresh_token, user  # noqa: F401
+from app.models import address, payment_method, refresh_token, user  # noqa: F401
 
 settings = get_settings()
 
@@ -34,6 +35,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router, prefix=settings.api_v1_prefix)
+app.include_router(profile_router, prefix=settings.api_v1_prefix)
 
 
 @app.get("/health", tags=["health"])

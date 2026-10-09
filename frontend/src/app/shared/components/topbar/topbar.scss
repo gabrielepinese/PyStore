@@ -132,6 +132,18 @@
   font-weight: 700;
   font-size: 0.85rem;
   text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #5A4842;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #735F58;
+    outline-offset: 2px;
+  }
 }
 
 .signout {
