@@ -202,9 +202,17 @@
       "emailCantChange": "Email can't be changed here — contact support if you need that updated.",
       "emailLabel": "Email",
       "nameLabel": "Name",
-      "nameError": "Enter your full name.",
+      "nameError": "Enter your name.",
+      "lastNameLabel": "Last name",
+      "lastNameError": "Enter your last name.",
       "phoneLabel": "Phone number",
       "phoneError": "Enter a valid phone number (6-12 digits).",
+      "countryLabel": "Country of residence",
+      "countryError": "Select a country of residence.",
+      "selectCountry": "Select a country",
+      "cityLabel": "City",
+      "cityError": "Select a city.",
+      "selectCity": "Select a city",
       "saveChanges": "Save changes"
     },
     "addresses": {

@@ -8,6 +8,7 @@ from app.api.routes.auth import router as auth_router
 from app.api.routes.profile import router as profile_router
 from app.core.config import get_settings
 from app.db.base import Base
+from app.db.dev_migrate import add_missing_columns
 from app.db.session import engine
 
 # Import models so they register on Base.metadata before create_all runs.
@@ -21,6 +22,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     # Dev/demo convenience only — a real deployment manages schema via
     # Alembic migrations instead of create_all.
     Base.metadata.create_all(bind=engine)
+    add_missing_columns(engine)
     yield
 
 

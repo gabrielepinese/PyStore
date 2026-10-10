@@ -42,7 +42,10 @@ def authenticate_user(db: Session, email: str, password: str) -> User | None:
 
 def update_profile(db: Session, user: User, data: UserUpdate) -> User:
     user.full_name = data.full_name
+    user.last_name = data.last_name
     user.phone = data.phone
+    user.country = data.country
+    user.city = data.city
     db.commit()
     db.refresh(user)
     return user

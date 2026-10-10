@@ -92,15 +92,25 @@ export class Account {
 
   protected readonly profileForm = this.fb.nonNullable.group({
     fullName: ['', [Validators.required, Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.minLength(2)]],
     phonePrefix: [DEFAULT_PHONE_PREFIX],
     phoneNumber: ['', Validators.pattern(PHONE_NUMBER_PATTERN)],
+    country: ['', Validators.required],
+    city: ['', Validators.required],
   });
   protected readonly savingProfile = signal(false);
 
   constructor() {
     const user = this.authService.currentUser();
     const { prefix, number } = splitPhone(user?.phone ?? null);
-    this.profileForm.setValue({ fullName: user?.fullName ?? '', phonePrefix: prefix, phoneNumber: number });
+    this.profileForm.setValue({
+      fullName: user?.fullName ?? '',
+      lastName: user?.lastName ?? '',
+      phonePrefix: prefix,
+      phoneNumber: number,
+      country: user?.country ?? '',
+      city: user?.city ?? '',
+    });
 
     this.loadAddresses();
     this.loadPaymentMethods();
@@ -134,17 +144,25 @@ export class Account {
 
     this.savingProfile.set(true);
 
-    const { fullName, phonePrefix, phoneNumber } = this.profileForm.getRawValue();
-    this.authService.updateProfile({ fullName, phone: joinPhone(phonePrefix, phoneNumber) }).subscribe({
-      next: () => {
-        this.savingProfile.set(false);
-        this.toastService.show(this.transloco.translate('toast.profileUpdated'), 'success');
-      },
-      error: () => {
-        this.savingProfile.set(false);
-        this.toastService.show(this.transloco.translate('toast.profileUpdateFailed'), 'error');
-      },
-    });
+    const { fullName, lastName, phonePrefix, phoneNumber, country, city } = this.profileForm.getRawValue();
+    this.authService
+      .updateProfile({
+        fullName,
+        lastName,
+        phone: joinPhone(phonePrefix, phoneNumber),
+        country,
+        city,
+      })
+      .subscribe({
+        next: () => {
+          this.savingProfile.set(false);
+          this.toastService.show(this.transloco.translate('toast.profileUpdated'), 'success');
+        },
+        error: () => {
+          this.savingProfile.set(false);
+          this.toastService.show(this.transloco.translate('toast.profileUpdateFailed'), 'error');
+        },
+      });
   }
 
   // ---- addresses ----

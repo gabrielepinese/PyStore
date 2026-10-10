@@ -13,7 +13,10 @@ class UserRead(BaseModel):
     id: str
     email: str
     full_name: str
+    last_name: str | None = None
     phone: str | None = None
+    country: str | None = None
+    city: str | None = None
     created_at: datetime
 
 
@@ -25,4 +28,7 @@ class UserUpdate(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
     full_name: str = Field(min_length=2)
+    last_name: str | None = None
     phone: str | None = None
+    country: str | None = None
+    city: str | None = None

@@ -9,7 +9,12 @@
     <span class="header-avatar">{{ (authService.currentUser()?.fullName ?? 'U').charAt(0) }}</span>
     <div class="header-text">
       <p class="header-greeting">{{ 'account.hello' | transloco }}</p>
-      <h1 class="page-title">{{ authService.currentUser()?.fullName }}</h1>
+      <h1 class="page-title">
+        {{ authService.currentUser()?.fullName }}
+        @if (authService.currentUser()?.lastName; as lastName) {
+          {{ lastName }}
+        }
+      </h1>
       <p class="header-email">{{ authService.currentUser()?.email }}</p>
     </div>
   </div>
@@ -81,25 +86,48 @@
               <input type="email" [value]="authService.currentUser()?.email" disabled />
             </div>
 
-            <div class="field">
-              <label for="fullName">{{ 'account.profile.nameLabel' | transloco }}</label>
-              <input
-                id="fullName"
-                type="text"
-                formControlName="fullName"
-                autocomplete="name"
-                [attr.aria-invalid]="
-                  profileForm.controls.fullName.invalid && profileForm.controls.fullName.touched
-                "
-              />
-              <p
-                class="field-error"
-                [class.is-visible]="
-                  profileForm.controls.fullName.invalid && profileForm.controls.fullName.touched
-                "
-              >
-                {{ 'account.profile.nameError' | transloco }}
-              </p>
+            <div class="field-row">
+              <div class="field">
+                <label for="fullName">{{ 'account.profile.nameLabel' | transloco }}</label>
+                <input
+                  id="fullName"
+                  type="text"
+                  formControlName="fullName"
+                  autocomplete="given-name"
+                  [attr.aria-invalid]="
+                    profileForm.controls.fullName.invalid && profileForm.controls.fullName.touched
+                  "
+                />
+                <p
+                  class="field-error"
+                  [class.is-visible]="
+                    profileForm.controls.fullName.invalid && profileForm.controls.fullName.touched
+                  "
+                >
+                  {{ 'account.profile.nameError' | transloco }}
+                </p>
+              </div>
+
+              <div class="field">
+                <label for="lastName">{{ 'account.profile.lastNameLabel' | transloco }}</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  formControlName="lastName"
+                  autocomplete="family-name"
+                  [attr.aria-invalid]="
+                    profileForm.controls.lastName.invalid && profileForm.controls.lastName.touched
+                  "
+                />
+                <p
+                  class="field-error"
+                  [class.is-visible]="
+                    profileForm.controls.lastName.invalid && profileForm.controls.lastName.touched
+                  "
+                >
+                  {{ 'account.profile.lastNameError' | transloco }}
+                </p>
+              </div>
             </div>
 
             <div class="field">
@@ -140,6 +168,52 @@
               >
                 {{ 'account.profile.phoneError' | transloco }}
               </p>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="profile-country">{{ 'account.profile.countryLabel' | transloco }}</label>
+                <select
+                  id="profile-country"
+                  formControlName="country"
+                  [attr.aria-invalid]="
+                    profileForm.controls.country.invalid && profileForm.controls.country.touched
+                  "
+                >
+                  <option value="" disabled>{{ 'account.profile.selectCountry' | transloco }}</option>
+                  @for (c of countries; track c) {
+                    <option [ngValue]="c">{{ c }}</option>
+                  }
+                </select>
+                <p
+                  class="field-error"
+                  [class.is-visible]="
+                    profileForm.controls.country.invalid && profileForm.controls.country.touched
+                  "
+                >
+                  {{ 'account.profile.countryError' | transloco }}
+                </p>
+              </div>
+
+              <div class="field">
+                <label for="profile-city">{{ 'account.profile.cityLabel' | transloco }}</label>
+                <select
+                  id="profile-city"
+                  formControlName="city"
+                  [attr.aria-invalid]="profileForm.controls.city.invalid && profileForm.controls.city.touched"
+                >
+                  <option value="" disabled>{{ 'account.profile.selectCity' | transloco }}</option>
+                  @for (c of cities; track c) {
+                    <option [ngValue]="c">{{ c }}</option>
+                  }
+                </select>
+                <p
+                  class="field-error"
+                  [class.is-visible]="profileForm.controls.city.invalid && profileForm.controls.city.touched"
+                >
+                  {{ 'account.profile.cityError' | transloco }}
+                </p>
+              </div>
             </div>
 
             <div class="form-actions">

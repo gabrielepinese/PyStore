@@ -202,9 +202,17 @@
       "emailCantChange": "L'email non può essere modificata qui — contatta l'assistenza se devi aggiornarla.",
       "emailLabel": "Email",
       "nameLabel": "Nome",
-      "nameError": "Inserisci il tuo nome completo.",
+      "nameError": "Inserisci il tuo nome.",
+      "lastNameLabel": "Cognome",
+      "lastNameError": "Inserisci il tuo cognome.",
       "phoneLabel": "Numero di telefono",
       "phoneError": "Inserisci un numero di telefono valido (6-12 cifre).",
+      "countryLabel": "Paese di residenza",
+      "countryError": "Seleziona un paese di residenza.",
+      "selectCountry": "Seleziona un paese",
+      "cityLabel": "Città",
+      "cityError": "Seleziona una città.",
+      "selectCity": "Seleziona una città",
       "saveChanges": "Salva modifiche"
     },
     "addresses": {
