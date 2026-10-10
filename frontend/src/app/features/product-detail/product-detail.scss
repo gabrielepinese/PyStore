@@ -1,13 +1,13 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: #F6F2EF;
+  background: #f6f2ef;
   font-family: system-ui, sans-serif;
   color: #1a1a1a;
 }
 
 .page {
-  max-width: 1040px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
 }
@@ -20,7 +20,7 @@
   padding: 0;
   border: none;
   background: none;
-  color: #6B6C6E;
+  color: #6b6c6e;
   font: inherit;
   font-weight: 600;
   text-decoration: none;
@@ -51,7 +51,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6B6C6E;
+  color: #6b6c6e;
   margin-bottom: 1.5rem;
 }
 
@@ -68,7 +68,7 @@
   gap: 14px;
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 4px;
   }
 }
@@ -96,20 +96,20 @@
   height: 64px;
   padding: 0;
   overflow: hidden;
-  border: 2px solid #B3B4B8;
+  border: 2px solid #b3b4b8;
   cursor: pointer;
   scroll-snap-align: start;
 
   &:hover {
-    border-color: #D0BFB2;
+    border-color: #d0bfb2;
   }
 
   &.is-active {
-    border-color: #735F58;
+    border-color: #735f58;
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 2px;
   }
 }
@@ -125,7 +125,7 @@
   flex: 1 1 auto;
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid #B3B4B8;
+  border: 1px solid #b3b4b8;
 }
 
 @media (min-width: 721px) {
@@ -159,7 +159,7 @@
   height: 56px;
   border-radius: 50%;
   background: #8b1a0a;
-  color: #F6F2EF;
+  color: #f6f2ef;
   font-weight: 700;
   font-size: 0.95rem;
 }
@@ -170,7 +170,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6B6C6E;
+  color: #6b6c6e;
 }
 
 .name {
@@ -196,7 +196,7 @@
 
 .price-original {
   font-size: 1.05rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
   text-decoration: line-through;
 }
 
@@ -207,36 +207,36 @@
 
   fa-icon {
     font-size: 1rem;
-    color: #B3B4B8;
+    color: #b3b4b8;
 
     &.is-full {
-      color: #D0BFB2;
+      color: #d0bfb2;
     }
   }
 
   .reviews {
     margin-left: 6px;
     font-size: 0.85rem;
-    color: #6B6C6E;
+    color: #6b6c6e;
   }
 }
 
 hr {
   border: none;
-  border-top: 1px solid #B3B4B8;
+  border-top: 1px solid #b3b4b8;
   margin: 20px 0;
 }
 
 .description {
   margin: 0;
-  color: #6B6C6E;
+  color: #6b6c6e;
   line-height: 1.6;
 }
 
 .stock-line {
   margin: 0 0 20px;
   font-size: 0.85rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
 }
 
 .purchase-row {
@@ -247,9 +247,9 @@ hr {
 
 .add-to-cart {
   padding: 0.85rem 1.8rem;
-  border: 1px solid #735F58;
-  background: #735F58;
-  color: #F6F2EF;
+  border: 1px solid #735f58;
+  background: #735f58;
+  color: #f6f2ef;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -275,7 +275,7 @@ hr {
   align-items: center;
   gap: 8px;
   padding: 0.85rem 1.4rem;
-  border: 1px solid #B3B4B8;
+  border: 1px solid #b3b4b8;
   background: transparent;
   color: #1a1a1a;
   font-weight: 600;
@@ -288,11 +288,11 @@ hr {
   }
 
   &:hover {
-    background: #F6F2EF;
+    background: #f6f2ef;
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid #735f58;
     outline-offset: 2px;
   }
 }
@@ -304,7 +304,7 @@ hr {
 .tab-headers {
   display: flex;
   gap: 28px;
-  border-bottom: 1px solid #B3B4B8;
+  border-bottom: 1px solid #b3b4b8;
 }
 
 .tab-header {
@@ -312,14 +312,14 @@ hr {
   border: none;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: #6B6C6E;
+  color: #6b6c6e;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
 
   &.is-active {
     color: #1a1a1a;
-    border-bottom-color: #735F58;
+    border-bottom-color: #735f58;
   }
 
   &:focus-visible {
@@ -348,7 +348,7 @@ hr {
 .about-list {
   margin: 0;
   padding-left: 1.2rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
   line-height: 1.6;
 
   li {
@@ -367,13 +367,13 @@ hr {
   align-items: flex-start;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #E4E2E0;
+  border: 1px solid #e4e2e0;
   border-radius: 2px;
-  background: #FBFAF9;
+  background: #fbfaf9;
   transition: border-color 0.15s ease;
 
   &:hover {
-    border-color: #735F58;
+    border-color: #735f58;
   }
 }
 
@@ -385,8 +385,8 @@ hr {
   width: 38px;
   height: 38px;
   border-radius: 2px;
-  background: #EFE8E5;
-  color: #735F58;
+  background: #efe8e5;
+  color: #735f58;
   font-size: 0.95rem;
 }
 
@@ -402,7 +402,7 @@ hr {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #9A9A9A;
+  color: #9a9a9a;
 }
 
 .spec-value {
@@ -412,11 +412,11 @@ hr {
   word-break: break-word;
 
   &.is-in-stock {
-    color: #2E7D4F;
+    color: #2e7d4f;
   }
 
   &.is-out-stock {
-    color: #C0392B;
+    color: #c0392b;
   }
 }
 
@@ -424,14 +424,14 @@ hr {
   margin-left: 6px;
   font-size: 0.82rem;
   font-weight: 500;
-  color: #9A9A9A;
+  color: #9a9a9a;
   text-decoration: line-through;
 }
 
 .spec-sub {
   font-size: 0.82rem;
   font-weight: 500;
-  color: #6B6C6E;
+  color: #6b6c6e;
 }
 
 .shipping-panel {
@@ -449,7 +449,7 @@ hr {
 
 .shipping-option {
   padding: 16px;
-  border: 1px solid #B3B4B8;
+  border: 1px solid #b3b4b8;
   background: #fff;
 
   h4 {
@@ -461,13 +461,13 @@ hr {
 
   p {
     margin: 0;
-    color: #6B6C6E;
+    color: #6b6c6e;
     font-size: 0.9rem;
   }
 }
 
 .shipping-policies {
-  color: #6B6C6E;
+  color: #6b6c6e;
   line-height: 1.6;
 
   h4 {
@@ -496,7 +496,7 @@ hr {
   gap: 32px;
   padding-bottom: 28px;
   margin-bottom: 28px;
-  border-bottom: 1px solid #B3B4B8;
+  border-bottom: 1px solid #b3b4b8;
 }
 
 .overview-score {
@@ -514,16 +514,16 @@ hr {
 
   .stars fa-icon {
     font-size: 1rem;
-    color: #B3B4B8;
+    color: #b3b4b8;
 
     &.is-full {
-      color: #D0BFB2;
+      color: #d0bfb2;
     }
   }
 
   .count {
     font-size: 0.8rem;
-    color: #6B6C6E;
+    color: #6b6c6e;
   }
 }
 
@@ -540,17 +540,17 @@ hr {
   align-items: center;
   gap: 10px;
   font-size: 0.8rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
 }
 
 .breakdown-bar {
   height: 8px;
-  background: #ECE4DF;
+  background: #ece4df;
 
   span {
     display: block;
     height: 100%;
-    background: #735F58;
+    background: #735f58;
   }
 }
 
@@ -566,7 +566,7 @@ hr {
 
 .review-card {
   padding-bottom: 20px;
-  border-bottom: 1px solid #B3B4B8;
+  border-bottom: 1px solid #b3b4b8;
 
   &:last-child {
     border-bottom: none;
@@ -581,10 +581,10 @@ hr {
 
   .stars fa-icon {
     font-size: 0.85rem;
-    color: #B3B4B8;
+    color: #b3b4b8;
 
     &.is-full {
-      color: #D0BFB2;
+      color: #d0bfb2;
     }
   }
 }
@@ -599,33 +599,33 @@ hr {
 .review-meta {
   margin: 0 0 8px;
   font-size: 0.78rem;
-  color: #6B6C6E;
+  color: #6b6c6e;
 }
 
 .review-body {
   margin: 0;
-  color: #6B6C6E;
+  color: #6b6c6e;
   line-height: 1.6;
 }
 
 .no-reviews {
-  color: #6B6C6E;
+  color: #6b6c6e;
 }
 
 .load-more {
   display: block;
   margin: 24px auto 0;
   padding: 0.7rem 1.6rem;
-  border: 1px solid #735F58;
+  border: 1px solid #735f58;
   background: transparent;
-  color: #735F58;
+  color: #735f58;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
 
   &:hover {
-    background: #735F58;
-    color: #F6F2EF;
+    background: #735f58;
+    color: #f6f2ef;
   }
 
   &:focus-visible {

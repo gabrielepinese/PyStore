@@ -7,7 +7,7 @@
 }
 
 .page {
-  max-width: 1040px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
 }
@@ -210,7 +210,7 @@
 form {
   display: grid;
   row-gap: 16px;
-  max-width: 420px;
+  max-width: 1440px;
 }
 
 .entity-form {
@@ -219,6 +219,161 @@ form {
   border: 1px solid #e4e2e0;
   border-radius: 2px;
   background: #fbfaf9;
+}
+
+// ---- compact card form, paired side-by-side with the live preview ----
+
+.card-form-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.card-flip-wrap {
+  position: relative;
+  order: 2;
+  flex: 0 0 360px;
+  max-width: 360px;
+}
+
+.card-flip-toggle {
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #f6f2ef;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #f6f2ef;
+    outline-offset: 2px;
+  }
+}
+
+.card-flip {
+  perspective: 1200px;
+}
+
+.card-flip-inner {
+  position: relative;
+  height: 190px;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+
+  .card-flip.is-flipped & {
+    transform: rotateY(180deg);
+  }
+}
+
+// Higher specificity than `.card-visual` (declared later, for the saved-card
+// list) so these always win regardless of source order.
+.card-flip-inner .card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.card-flip-inner .card-face-back {
+  display: flex;
+  flex-direction: column;
+  transform: rotateY(180deg);
+}
+
+.card-visual-preview {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.card-back-stripe {
+  margin: -18px -16px 16px;
+  height: 38px;
+  background: #1a1414;
+}
+
+.card-back-signature {
+  display: flex;
+  justify-content: flex-end;
+  margin: 18px 0 0;
+  padding: 8px 10px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    45deg,
+    #ece4df,
+    #ece4df 4px,
+    #e4e2e0 4px,
+    #e4e2e0 8px
+  );
+}
+
+.card-back-cvv {
+  padding: 2px 10px;
+  border-radius: 2px;
+  background: #fff;
+  color: #1a1a1a;
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.card-back-hint {
+  margin: 10px 0 0;
+  color: #d0bfb2;
+  font-size: 0.68rem;
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+
+.card-form {
+  order: 1;
+  flex: 1 1 320px;
+  min-width: 0;
+  row-gap: 14px;
+  padding: 16px;
+  margin-bottom: 0;
+  max-width: 420px;
+
+  input,
+  select {
+    min-height: 38px;
+    padding: 0.5rem 0.65rem;
+  }
+}
+
+.card-form-row {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cvv-field {
+  position: relative;
+}
+
+.cvv-lock-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #b3b4b8;
+  font-size: 0.85rem;
+  pointer-events: none;
 }
 
 .field {
@@ -266,6 +421,24 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+}
+
+.card-number-field {
+  position: relative;
+
+  input.has-brand-icon {
+    padding-right: 42px;
+  }
+}
+
+.card-number-brand-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #735f58;
+  font-size: 1.4rem;
+  pointer-events: none;
 }
 
 .field .label-optional {
@@ -526,31 +699,46 @@ form {
 
 .entity-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
 }
 
 .entity-card {
   position: relative;
-  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 18px;
   border: 1px solid #e4e2e0;
+  border-left: 3px solid #e4e2e0;
   border-radius: 2px;
   background: #fff;
+  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04);
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 
   &:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    border-color: #d0bfb2;
+    border-left-color: #735f58;
+    box-shadow: 0 10px 24px rgba(26, 26, 26, 0.08);
   }
 
   &.is-default {
-    border-color: #d0bfb2;
+    border-left-color: #735f58;
+  }
+
+  &.is-clickable {
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 3px solid #735f58;
+      outline-offset: 2px;
+    }
   }
 
   h3 {
-    margin: 0 0 8px;
-    font-size: 0.95rem;
+    margin: 0;
+    font-size: 0.98rem;
     font-weight: 700;
     color: #1a1a1a;
   }
@@ -559,19 +747,37 @@ form {
     margin: 0 0 2px;
     font-size: 0.82rem;
     color: #6b6c6e;
-    line-height: 1.4;
+    line-height: 1.45;
+  }
+
+  .entity-subtitle {
+    margin: 2px 0 0;
+    font-size: 0.78rem;
+    color: #8a8b8d;
+  }
+
+  .entity-phone {
+    margin-top: 6px;
+    color: #735f58;
+    font-weight: 600;
   }
 }
 
 .entity-card-head {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0ede9;
+}
 
-  h3 {
-    margin: 0;
-  }
+.entity-card-title {
+  min-width: 0;
+}
+
+.entity-card-body {
+  flex: 1 1 auto;
 }
 
 .entity-icon {
@@ -579,32 +785,38 @@ form {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 38px;
+  height: 38px;
+  margin-top: 1px;
   border-radius: 50%;
-  background: #f6f2ef;
+  background: linear-gradient(135deg, #ece4df, #e4e2e0);
   color: #735f58;
-  font-size: 0.78rem;
+  font-size: 0.85rem;
+  box-shadow: inset 0 0 0 1px rgba(115, 95, 88, 0.12);
 }
 
 .default-badge {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  z-index: 2;
+  top: 14px;
+  right: 14px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
+  padding: 4px 9px;
+  border: 1px solid #ecd9a8;
   border-radius: 2px;
-  background: #d0bfb2;
+  background: #fff;
   color: #5a4842;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
 
   fa-icon {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
+    color: #c9972b;
   }
 }
 
@@ -614,15 +826,17 @@ form {
 // piece of content on this page people recognize on sight.
 
 .card-entity {
-  padding-top: 18px;
+  padding-top: 20px;
 }
 
 .card-visual {
   position: relative;
+  z-index: 1;
   padding: 18px 16px;
-  border-radius: 8px;
+  border-radius: 2px;
   background: linear-gradient(135deg, #5a4842, #2a2220);
   color: #f6f2ef;
+  box-shadow: 0 8px 20px rgba(42, 34, 32, 0.25);
   overflow: hidden;
 
   &::after {
@@ -644,10 +858,22 @@ form {
   gap: 10px;
 }
 
+.card-visual-marks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .card-chip-icon {
   font-size: 1.4rem;
   color: #d0bfb2;
   opacity: 0.9;
+}
+
+.card-brand-icon {
+  font-size: 1.5rem;
+  color: #f6f2ef;
+  opacity: 0.95;
 }
 
 .card-number {
@@ -690,30 +916,42 @@ form {
 .entity-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #f0ede9;
 }
 
 .icon-text-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0;
-  border: none;
-  background: none;
+  padding: 6px 11px;
+  border: 1px solid #e4e2e0;
+  border-radius: 2px;
+  background: #f6f2ef;
   color: #735f58;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
+    background: #ece4df;
+    border-color: #d0bfb2;
     color: #5a4842;
   }
 
   &.is-danger {
+    background: #fbf0ee;
     color: #8b1a0a;
 
     &:hover {
+      background: #f6d9d2;
+      border-color: #e3a79a;
       color: #5e1206;
     }
   }
@@ -721,7 +959,6 @@ form {
   &:focus-visible {
     outline: 3px solid #735f58;
     outline-offset: 2px;
-    border-radius: 2px;
   }
 }
 
@@ -760,5 +997,14 @@ form {
 
   .field-row {
     grid-template-columns: 1fr;
+  }
+
+  .card-form-layout {
+    flex-direction: column;
+  }
+
+  .card-visual-preview {
+    flex-basis: auto;
+    max-width: 100%;
   }
 }

@@ -11,6 +11,8 @@ export interface PaymentMethod {
 
 export interface PaymentMethodCreate {
   cardNumber: string;
+  /** Validated client- and server-side, then discarded — never stored or echoed back. */
+  cvv: string;
   cardholderName: string;
   expMonth: number;
   expYear: number;

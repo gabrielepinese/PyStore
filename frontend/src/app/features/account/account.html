@@ -326,7 +326,15 @@
           } @else {
             <div class="entity-grid">
               @for (address of addresses(); track address.id) {
-                <article class="entity-card" [class.is-default]="address.isDefault">
+                <article
+                  class="entity-card is-clickable"
+                  [class.is-default]="address.isDefault"
+                  role="button"
+                  tabindex="0"
+                  (click)="editAddress(address)"
+                  (keydown.enter)="editAddress(address)"
+                  (keydown.space)="$event.preventDefault(); editAddress(address)"
+                >
                   @if (address.isDefault) {
                     <span class="default-badge"
                       ><fa-icon [icon]="icons.star" aria-hidden="true" /> {{ 'account.addresses.default' | transloco }}</span
@@ -334,21 +342,33 @@
                   }
                   <div class="entity-card-head">
                     <span class="entity-icon"><fa-icon [icon]="icons.location" aria-hidden="true" /></span>
-                    <h3>{{ address.label }}</h3>
+                    <div class="entity-card-title">
+                      <h3>{{ address.label }}</h3>
+                      <p class="entity-subtitle">{{ address.fullName }}</p>
+                    </div>
                   </div>
-                  <p>{{ address.fullName }}</p>
-                  <p>{{ address.line1 }}{{ address.line2 ? ', ' + address.line2 : '' }}</p>
-                  <p>{{ address.city }}, {{ address.postalCode }}</p>
-                  <p>{{ address.country }}</p>
-                  @if (address.phone) {
-                    <p>{{ address.phone }}</p>
-                  }
+
+                  <div class="entity-card-body">
+                    <p>{{ address.line1 }}{{ address.line2 ? ', ' + address.line2 : '' }}</p>
+                    <p>{{ address.city }}, {{ address.postalCode }} · {{ address.country }}</p>
+                    @if (address.phone) {
+                      <p class="entity-phone">{{ address.phone }}</p>
+                    }
+                  </div>
 
                   <div class="entity-actions">
-                    <button type="button" class="icon-text-btn" (click)="editAddress(address)">
+                    <button
+                      type="button"
+                      class="icon-text-btn"
+                      (click)="$event.stopPropagation(); editAddress(address)"
+                    >
                       <fa-icon [icon]="icons.pen" aria-hidden="true" /> {{ 'account.addresses.edit' | transloco }}
                     </button>
-                    <button type="button" class="icon-text-btn is-danger" (click)="deleteAddress(address.id)">
+                    <button
+                      type="button"
+                      class="icon-text-btn is-danger"
+                      (click)="$event.stopPropagation(); deleteAddress(address.id)"
+                    >
                       <fa-icon [icon]="icons.trash" aria-hidden="true" /> {{ 'account.addresses.remove' | transloco }}
                     </button>
                   </div>
@@ -374,63 +394,153 @@
           </p>
 
           @if (cardFormOpen()) {
-            <form class="entity-form" [formGroup]="cardForm" (ngSubmit)="saveCard()" novalidate>
-              <div class="field">
-                <label for="card-number">{{ 'account.payment.cardNumberLabel' | transloco }}</label>
-                <input
-                  id="card-number"
-                  type="text"
-                  inputmode="numeric"
-                  formControlName="cardNumber"
-                  placeholder="4242 4242 4242 4242"
-                  autocomplete="cc-number"
-                />
-              </div>
-
-              <div class="field">
-                <label for="card-name">{{ 'account.payment.cardholderLabel' | transloco }}</label>
-                <input id="card-name" type="text" formControlName="cardholderName" autocomplete="cc-name" />
-              </div>
-
-              <div class="field-row">
-                <div class="field">
-                  <label for="card-month">{{ 'account.payment.expMonthLabel' | transloco }}</label>
-                  <select id="card-month" formControlName="expMonth">
-                    @for (month of cardMonths; track month) {
-                      <option [ngValue]="month">{{ month }}</option>
-                    }
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="card-year">{{ 'account.payment.expYearLabel' | transloco }}</label>
-                  <select id="card-year" formControlName="expYear">
-                    @for (year of cardYears; track year) {
-                      <option [ngValue]="year">{{ year }}</option>
-                    }
-                  </select>
-                </div>
-              </div>
-
-              <label class="checkbox-field">
-                <input type="checkbox" formControlName="isDefault" />
-                <span>{{ 'account.payment.setDefault' | transloco }}</span>
-              </label>
-
-              <p class="form-error" [class.is-visible]="!!cardError()">{{ cardError() }}</p>
-
-              <div class="form-actions">
-                <button type="submit" class="btn-primary" [disabled]="savingCard()">
-                  @if (savingCard()) {
-                    <app-dot-loader />
-                  } @else {
-                    {{ 'account.payment.addCard' | transloco }}
-                  }
+            <div class="card-form-layout">
+              <div class="card-flip-wrap">
+                <button
+                  type="button"
+                  class="card-flip-toggle"
+                  (click)="previewFlipped.update(flipped => !flipped)"
+                  [attr.aria-label]="'account.payment.flipPreview' | transloco"
+                >
+                  <fa-icon [icon]="icons.rotate" aria-hidden="true" />
                 </button>
-                <button type="button" class="btn-text" (click)="cancelCardForm()" [disabled]="savingCard()">
-                  {{ 'common.cancel' | transloco }}
-                </button>
+
+                <div class="card-flip" [class.is-flipped]="previewFlipped()">
+                  <div class="card-flip-inner">
+                    <div class="card-visual card-visual-preview card-face card-face-front">
+                      <div class="card-visual-top">
+                        <div class="card-visual-marks">
+                          <fa-icon class="card-chip-icon" [icon]="icons.card" aria-hidden="true" />
+                          @if (typedCardIcon()) {
+                            <fa-icon class="card-brand-icon" [icon]="typedCardIcon()!" aria-hidden="true" />
+                          }
+                        </div>
+                        <span class="card-brand">{{ typedCardBrand() }}</span>
+                      </div>
+                      <p class="card-number">{{ cardNumberPreview() }}</p>
+                      <div class="card-visual-foot">
+                        <span class="card-holder">{{
+                          cardholderPreview() ?? ('account.payment.cardholderPlaceholder' | transloco)
+                        }}</span>
+                        <span class="card-expiry">{{ cardExpiryPreview() }}</span>
+                      </div>
+                    </div>
+
+                    <div class="card-visual card-visual-preview card-face card-face-back">
+                      <div class="card-back-stripe"></div>
+                      <div class="card-back-signature">
+                        <span class="card-back-cvv">{{ cvvPreview() }}</span>
+                      </div>
+                      <p class="card-back-hint">{{ 'account.payment.cvvLabel' | transloco }}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </form>
+
+              <form class="entity-form card-form" [formGroup]="cardForm" (ngSubmit)="saveCard()" novalidate>
+                <div class="field">
+                  <label for="card-number">{{ 'account.payment.cardNumberLabel' | transloco }}</label>
+                  <div class="card-number-field">
+                    <input
+                      id="card-number"
+                      type="text"
+                      inputmode="numeric"
+                      formControlName="cardNumber"
+                      placeholder="4242424242424242"
+                      autocomplete="cc-number"
+                      [class.has-brand-icon]="!!typedCardIcon()"
+                      (input)="onCardNumberInput($event)"
+                      (keypress)="onDigitsOnlyKeypress($event)"
+                      (paste)="onCardNumberPaste($event)"
+                      [attr.aria-invalid]="
+                        cardForm.controls.cardNumber.invalid && cardForm.controls.cardNumber.touched
+                      "
+                    />
+                    @if (typedCardIcon()) {
+                      <fa-icon class="card-number-brand-icon" [icon]="typedCardIcon()!" aria-hidden="true" />
+                    }
+                  </div>
+                  <p
+                    class="field-error"
+                    [class.is-visible]="
+                      cardForm.controls.cardNumber.invalid && cardForm.controls.cardNumber.touched
+                    "
+                  >
+                    {{ 'account.payment.cardNumberError' | transloco }}
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label for="card-name">{{ 'account.payment.cardholderLabel' | transloco }}</label>
+                  <input id="card-name" type="text" formControlName="cardholderName" autocomplete="cc-name" />
+                </div>
+
+                <div class="field-row card-form-row">
+                  <div class="field">
+                    <label for="card-month">{{ 'account.payment.expMonthLabel' | transloco }}</label>
+                    <select id="card-month" formControlName="expMonth">
+                      @for (month of cardMonths; track month) {
+                        <option [ngValue]="month">{{ month }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="card-year">{{ 'account.payment.expYearLabel' | transloco }}</label>
+                    <select id="card-year" formControlName="expYear">
+                      @for (year of cardYears; track year) {
+                        <option [ngValue]="year">{{ year }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="card-cvv">{{ 'account.payment.cvvLabel' | transloco }}</label>
+                    <div class="cvv-field">
+                      <input
+                        id="card-cvv"
+                        type="text"
+                        inputmode="numeric"
+                        formControlName="cvv"
+                        autocomplete="cc-csc"
+                        [attr.maxlength]="cvvMaxLength()"
+                        [placeholder]="typedCardBrand() ? (cvvMaxLength() === 4 ? '1234' : '123') : ''"
+                        (focus)="previewFlipped.set(true)"
+                        (blur)="previewFlipped.set(false)"
+                        [attr.aria-invalid]="cardForm.hasError('cvv') && cardForm.controls.cvv.touched"
+                      />
+                      @if (!typedCardBrand()) {
+                        <fa-icon class="cvv-lock-icon" [icon]="icons.lock" aria-hidden="true" />
+                      }
+                    </div>
+                    @if (!typedCardBrand()) {
+                      <p class="field-hint">{{ 'account.payment.cvvLocked' | transloco }}</p>
+                    }
+                    <p class="field-error" [class.is-visible]="cardForm.hasError('cvv') && cardForm.controls.cvv.touched">
+                      {{ 'account.payment.cvvError' | transloco }}
+                    </p>
+                  </div>
+                </div>
+
+                <label class="checkbox-field">
+                  <input type="checkbox" formControlName="isDefault" />
+                  <span>{{ 'account.payment.setDefault' | transloco }}</span>
+                </label>
+
+                <p class="form-error" [class.is-visible]="!!cardError()">{{ cardError() }}</p>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary" [disabled]="savingCard()">
+                    @if (savingCard()) {
+                      <app-dot-loader />
+                    } @else {
+                      {{ 'account.payment.addCard' | transloco }}
+                    }
+                  </button>
+                  <button type="button" class="btn-text" (click)="cancelCardForm()" [disabled]="savingCard()">
+                    {{ 'common.cancel' | transloco }}
+                  </button>
+                </div>
+              </form>
+            </div>
           }
 
           @if (cardsLoading()) {
@@ -442,7 +552,7 @@
               <fa-icon [icon]="icons.card" aria-hidden="true" />
               <p>{{ 'account.payment.noSaved' | transloco }}</p>
             </div>
-          } @else {
+          } @else if (!cardFormOpen()) {
             <div class="entity-grid">
               @for (card of cards(); track card.id) {
                 <article class="entity-card card-entity" [class.is-default]="card.isDefault">
@@ -454,7 +564,12 @@
 
                   <div class="card-visual">
                     <div class="card-visual-top">
-                      <fa-icon class="card-chip-icon" [icon]="icons.card" aria-hidden="true" />
+                      <div class="card-visual-marks">
+                        <fa-icon class="card-chip-icon" [icon]="icons.card" aria-hidden="true" />
+                        @if (brandIcon(card.brand)) {
+                          <fa-icon class="card-brand-icon" [icon]="brandIcon(card.brand)!" aria-hidden="true" />
+                        }
+                      </div>
                       <span class="card-brand">{{ card.brand }}</span>
                     </div>
                     <p class="card-number">•••• •••• •••• {{ card.last4 }}</p>

@@ -1,17 +1,22 @@
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faCcAmex, faCcMastercard, faCcVisa } from '@fortawesome/free-brands-svg-icons';
 import {
   faAngleLeft,
   faBoxOpen,
   faChevronDown,
   faCreditCard,
   faLocationDot,
+  faLock,
   faPen,
   faPlus,
+  faRotate,
   faStar,
   faTrash,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -25,6 +30,20 @@ import { ToastService } from '../../shared/services/toast.service';
 import { COUNTRIES, ITALIAN_CITIES } from '../../shared/data/italy';
 import { DEFAULT_PHONE_PREFIX, PHONE_PREFIXES } from '../../shared/data/phone-prefixes';
 import { joinPhone, PHONE_NUMBER_PATTERN, POSTAL_CODE_PATTERN, splitPhone } from '../../shared/utils/phone';
+import {
+  cardNumberValidator,
+  cvvLengthForBrand,
+  cvvValidator,
+  detectCardBrand,
+  normalizeCardNumber,
+} from '../../shared/utils/card-number';
+
+/** Brand name (as returned by the backend, or detected client-side) → its FontAwesome mark. */
+const CARD_BRAND_ICONS: Record<string, IconDefinition> = {
+  Visa: faCcVisa,
+  Mastercard: faCcMastercard,
+  'American Express': faCcAmex,
+};
 
 type Section = 'profile' | 'addresses' | 'payment' | 'orders';
 
@@ -43,8 +62,10 @@ export class Account {
     chevronDown: faChevronDown,
     card: faCreditCard,
     location: faLocationDot,
+    lock: faLock,
     pen: faPen,
     plus: faPlus,
+    rotate: faRotate,
     star: faStar,
     trash: faTrash,
     user: faUser,
@@ -81,9 +102,25 @@ export class Account {
 
     this.loadAddresses();
     this.loadPaymentMethods();
+
+    // The CVV's valid length depends on the brand, which isn't known until
+    // the card number is typed and recognized — so the field stays locked
+    // until then, instead of silently accepting the wrong length.
+    effect(() => {
+      const cvvControl = this.cardForm.controls.cvv;
+      if (this.typedCardBrand()) {
+        if (cvvControl.disabled) {
+          cvvControl.enable({ emitEvent: false });
+        }
+      } else if (cvvControl.enabled) {
+        cvvControl.disable({ emitEvent: false });
+      }
+    });
   }
 
   protected setSection(section: Section): void {
+    this.addressFormOpen.set(false);
+    this.cardFormOpen.set(false);
     this.section.set(section);
   }
 
@@ -234,13 +271,95 @@ export class Account {
   protected readonly savingCard = signal(false);
   protected readonly cardError = signal<string | null>(null);
 
-  protected readonly cardForm = this.fb.nonNullable.group({
-    cardNumber: ['', [Validators.required, Validators.pattern(/^[\d\s-]{12,24}$/)]],
-    cardholderName: ['', [Validators.required, Validators.minLength(2)]],
-    expMonth: [1, Validators.required],
-    expYear: [CURRENT_YEAR, Validators.required],
-    isDefault: [false],
+  protected readonly cardForm = this.fb.nonNullable.group(
+    {
+      cardNumber: ['', [Validators.required, cardNumberValidator]],
+      cvv: ['', [Validators.required]],
+      cardholderName: ['', [Validators.required, Validators.minLength(2)]],
+      expMonth: [1, Validators.required],
+      expYear: [CURRENT_YEAR, Validators.required],
+      isDefault: [false],
+    },
+    { validators: cvvValidator },
+  );
+
+  /** Backs the live card preview + the brand icon in the number field — one source, both read from it. */
+  private readonly cardFormValue = toSignal(this.cardForm.valueChanges, {
+    initialValue: this.cardForm.getRawValue(),
   });
+
+  /** True while the preview shows the back (CVV focused, or flipped manually). */
+  protected readonly previewFlipped = signal(false);
+
+  protected readonly typedCardBrand = computed(() =>
+    detectCardBrand(normalizeCardNumber(this.cardFormValue().cardNumber ?? '')),
+  );
+
+  /** Live brand icon as the user types, shown both inside the number field and in the card preview. */
+  protected readonly typedCardIcon = computed(() => this.brandIcon(this.typedCardBrand() ?? ''));
+
+  protected readonly cvvMaxLength = computed(() => cvvLengthForBrand(this.typedCardBrand()));
+
+  protected readonly cardNumberPreview = computed(() => {
+    const digits = normalizeCardNumber(this.cardFormValue().cardNumber ?? '');
+    if (!digits) {
+      return '•••• •••• •••• ••••';
+    }
+    const padded = digits.length < 16 ? digits + '•'.repeat(16 - digits.length) : digits;
+    return padded.match(/.{1,4}/g)?.join(' ') ?? padded;
+  });
+
+  protected readonly cardholderPreview = computed(() => this.cardFormValue().cardholderName?.trim() || null);
+
+  protected readonly cardExpiryPreview = computed(() => {
+    const { expMonth, expYear } = this.cardFormValue();
+    return expMonth && expYear ? `${expMonth.toString().padStart(2, '0')}/${expYear.toString().slice(-2)}` : '••/••';
+  });
+
+  protected readonly cvvPreview = computed(() => {
+    const cvv = this.cardFormValue().cvv ?? '';
+    const length = this.cvvMaxLength();
+    return (cvv + '•'.repeat(length)).slice(0, length);
+  });
+
+  protected brandIcon(brand: string): IconDefinition | undefined {
+    return CARD_BRAND_ICONS[brand];
+  }
+
+  /** Blocks any non-digit keystroke outright — letters, spaces, dashes never reach the field. */
+  protected onDigitsOnlyKeypress(event: KeyboardEvent): void {
+    if (event.ctrlKey || event.metaKey || event.altKey) {
+      return;
+    }
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  /** Paste fallback: strips anything non-digit from the clipboard instead of blocking the paste entirely. */
+  protected onCardNumberPaste(event: ClipboardEvent): void {
+    const pasted = event.clipboardData?.getData('text') ?? '';
+    const digits = pasted.replace(/\D/g, '');
+    if (digits.length === pasted.length) {
+      return;
+    }
+
+    event.preventDefault();
+    const input = event.target as HTMLInputElement;
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    const merged = (input.value.slice(0, start) + digits + input.value.slice(end)).slice(0, 19);
+    this.cardForm.controls.cardNumber.setValue(merged);
+  }
+
+  /** Last-resort net for anything keypress/paste don't catch (autofill, IME, drag-and-drop text). */
+  protected onCardNumberInput(event: Event): void {
+    const raw = (event.target as HTMLInputElement).value;
+    const digitsOnly = raw.replace(/\D/g, '').slice(0, 19);
+    if (digitsOnly !== raw) {
+      this.cardForm.controls.cardNumber.setValue(digitsOnly);
+    }
+  }
 
   private loadPaymentMethods(): void {
     this.cardsLoading.set(true);
@@ -257,11 +376,13 @@ export class Account {
     this.cardError.set(null);
     this.cardForm.reset({
       cardNumber: '',
+      cvv: '',
       cardholderName: '',
       expMonth: 1,
       expYear: CURRENT_YEAR,
       isDefault: this.cards().length === 0,
     });
+    this.previewFlipped.set(false);
     this.cardFormOpen.set(true);
   }
 
@@ -278,7 +399,11 @@ export class Account {
     this.savingCard.set(true);
     this.cardError.set(null);
 
-    this.accountService.createPaymentMethod(this.cardForm.getRawValue()).subscribe({
+    const raw = this.cardForm.getRawValue();
+    this.accountService.createPaymentMethod({
+      ...raw,
+      cardNumber: normalizeCardNumber(raw.cardNumber),
+    }).subscribe({
       next: () => {
         this.savingCard.set(false);
         this.cardFormOpen.set(false);
