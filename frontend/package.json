@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "docker:rebuild": "docker compose -f ../docker-compose.yml build frontend --no-cache && docker compose -f ../docker-compose.yml up -d frontend"
   },
   "private": true,
   "packageManager": "npm@10.9.8",
