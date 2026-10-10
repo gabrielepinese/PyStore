@@ -113,6 +113,7 @@ def test_payment_method_never_exposes_full_card_number(client, auth_header):
         "/api/v1/auth/me/payment-methods",
         json={
             "cardNumber": "4242 4242 4242 4242",
+            "cvv": "123",
             "cardholderName": "Grace Hopper",
             "expMonth": 12,
             "expYear": 2030,
@@ -125,12 +126,14 @@ def test_payment_method_never_exposes_full_card_number(client, auth_header):
     assert body["brand"] == "Visa"
     assert body["isDefault"] is True
     assert "cardNumber" not in body
+    assert "cvv" not in body
     assert "4242424242424242" not in r.text
 
     second = client.post(
         "/api/v1/auth/me/payment-methods",
         json={
             "cardNumber": "5500005555555559",
+            "cvv": "456",
             "cardholderName": "Grace Hopper",
             "expMonth": 6,
             "expYear": 2028,
@@ -155,6 +158,7 @@ def test_payment_method_never_exposes_full_card_number(client, auth_header):
         "/api/v1/auth/me/payment-methods",
         json={
             "cardNumber": "not-a-card",
+            "cvv": "123",
             "cardholderName": "Grace Hopper",
             "expMonth": 1,
             "expYear": 2030,
@@ -165,6 +169,48 @@ def test_payment_method_never_exposes_full_card_number(client, auth_header):
 
     r_delete = client.delete(f"/api/v1/auth/me/payment-methods/{second['id']}", headers=auth_header)
     assert r_delete.status_code == 204
+
+
+def test_payment_method_rejects_cvv_length_mismatched_with_brand(client, auth_header):
+    r_visa_with_amex_cvv = client.post(
+        "/api/v1/auth/me/payment-methods",
+        json={
+            "cardNumber": "4242424242424242",
+            "cvv": "1234",
+            "cardholderName": "Grace Hopper",
+            "expMonth": 1,
+            "expYear": 2030,
+        },
+        headers=auth_header,
+    )
+    assert r_visa_with_amex_cvv.status_code == 422
+
+    r_amex_with_visa_cvv = client.post(
+        "/api/v1/auth/me/payment-methods",
+        json={
+            "cardNumber": "371449635398431",
+            "cvv": "123",
+            "cardholderName": "Grace Hopper",
+            "expMonth": 1,
+            "expYear": 2030,
+        },
+        headers=auth_header,
+    )
+    assert r_amex_with_visa_cvv.status_code == 422
+
+    r_amex_ok = client.post(
+        "/api/v1/auth/me/payment-methods",
+        json={
+            "cardNumber": "371449635398431",
+            "cvv": "1234",
+            "cardholderName": "Grace Hopper",
+            "expMonth": 1,
+            "expYear": 2030,
+        },
+        headers=auth_header,
+    )
+    assert r_amex_ok.status_code == 201
+    assert r_amex_ok.json()["brand"] == "American Express"
 
 
 def test_profile_endpoints_are_scoped_to_their_own_user(client):

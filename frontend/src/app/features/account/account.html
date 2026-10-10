@@ -367,7 +367,7 @@
                     <button
                       type="button"
                       class="icon-text-btn is-danger"
-                      (click)="$event.stopPropagation(); deleteAddress(address.id)"
+                      (click)="$event.stopPropagation(); confirmDeleteAddress(address)"
                     >
                       <fa-icon [icon]="icons.trash" aria-hidden="true" /> {{ 'account.addresses.remove' | transloco }}
                     </button>
@@ -587,7 +587,7 @@
                         <fa-icon [icon]="icons.star" aria-hidden="true" /> {{ 'account.payment.makeDefault' | transloco }}
                       </button>
                     }
-                    <button type="button" class="icon-text-btn is-danger" (click)="deleteCard(card.id)">
+                    <button type="button" class="icon-text-btn is-danger" (click)="confirmDeleteCard(card)">
                       <fa-icon [icon]="icons.trash" aria-hidden="true" /> {{ 'account.payment.remove' | transloco }}
                     </button>
                   </div>

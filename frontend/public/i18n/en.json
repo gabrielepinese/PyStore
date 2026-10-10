@@ -4,6 +4,7 @@
     "backToProducts": "Back to products",
     "allCategories": "All categories",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "optional": "(optional)",
     "product": "product",
     "products": "products",
@@ -228,7 +229,9 @@
       "noSaved": "No saved addresses yet.",
       "default": "Default",
       "edit": "Edit",
-      "remove": "Remove"
+      "remove": "Remove",
+      "deleteConfirmTitle": "Remove this address?",
+      "deleteConfirmDescription": "\"{{label}}\" will be permanently deleted. This can't be undone."
     },
     "payment": {
       "heading": "Payment options",
@@ -248,6 +251,8 @@
       "noSaved": "No saved payment methods yet.",
       "makeDefault": "Make default",
       "remove": "Remove",
+      "deleteConfirmTitle": "Remove this payment method?",
+      "deleteConfirmDescription": "The {{brand}} card ending in {{last4}} will be permanently deleted. This can't be undone.",
       "cardErrorDetailed": "Could not save this card — double-check the details and try again."
     },
     "orders": {

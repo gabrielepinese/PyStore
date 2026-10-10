@@ -4,6 +4,7 @@
     "backToProducts": "Torna ai prodotti",
     "allCategories": "Tutte le categorie",
     "cancel": "Annulla",
+    "confirm": "Conferma",
     "optional": "(opzionale)",
     "product": "prodotto",
     "products": "prodotti",
@@ -228,7 +229,9 @@
       "noSaved": "Nessun indirizzo salvato.",
       "default": "Predefinito",
       "edit": "Modifica",
-      "remove": "Rimuovi"
+      "remove": "Rimuovi",
+      "deleteConfirmTitle": "Rimuovere questo indirizzo?",
+      "deleteConfirmDescription": "\"{{label}}\" verrà eliminato definitivamente. Questa azione non può essere annullata."
     },
     "payment": {
       "heading": "Opzioni di pagamento",
@@ -248,6 +251,8 @@
       "noSaved": "Nessun metodo di pagamento salvato.",
       "makeDefault": "Imposta come predefinito",
       "remove": "Rimuovi",
+      "deleteConfirmTitle": "Rimuovere questo metodo di pagamento?",
+      "deleteConfirmDescription": "La carta {{brand}} che termina con {{last4}} verrà eliminata definitivamente. Questa azione non può essere annullata.",
       "cardErrorDetailed": "Impossibile salvare la carta — controlla i dati e riprova."
     },
     "orders": {

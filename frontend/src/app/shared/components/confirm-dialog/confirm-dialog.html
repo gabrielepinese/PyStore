@@ -1,0 +1,26 @@
+@if (confirmDialogService.request(); as req) {
+  <div class="modal-backdrop" (click)="cancel()" (keydown.escape)="cancel()">
+    <div
+      class="modal"
+      [class.modal--danger]="req.tone === 'danger'"
+      role="alertdialog"
+      aria-modal="true"
+      [attr.aria-label]="req.title"
+      (click)="$event.stopPropagation()"
+    >
+      <p class="modal-title">{{ req.title }}</p>
+      @if (req.description) {
+        <p class="modal-description">{{ req.description }}</p>
+      }
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" autofocus (click)="cancel()">
+          {{ req.cancelLabel ?? ('common.cancel' | transloco) }}
+        </button>
+        <button type="button" class="btn-confirm" [class.btn-confirm--danger]="req.tone === 'danger'" (click)="confirm()">
+          {{ req.confirmLabel ?? ('common.confirm' | transloco) }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -26,6 +26,7 @@ import { Address } from '../../core/models/address.model';
 import { PaymentMethod } from '../../core/models/payment-method.model';
 import { DotLoader } from '../../shared/components/dot-loader/dot-loader';
 import { Topbar } from '../../shared/components/topbar/topbar';
+import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { COUNTRIES, ITALIAN_CITIES } from '../../shared/data/italy';
 import { DEFAULT_PHONE_PREFIX, PHONE_PREFIXES } from '../../shared/data/phone-prefixes';
@@ -82,6 +83,7 @@ export class Account {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly transloco = inject(TranslocoService);
 
   protected readonly section = signal<Section>('profile');
@@ -253,7 +255,21 @@ export class Account {
     });
   }
 
-  protected deleteAddress(id: string): void {
+  protected async confirmDeleteAddress(address: Address): Promise<void> {
+    const confirmed = await this.confirmDialogService.confirm({
+      title: this.transloco.translate('account.addresses.deleteConfirmTitle'),
+      description: this.transloco.translate('account.addresses.deleteConfirmDescription', {
+        label: address.label,
+      }),
+      confirmLabel: this.transloco.translate('account.addresses.remove'),
+      tone: 'danger',
+    });
+    if (confirmed) {
+      this.deleteAddress(address.id);
+    }
+  }
+
+  private deleteAddress(id: string): void {
     this.accountService.deleteAddress(id).subscribe({
       next: () => {
         this.loadAddresses();
@@ -429,7 +445,22 @@ export class Account {
     });
   }
 
-  protected deleteCard(id: string): void {
+  protected async confirmDeleteCard(card: PaymentMethod): Promise<void> {
+    const confirmed = await this.confirmDialogService.confirm({
+      title: this.transloco.translate('account.payment.deleteConfirmTitle'),
+      description: this.transloco.translate('account.payment.deleteConfirmDescription', {
+        brand: card.brand,
+        last4: card.last4,
+      }),
+      confirmLabel: this.transloco.translate('account.payment.remove'),
+      tone: 'danger',
+    });
+    if (confirmed) {
+      this.deleteCard(card.id);
+    }
+  }
+
+  private deleteCard(id: string): void {
     this.accountService.deletePaymentMethod(id).subscribe({
       next: () => {
         this.loadPaymentMethods();
