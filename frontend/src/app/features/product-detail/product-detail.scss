@@ -1,9 +1,11 @@
+@use '../../../styles/tokens' as *;
+
 :host {
   display: block;
   min-height: 100vh;
-  background: #f6f2ef;
+  background: $color-surface;
   font-family: system-ui, sans-serif;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .page {
@@ -20,18 +22,18 @@
   padding: 0;
   border: none;
   background: none;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font: inherit;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }
@@ -42,7 +44,7 @@
   padding: 3rem 0;
 
   &.error {
-    color: #8b1a0a;
+    color: $color-error;
   }
 }
 
@@ -51,7 +53,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6b6c6e;
+  color: $color-text-muted;
   margin-bottom: 1.5rem;
 }
 
@@ -68,7 +70,7 @@
   gap: 14px;
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 4px;
   }
 }
@@ -96,20 +98,20 @@
   height: 64px;
   padding: 0;
   overflow: hidden;
-  border: 2px solid #b3b4b8;
+  border: 2px solid $color-border;
   cursor: pointer;
   scroll-snap-align: start;
 
   &:hover {
-    border-color: #d0bfb2;
+    border-color: $color-brand-light;
   }
 
   &.is-active {
-    border-color: #735f58;
+    border-color: $color-brand;
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -125,7 +127,7 @@
   flex: 1 1 auto;
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid #b3b4b8;
+  border: 1px solid $color-border;
 }
 
 @media (min-width: 721px) {
@@ -158,8 +160,8 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #8b1a0a;
-  color: #f6f2ef;
+  background: $color-error;
+  color: $color-surface;
   font-weight: 700;
   font-size: 0.95rem;
 }
@@ -170,7 +172,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .name {
@@ -191,12 +193,12 @@
 .price {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .price-original {
   font-size: 1.05rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
   text-decoration: line-through;
 }
 
@@ -207,36 +209,36 @@
 
   fa-icon {
     font-size: 1rem;
-    color: #b3b4b8;
+    color: $color-border;
 
     &.is-full {
-      color: #d0bfb2;
+      color: $color-brand-light;
     }
   }
 
   .reviews {
     margin-left: 6px;
     font-size: 0.85rem;
-    color: #6b6c6e;
+    color: $color-text-muted;
   }
 }
 
 hr {
   border: none;
-  border-top: 1px solid #b3b4b8;
+  border-top: 1px solid $color-border;
   margin: 20px 0;
 }
 
 .description {
   margin: 0;
-  color: #6b6c6e;
+  color: $color-text-muted;
   line-height: 1.6;
 }
 
 .stock-line {
   margin: 0 0 20px;
   font-size: 0.85rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .purchase-row {
@@ -247,9 +249,9 @@ hr {
 
 .add-to-cart {
   padding: 0.85rem 1.8rem;
-  border: 1px solid #735f58;
-  background: #735f58;
-  color: #f6f2ef;
+  border: 1px solid $color-brand;
+  background: $color-brand;
+  color: $color-surface;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -265,7 +267,7 @@ hr {
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }
@@ -275,24 +277,24 @@ hr {
   align-items: center;
   gap: 8px;
   padding: 0.85rem 1.4rem;
-  border: 1px solid #b3b4b8;
+  border: 1px solid $color-border;
   background: transparent;
-  color: #1a1a1a;
+  color: $color-text;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
 
   &.is-active {
-    color: #8b1a0a;
-    border-color: #8b1a0a;
+    color: $color-error;
+    border-color: $color-error;
   }
 
   &:hover {
-    background: #f6f2ef;
+    background: $color-surface;
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -304,7 +306,7 @@ hr {
 .tab-headers {
   display: flex;
   gap: 28px;
-  border-bottom: 1px solid #b3b4b8;
+  border-bottom: 1px solid $color-border;
 }
 
 .tab-header {
@@ -312,18 +314,18 @@ hr {
   border: none;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
 
   &.is-active {
-    color: #1a1a1a;
-    border-bottom-color: #735f58;
+    color: $color-text;
+    border-bottom-color: $color-brand;
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }
@@ -341,14 +343,14 @@ hr {
     margin: 0 0 12px;
     font-size: 1.05rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
   }
 }
 
 .about-list {
   margin: 0;
   padding-left: 1.2rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
   line-height: 1.6;
 
   li {
@@ -367,13 +369,13 @@ hr {
   align-items: flex-start;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #fbfaf9;
+  background: $color-surface-subtle;
   transition: border-color 0.15s ease;
 
   &:hover {
-    border-color: #735f58;
+    border-color: $color-brand;
   }
 }
 
@@ -386,7 +388,7 @@ hr {
   height: 38px;
   border-radius: 2px;
   background: #efe8e5;
-  color: #735f58;
+  color: $color-brand;
   font-size: 0.95rem;
 }
 
@@ -402,21 +404,21 @@ hr {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #9a9a9a;
+  color: $color-text-subtle;
 }
 
 .spec-value {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: $color-text;
   word-break: break-word;
 
   &.is-in-stock {
-    color: #2e7d4f;
+    color: $color-success;
   }
 
   &.is-out-stock {
-    color: #c0392b;
+    color: $color-danger;
   }
 }
 
@@ -424,14 +426,14 @@ hr {
   margin-left: 6px;
   font-size: 0.82rem;
   font-weight: 500;
-  color: #9a9a9a;
+  color: $color-text-subtle;
   text-decoration: line-through;
 }
 
 .spec-sub {
   font-size: 0.82rem;
   font-weight: 500;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .shipping-panel {
@@ -449,32 +451,32 @@ hr {
 
 .shipping-option {
   padding: 16px;
-  border: 1px solid #b3b4b8;
-  background: #fff;
+  border: 1px solid $color-border;
+  background: $color-white;
 
   h4 {
     margin: 0 0 6px;
     font-size: 0.95rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   p {
     margin: 0;
-    color: #6b6c6e;
+    color: $color-text-muted;
     font-size: 0.9rem;
   }
 }
 
 .shipping-policies {
-  color: #6b6c6e;
+  color: $color-text-muted;
   line-height: 1.6;
 
   h4 {
     margin: 0 0 6px;
     font-size: 0.95rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
 
     &:not(:first-child) {
       margin-top: 18px;
@@ -496,7 +498,7 @@ hr {
   gap: 32px;
   padding-bottom: 28px;
   margin-bottom: 28px;
-  border-bottom: 1px solid #b3b4b8;
+  border-bottom: 1px solid $color-border;
 }
 
 .overview-score {
@@ -508,22 +510,22 @@ hr {
   .score {
     font-size: 2.4rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
     line-height: 1;
   }
 
   .stars fa-icon {
     font-size: 1rem;
-    color: #b3b4b8;
+    color: $color-border;
 
     &.is-full {
-      color: #d0bfb2;
+      color: $color-brand-light;
     }
   }
 
   .count {
     font-size: 0.8rem;
-    color: #6b6c6e;
+    color: $color-text-muted;
   }
 }
 
@@ -540,17 +542,17 @@ hr {
   align-items: center;
   gap: 10px;
   font-size: 0.8rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .breakdown-bar {
   height: 8px;
-  background: #ece4df;
+  background: $color-surface-alt;
 
   span {
     display: block;
     height: 100%;
-    background: #735f58;
+    background: $color-brand;
   }
 }
 
@@ -566,7 +568,7 @@ hr {
 
 .review-card {
   padding-bottom: 20px;
-  border-bottom: 1px solid #b3b4b8;
+  border-bottom: 1px solid $color-border;
 
   &:last-child {
     border-bottom: none;
@@ -581,10 +583,10 @@ hr {
 
   .stars fa-icon {
     font-size: 0.85rem;
-    color: #b3b4b8;
+    color: $color-border;
 
     &.is-full {
-      color: #d0bfb2;
+      color: $color-brand-light;
     }
   }
 }
@@ -593,43 +595,43 @@ hr {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .review-meta {
   margin: 0 0 8px;
   font-size: 0.78rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .review-body {
   margin: 0;
-  color: #6b6c6e;
+  color: $color-text-muted;
   line-height: 1.6;
 }
 
 .no-reviews {
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .load-more {
   display: block;
   margin: 24px auto 0;
   padding: 0.7rem 1.6rem;
-  border: 1px solid #735f58;
+  border: 1px solid $color-brand;
   background: transparent;
-  color: #735f58;
+  color: $color-brand;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
 
   &:hover {
-    background: #735f58;
-    color: #f6f2ef;
+    background: $color-brand;
+    color: $color-surface;
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }

@@ -1,3 +1,5 @@
+@use '../../../../styles/tokens' as *;
+
 :host {
   display: block;
   width: fit-content;
@@ -47,26 +49,26 @@ button {
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 
   &.primary {
-    background: #735F58;
-    color: #F6F2EF;
+    background: $color-brand;
+    color: $color-surface;
 
     &:hover:not(:disabled) {
-      background: #5A4842;
+      background: $color-brand-dark;
     }
   }
 
   &.secondary {
     background: transparent;
-    border-color: #735F58;
-    color: #735F58;
+    border-color: $color-brand;
+    color: $color-brand;
 
     &:hover:not(:disabled) {
-      background: rgba(122, 48, 24, 0.08);
+      background: rgba($color-brand, 0.08);
     }
   }
 }

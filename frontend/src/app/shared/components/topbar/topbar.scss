@@ -1,3 +1,5 @@
+@use '../../../../styles/tokens' as *;
+
 :host {
   display: block;
 }
@@ -6,8 +8,8 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: #F6F2EF;
-  border-bottom: 1px solid #B3B4B8;
+  background: $color-surface;
+  border-bottom: 1px solid $color-border;
 }
 
 .topbar-inner {
@@ -26,12 +28,12 @@
   font: inherit;
   font-weight: 700;
   font-size: 1.2rem;
-  color: #735F58;
+  color: $color-brand;
   white-space: nowrap;
   cursor: pointer;
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid $color-brand;
     outline-offset: 4px;
     border-radius: 4px;
   }
@@ -45,9 +47,9 @@
   max-width: 420px;
   padding: 0.6rem 0.9rem;
   border-radius: 999px;
-  background: #ECE4DF;
-  border: 1px solid #B3B4B8;
-  color: #6B6C6E;
+  background: $color-surface-alt;
+  border: 1px solid $color-border;
+  color: $color-text-muted;
 
   fa-icon {
     font-size: 1rem;
@@ -60,10 +62,10 @@
     background: none;
     outline: none;
     font-size: 0.88rem;
-    color: #1a1a1a;
+    color: $color-text;
 
     &::placeholder {
-      color: #6B6C6E;
+      color: $color-text-muted;
     }
   }
 }
@@ -77,27 +79,27 @@
 
 .lang-switch {
   display: flex;
-  border: 1px solid #B3B4B8;
+  border: 1px solid $color-border;
   border-radius: 999px;
   overflow: hidden;
 }
 
 .lang-btn {
   border: none;
-  background: #fff;
-  color: #6B6C6E;
+  background: $color-white;
+  color: $color-text-muted;
   font-size: 0.72rem;
   font-weight: 700;
   padding: 0.4rem 0.7rem;
   cursor: pointer;
 
   &.is-active {
-    background: #735F58;
-    color: #F6F2EF;
+    background: $color-brand;
+    color: $color-surface;
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -109,10 +111,10 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border: 1px solid #B3B4B8;
+  border: 1px solid $color-border;
   border-radius: 50%;
-  background: #fff;
-  color: #1a1a1a;
+  background: $color-white;
+  color: $color-text;
   cursor: pointer;
 
   fa-icon {
@@ -120,7 +122,7 @@
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 
@@ -132,8 +134,8 @@
     height: 18px;
     padding: 0 4px;
     border-radius: 999px;
-    background: #735F58;
-    color: #F6F2EF;
+    background: $color-brand;
+    color: $color-surface;
     font-size: 0.65rem;
     font-weight: 700;
     line-height: 18px;
@@ -154,8 +156,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #735F58;
-  color: #F6F2EF;
+  background: $color-brand;
+  color: $color-surface;
   font-weight: 700;
   font-size: 0.85rem;
   text-transform: uppercase;
@@ -164,11 +166,11 @@
   transition: background 0.15s ease;
 
   &:hover {
-    background: #5A4842;
+    background: $color-brand-dark;
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -176,18 +178,18 @@
 .signout {
   border: none;
   background: none;
-  color: #6B6C6E;
+  color: $color-text-muted;
   font-size: 0.82rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: #735F58;
+    color: $color-brand;
   }
 
   &:focus-visible {
-    outline: 3px solid #735F58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -195,19 +197,19 @@
 .signin {
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
-  background: #735F58;
-  color: #F6F2EF;
+  background: $color-brand;
+  color: $color-surface;
   font-size: 0.82rem;
   font-weight: 600;
   text-decoration: none;
   transition: background 0.15s ease;
 
   &:hover {
-    background: #5A4842;
+    background: $color-brand-dark;
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }

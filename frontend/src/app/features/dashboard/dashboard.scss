@@ -1,9 +1,12 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/checkbox' as *;
+
 :host {
   display: block;
   min-height: 100vh;
-  background: #f6f2ef;
+  background: $color-surface;
   font-family: system-ui, sans-serif;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .page {
@@ -24,7 +27,7 @@
   margin-top: 12px;
   padding: 40px 44px;
   border-radius: 24px;
-  background: linear-gradient(135deg, #ece4df 0%, #d0bfb2 100%);
+  background: linear-gradient(135deg, $color-surface-alt 0%, $color-brand-light 100%);
   overflow: hidden;
 }
 
@@ -37,19 +40,19 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: #735f58;
+    color: $color-brand;
   }
 
   h1 {
     margin: 0 0 8px;
     font-size: 2rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   .subtitle {
     margin: 0;
-    color: #6b6c6e;
+    color: $color-text-muted;
     font-size: 0.95rem;
   }
 }
@@ -81,7 +84,7 @@
   padding: 4px 2px;
   border: none;
   background: none;
-  color: #735f58;
+  color: $color-brand;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -91,7 +94,7 @@
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -106,17 +109,17 @@
     padding: 0;
     border: none;
     background: none;
-    color: #6b6c6e;
+    color: $color-text-muted;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
 
     &:hover {
-      color: #735f58;
+      color: $color-brand;
     }
 
     &:focus-visible {
-      outline: 3px solid #735f58;
+      outline: 3px solid $color-brand;
       outline-offset: 2px;
       border-radius: 4px;
     }
@@ -141,8 +144,8 @@
   padding: 20px;
   border: none;
   border-radius: 24px;
-  background: var(--tile-bg, #b3b4b8);
-  color: var(--tile-fg, #1a1a1a);
+  background: var(--tile-bg, #{$color-border});
+  color: var(--tile-fg, #{$color-text});
   text-align: left;
   font: inherit;
   cursor: pointer;
@@ -166,7 +169,7 @@
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 3px;
   }
 
@@ -243,8 +246,8 @@
   left: 16px;
   padding: 3px 10px;
   border-radius: 999px;
-  background: #8b1a0a;
-  color: #f6f2ef;
+  background: $color-error;
+  color: $color-surface;
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -314,14 +317,14 @@
   flex-direction: column;
   gap: 22px;
   padding: 22px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: $color-white;
 }
 
 .sidebar-section {
   padding-bottom: 22px;
-  border-bottom: 1px solid #e4e2e0;
+  border-bottom: 1px solid $color-border-light;
 
   &:last-of-type {
     border-bottom: none;
@@ -332,12 +335,12 @@
 .sidebar-title {
   margin: 0 0 14px;
   padding-left: 10px;
-  border-left: 2px solid #735f58;
+  border-left: 2px solid $color-brand;
   font-size: 0.82rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .category-list {
@@ -355,7 +358,7 @@
   border: none;
   border-radius: 2px;
   background: none;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font-size: 0.88rem;
   font-weight: 600;
   text-align: left;
@@ -367,24 +370,24 @@
   .count {
     font-size: 0.78rem;
     font-weight: 600;
-    color: #b3b4b8;
+    color: $color-border;
   }
 
   &:hover {
-    background: #ece4df;
+    background: $color-surface-alt;
   }
 
   &.is-active {
-    background: #735f58;
-    color: #f6f2ef;
+    background: $color-brand;
+    color: $color-surface;
 
     .count {
-      color: #d0bfb2;
+      color: $color-brand-light;
     }
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -400,10 +403,10 @@
   gap: 8px;
   width: 100%;
   padding: 0.55rem 0.7rem;
-  border: 1px solid #b3b4b8;
+  border: 1px solid $color-border;
   border-radius: 2px;
-  background: #fff;
-  color: #1a1a1a;
+  background: $color-white;
+  color: $color-text;
   font: inherit;
   font-size: 0.85rem;
   text-align: left;
@@ -412,16 +415,16 @@
 
   fa-icon {
     font-size: 0.75rem;
-    color: #6b6c6e;
+    color: $color-text-muted;
     transition: transform 0.15s ease;
   }
 
   &:hover {
-    border-color: #735f58;
+    border-color: $color-brand;
   }
 
   &.is-open {
-    border-color: #735f58;
+    border-color: $color-brand;
 
     fa-icon {
       transform: rotate(180deg);
@@ -429,7 +432,7 @@
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 1px;
   }
 }
@@ -451,9 +454,9 @@
   margin: 0;
   padding: 6px;
   list-style: none;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: $color-white;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
@@ -464,7 +467,7 @@
   border: none;
   border-radius: 2px;
   background: none;
-  color: #1a1a1a;
+  color: $color-text;
   font: inherit;
   font-size: 0.85rem;
   text-align: left;
@@ -472,16 +475,16 @@
   transition: background 0.15s ease;
 
   &:hover {
-    background: #ece4df;
+    background: $color-surface-alt;
   }
 
   &.is-active {
-    background: #735f58;
-    color: #f6f2ef;
+    background: $color-brand;
+    color: $color-surface;
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 1px;
   }
 }
@@ -500,7 +503,7 @@
   margin-bottom: 14px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 // Bars sit right above the track, same horizontal inset, so they read as
@@ -516,12 +519,12 @@
 .histogram-bar {
   flex: 1 1 0;
   min-height: 2px;
-  background: #e4e2e0;
+  background: $color-border-light;
   border-radius: 1px;
   transition: background 0.15s ease;
 
   &.is-active {
-    background: #d0bfb2;
+    background: $color-brand-light;
   }
 }
 
@@ -529,7 +532,7 @@
   position: relative;
   height: 4px;
   margin: 0 8px;
-  background: #e4e2e0;
+  background: $color-border-light;
   border-radius: 2px;
 }
 
@@ -537,7 +540,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  background: #735f58;
+  background: $color-brand;
   border-radius: 2px;
 }
 
@@ -580,7 +583,7 @@ $thumb-size: 16px;
     // without this it hangs below the line instead of straddling it.
     margin-top: calc((4px - $thumb-size) / 2);
     border-radius: 50%;
-    background: #735f58;
+    background: $color-brand;
     border: none;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
     cursor: pointer;
@@ -592,18 +595,18 @@ $thumb-size: 16px;
     height: $thumb-size;
     border: none;
     border-radius: 50%;
-    background: #735f58;
+    background: $color-brand;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
     cursor: pointer;
   }
 
   &:focus-visible::-webkit-slider-thumb {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 
   &:focus-visible::-moz-range-thumb {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -621,28 +624,18 @@ $thumb-size: 16px;
   padding: 0.4rem 0.2rem;
   border: none;
   background: none;
-  color: #1a1a1a;
+  color: $color-text;
   font-size: 0.86rem;
   text-align: left;
   cursor: pointer;
 
   input[type='checkbox'] {
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    accent-color: #735f58;
-    cursor: pointer;
-
-    &:focus-visible {
-      outline: 3px solid #735f58;
-      outline-offset: 2px;
-      border-radius: 2px;
-    }
+    @include checkbox-input;
   }
 
   .count {
     margin-left: auto;
-    color: #6b6c6e;
+    color: $color-text-muted;
     font-size: 0.8rem;
   }
 }
@@ -685,20 +678,20 @@ $thumb-size: 16px;
   align-items: center;
   gap: 6px;
   padding: 0.3rem 0.7rem;
-  border: 1px solid #d0bfb2;
+  border: 1px solid $color-brand-light;
   border-radius: 2px;
-  background: #d0bfb2;
-  color: #5a4842;
+  background: $color-brand-light;
+  color: $color-brand-dark;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    background: #b0a297;
+    background: $color-brand-light-active;
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -714,7 +707,7 @@ $thumb-size: 16px;
 
   p {
     margin: 0;
-    color: #6b6c6e;
+    color: $color-text-muted;
     font-size: 0.88rem;
   }
 }
@@ -723,11 +716,11 @@ $thumb-size: 16px;
   display: flex;
   justify-content: center;
   padding: 40px 0;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font-size: 0.9rem;
 
   &.error {
-    color: #8b1a0a;
+    color: $color-error;
   }
 
   &.empty {
@@ -782,7 +775,7 @@ $thumb-size: 16px;
     }
 
     &:focus-visible {
-      outline: 3px solid #735f58;
+      outline: 3px solid $color-brand;
       outline-offset: 2px;
     }
   }
@@ -797,10 +790,10 @@ $thumb-size: 16px;
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    color: #1a1a1a;
+    color: $color-text;
 
     &:hover:not(:disabled) {
-      background: #ece4df;
+      background: $color-surface-alt;
     }
   }
 
@@ -809,18 +802,18 @@ $thumb-size: 16px;
     height: 38px;
     padding: 0 0.4rem;
     border-radius: 50%;
-    color: #6b6c6e;
+    color: $color-text-muted;
     font-weight: 600;
     font-size: 0.85rem;
 
     &:hover:not(:disabled) {
-      background: #ece4df;
-      color: #1a1a1a;
+      background: $color-surface-alt;
+      color: $color-text;
     }
 
     &.is-active {
-      background: #735f58;
-      color: #f6f2ef;
+      background: $color-brand;
+      color: $color-surface;
     }
   }
 }
@@ -831,22 +824,22 @@ $thumb-size: 16px;
   align-items: flex-start;
   gap: 16px;
   padding: 16px;
-  background: #fff;
-  border: 1px solid #e4e2e0;
+  background: $color-white;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
   transition: border-color 0.15s ease;
 
   &:hover {
-    border-color: #735f58;
+    border-color: $color-brand;
   }
 
   &.is-sale {
-    box-shadow: inset 0 0 0 2px #8b1a0a;
+    box-shadow: inset 0 0 0 2px $color-error;
     background: rgba(139, 26, 10, 0.04);
   }
 
   &.is-bestseller {
-    box-shadow: inset 0 0 0 2px #d0bfb2;
+    box-shadow: inset 0 0 0 2px $color-brand-light;
     background: rgba(197, 160, 89, 0.08);
   }
 }
@@ -859,7 +852,7 @@ $thumb-size: 16px;
   z-index: 1;
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: -3px;
   }
 }
@@ -884,8 +877,8 @@ $thumb-size: 16px;
 .tag {
   display: inline-block;
   padding: 4px 10px;
-  background: #f6f2ef;
-  color: #1a1a1a;
+  background: $color-surface;
+  color: $color-text;
   font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -924,12 +917,12 @@ $thumb-size: 16px;
 .price {
   font-size: 1.55rem;
   font-weight: 700;
-  color: #735f58;
+  color: $color-brand;
 }
 
 .price-original {
   font-size: 0.92rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
   text-decoration: line-through;
 }
 
@@ -940,17 +933,17 @@ $thumb-size: 16px;
 
   fa-icon {
     font-size: 1.05rem;
-    color: #b3b4b8;
+    color: $color-border;
 
     &.is-full {
-      color: #d0bfb2;
+      color: $color-brand-light;
     }
   }
 
   .reviews {
     margin-left: 6px;
     font-size: 0.88rem;
-    color: #6b6c6e;
+    color: $color-text-muted;
   }
 }
 
@@ -966,12 +959,12 @@ $thumb-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .stock {
   font-size: 0.82rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
 
   &::before {
     content: '·';
@@ -990,19 +983,19 @@ $thumb-size: 16px;
 }
 
 .is-sale .row-side .tag {
-  background: #8b1a0a;
-  color: #f6f2ef;
+  background: $color-error;
+  color: $color-surface;
 }
 
 .is-bestseller .row-side .tag {
-  background: #d0bfb2;
-  color: #1a1a1a;
+  background: $color-brand-light;
+  color: $color-text;
 }
 
 .description {
   margin: 0;
   font-size: 0.85rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
   line-height: 1.4;
 }
 
@@ -1015,10 +1008,10 @@ $thumb-size: 16px;
 
 .add-to-cart {
   padding: 0.75rem 1.4rem;
-  border: 1px solid #735f58;
+  border: 1px solid $color-brand;
   border-radius: 2px;
   background: transparent;
-  color: #735f58;
+  color: $color-brand;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -1028,12 +1021,12 @@ $thumb-size: 16px;
     color 0.15s ease;
 
   &:hover {
-    background: #735f58;
-    color: #f6f2ef;
+    background: $color-brand;
+    color: $color-surface;
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }
@@ -1044,10 +1037,10 @@ $thumb-size: 16px;
   justify-content: center;
   width: 42px;
   height: 42px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #f6f2ef;
-  color: #1a1a1a;
+  background: $color-surface;
+  color: $color-text;
   cursor: pointer;
   transition:
     background 0.15s ease,
@@ -1058,17 +1051,17 @@ $thumb-size: 16px;
   }
 
   &.is-active {
-    color: #8b1a0a;
-    border-color: #8b1a0a;
+    color: $color-error;
+    border-color: $color-error;
   }
 
   &:hover {
-    background: #ece4df;
-    border-color: #b3b4b8;
+    background: $color-surface-alt;
+    border-color: $color-border;
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }

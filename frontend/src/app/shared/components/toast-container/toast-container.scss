@@ -1,3 +1,5 @@
+@use '../../../../styles/tokens' as *;
+
 :host {
   display: contents;
   font-family: system-ui, sans-serif;
@@ -29,9 +31,9 @@
   position: relative;
   width: min(360px, 100%);
   padding: 20px 32px 18px 20px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: $color-white;
   box-shadow: 0 8px 24px rgba(26, 26, 26, 0.12);
   overflow: hidden;
   text-align: left;
@@ -62,14 +64,14 @@
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.4;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .modal-description {
   margin: 0;
   font-size: 0.85rem;
   line-height: 1.4;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .modal-close {
@@ -85,7 +87,7 @@
   border: none;
   border-radius: 50%;
   background: none;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font-size: 0.75rem;
   cursor: pointer;
   transition:
@@ -93,12 +95,12 @@
     color 0.15s ease;
 
   &:hover {
-    background: #ece4df;
-    color: #1a1a1a;
+    background: $color-surface-alt;
+    color: $color-text;
   }
 
   &:focus-visible {
-    outline: 2px solid #735f58;
+    outline: 2px solid $color-brand;
     outline-offset: 1px;
   }
 }
@@ -109,7 +111,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: #735f58;
+  background: $color-brand;
   transform-origin: left;
   animation-name: modal-shrink;
   animation-timing-function: linear;
@@ -127,13 +129,13 @@
 }
 
 .modal--success .modal-progress {
-  background: #3f3330;
+  background: $color-brand-darker;
 }
 
 .modal--error .modal-progress {
-  background: #8b1a0a;
+  background: $color-error;
 }
 
 .modal--info .modal-progress {
-  background: #735f58;
+  background: $color-brand;
 }

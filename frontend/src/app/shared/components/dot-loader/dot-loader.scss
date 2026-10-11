@@ -1,3 +1,5 @@
+@use '../../../../styles/tokens' as *;
+
 :host {
   display: inline-flex;
 }
@@ -12,7 +14,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #735F58;
+  background: $color-brand;
   animation: dot-pulse 1.1s ease-in-out infinite;
 
   &:nth-child(2) {
