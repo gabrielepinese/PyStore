@@ -1,0 +1,15 @@
+@use 'tokens' as *;
+
+@mixin checkbox-input {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: $color-brand;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid $color-brand;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}

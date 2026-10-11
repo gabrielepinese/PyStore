@@ -1,0 +1,47 @@
+// Single source of truth for the app's palette. Change a value here and it
+// propagates to every component that `@use`s this module.
+
+// ---- brand ----
+$color-brand: #735f58;
+$color-brand-dark: #5a4842;
+$color-brand-darker: #3f3330;
+$color-brand-light: #d0bfb2;
+$color-brand-light-active: #b0a297;
+
+// ---- neutrals / surfaces ----
+$color-white: #fff;
+$color-surface: #f6f2ef;
+$color-surface-alt: #ece4df;
+$color-surface-subtle: #fbfaf9;
+$color-divider: #f0ede9;
+$color-border: #b3b4b8;
+$color-border-light: #e4e2e0;
+
+// ---- text ----
+$color-text: #1a1a1a;
+$color-text-muted: #6b6c6e;
+$color-text-subtle: #9a9a9a;
+
+// ---- status ----
+$color-error: #8b1a0a;
+$color-error-dark: #5e1206;
+$color-success: #2e7d4f;
+$color-danger: #c0392b;
+
+// ---- soft danger chip (account "remove" actions) ----
+$color-danger-soft-bg: #fbf0ee;
+$color-danger-soft-bg-hover: #f6d9d2;
+$color-danger-soft-border-hover: #e3a79a;
+
+// ---- default-address/card badge (gold accent) ----
+$color-badge-gold-border: #ecd9a8;
+$color-badge-gold-icon: #c9972b;
+
+// ---- payment card mock visual ----
+$color-card-stripe: #1a1414;
+$color-card-back-dark: #2a2220;
+
+// ---- footer ----
+$color-footer-text: #d9d1cc;
+$color-footer-text-muted: #b3a89f;
+$color-footer-text-faint: #8c8077;

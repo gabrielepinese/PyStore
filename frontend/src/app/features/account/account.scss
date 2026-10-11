@@ -1,9 +1,12 @@
+@use '../../../styles/tokens' as *;
+@use '../../../styles/checkbox' as *;
+
 :host {
   display: block;
   min-height: 100vh;
-  background: #f6f2ef;
+  background: $color-surface;
   font-family: system-ui, sans-serif;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .page {
@@ -20,18 +23,18 @@
   padding: 0;
   border: none;
   background: none;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font: inherit;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -52,8 +55,8 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #735f58, #3f3330);
-  color: #f6f2ef;
+  background: linear-gradient(135deg, $color-brand, $color-brand-darker);
+  color: $color-surface;
   font-weight: 700;
   font-size: 1.5rem;
   text-transform: uppercase;
@@ -66,20 +69,20 @@
 .header-greeting {
   margin: 0;
   font-size: 0.85rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .page-title {
   margin: 2px 0 0;
   font-size: 1.6rem;
   font-weight: 700;
-  color: #1a1a1a;
+  color: $color-text;
 }
 
 .header-email {
   margin: 2px 0 0;
   font-size: 0.82rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 .account-body {
@@ -94,9 +97,9 @@
   flex-direction: column;
   gap: 4px;
   padding: 10px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: $color-white;
 }
 
 .nav-item {
@@ -107,7 +110,7 @@
   border: none;
   border-radius: 2px;
   background: none;
-  color: #1a1a1a;
+  color: $color-text;
   text-align: left;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -122,37 +125,37 @@
     display: block;
     margin-top: 2px;
     font-size: 0.75rem;
-    color: #6b6c6e;
+    color: $color-text-muted;
     transition: color 0.15s ease;
   }
 
   &:hover {
-    background: #ece4df;
+    background: $color-surface-alt;
 
     .nav-icon {
-      background: #e4e2e0;
+      background: $color-border-light;
     }
   }
 
   &.is-active {
-    background: #735f58;
+    background: $color-brand;
 
     small {
-      color: #d0bfb2;
+      color: $color-brand-light;
     }
 
     strong {
-      color: #f6f2ef;
+      color: $color-surface;
     }
 
     .nav-icon {
-      background: #5a4842;
-      color: #f6f2ef;
+      background: $color-brand-dark;
+      color: $color-surface;
     }
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -165,8 +168,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #f6f2ef;
-  color: #735f58;
+  background: $color-surface;
+  color: $color-brand;
   font-size: 0.95rem;
   transition:
     background 0.15s ease,
@@ -175,15 +178,15 @@
 
 .panel-card {
   padding: 28px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: $color-white;
 
   h2 {
     margin: 0 0 6px;
     font-size: 1.2rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
   }
 }
 
@@ -202,7 +205,7 @@
 .panel-hint {
   margin: 0 0 20px;
   font-size: 0.85rem;
-  color: #6b6c6e;
+  color: $color-text-muted;
 }
 
 // ---- forms (profile edit, address/card forms) ----
@@ -216,9 +219,9 @@ form {
 .entity-form {
   margin-bottom: 28px;
   padding: 20px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #fbfaf9;
+  background: $color-surface-subtle;
 }
 
 // ---- compact card form, paired side-by-side with the live preview ----
@@ -250,7 +253,7 @@ form {
   border: none;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.14);
-  color: #f6f2ef;
+  color: $color-surface;
   font-size: 0.85rem;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -260,7 +263,7 @@ form {
   }
 
   &:focus-visible {
-    outline: 2px solid #f6f2ef;
+    outline: 2px solid $color-surface;
     outline-offset: 2px;
   }
 }
@@ -303,7 +306,7 @@ form {
 .card-back-stripe {
   margin: -18px -16px 16px;
   height: 38px;
-  background: #1a1414;
+  background: $color-card-stripe;
 }
 
 .card-back-signature {
@@ -314,18 +317,18 @@ form {
   border-radius: 2px;
   background: repeating-linear-gradient(
     45deg,
-    #ece4df,
-    #ece4df 4px,
-    #e4e2e0 4px,
-    #e4e2e0 8px
+    $color-surface-alt,
+    $color-surface-alt 4px,
+    $color-border-light 4px,
+    $color-border-light 8px
   );
 }
 
 .card-back-cvv {
   padding: 2px 10px;
   border-radius: 2px;
-  background: #fff;
-  color: #1a1a1a;
+  background: $color-white;
+  color: $color-text;
   font-family: ui-monospace, 'SF Mono', Consolas, monospace;
   font-size: 0.9rem;
   letter-spacing: 0.1em;
@@ -333,7 +336,7 @@ form {
 
 .card-back-hint {
   margin: 10px 0 0;
-  color: #d0bfb2;
+  color: $color-brand-light;
   font-size: 0.68rem;
   text-align: right;
   text-transform: uppercase;
@@ -371,7 +374,7 @@ form {
   top: 50%;
   right: 12px;
   transform: translateY(-50%);
-  color: #b3b4b8;
+  color: $color-border;
   font-size: 0.85rem;
   pointer-events: none;
 }
@@ -383,7 +386,7 @@ form {
   label {
     font-size: 0.78rem;
     font-weight: 600;
-    color: #6b6c6e;
+    color: $color-text-muted;
   }
 
   input,
@@ -392,26 +395,26 @@ form {
     box-sizing: border-box;
     min-height: 42px;
     padding: 0.6rem 0.7rem;
-    border: 1px solid #b3b4b8;
+    border: 1px solid $color-border;
     border-radius: 2px;
-    background: #fff;
+    background: $color-white;
     font: inherit;
     font-size: 0.88rem;
-    color: #1a1a1a;
+    color: $color-text;
     transition: border-color 0.15s ease;
 
     &:hover {
-      border-color: #735f58;
+      border-color: $color-brand;
     }
 
     &:focus-visible {
-      outline: 3px solid #735f58;
+      outline: 3px solid $color-brand;
       outline-offset: 1px;
     }
 
     &:disabled {
-      color: #6b6c6e;
-      background: #ece4df;
+      color: $color-text-muted;
+      background: $color-surface-alt;
       cursor: not-allowed;
     }
   }
@@ -436,14 +439,14 @@ form {
   top: 50%;
   right: 12px;
   transform: translateY(-50%);
-  color: #735f58;
+  color: $color-brand;
   font-size: 1.4rem;
   pointer-events: none;
 }
 
 .field .label-optional {
   font-weight: 400;
-  color: #b3b4b8;
+  color: $color-border;
 }
 
 .phone-field {
@@ -452,9 +455,9 @@ form {
   align-items: stretch;
   overflow: hidden;
   min-height: 42px;
-  border: 1px solid #b3b4b8;
+  border: 1px solid $color-border;
   border-radius: 2px;
-  background: #fff;
+  background: $color-white;
   transition: border-color 0.15s ease;
 
   &::after {
@@ -464,16 +467,16 @@ form {
     bottom: 8px;
     left: 64px;
     width: 1px;
-    background: #e4e2e0;
+    background: $color-border-light;
   }
 
   &:hover {
-    border-color: #735f58;
+    border-color: $color-brand;
   }
 
   &:focus-within {
-    border-color: #735f58;
-    outline: 3px solid #735f58;
+    border-color: $color-brand;
+    outline: 3px solid $color-brand;
     outline-offset: 1px;
   }
 }
@@ -502,7 +505,7 @@ form {
   position: relative;
   flex: 0 0 auto;
   width: 64px;
-  background: #f6f2ef;
+  background: $color-surface;
 }
 
 .field .phone-prefix {
@@ -511,7 +514,7 @@ form {
   min-height: auto;
   padding: 0.6rem 1.3rem 0.6rem 0.65rem;
   border: none;
-  color: #5a4842;
+  color: $color-brand-dark;
   font-weight: 600;
   text-align: left;
   appearance: none;
@@ -531,20 +534,20 @@ form {
   top: 50%;
   right: 8px;
   transform: translateY(-50%);
-  color: #b3b4b8;
+  color: $color-border;
   font-size: 0.6rem;
   pointer-events: none;
 }
 
 .field-hint {
   margin: 2px 0 0;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font-size: 0.75rem;
 }
 
 .field-error {
   margin: 0;
-  color: #8b1a0a;
+  color: $color-error;
   font-size: 0.75rem;
   min-height: 14px;
   visibility: hidden;
@@ -556,7 +559,7 @@ form {
 
 .form-error {
   margin: 0;
-  color: #8b1a0a;
+  color: $color-error;
   font-size: 0.8rem;
   min-height: 16px;
   visibility: hidden;
@@ -571,12 +574,11 @@ form {
   align-items: center;
   gap: 8px;
   font-size: 0.85rem;
-  color: #1a1a1a;
+  color: $color-text;
   cursor: pointer;
 
   input {
-    width: 16px;
-    height: 16px;
+    @include checkbox-input;
   }
 }
 
@@ -592,17 +594,17 @@ form {
   justify-content: center;
   min-width: 128px;
   padding: 0.65rem 1.4rem;
-  border: 1px solid #735f58;
+  border: 1px solid $color-brand;
   border-radius: 2px;
-  background: #735f58;
-  color: #f6f2ef;
+  background: $color-brand;
+  color: $color-surface;
   font-weight: 600;
   font-size: 0.88rem;
   cursor: pointer;
   transition: background 0.15s ease;
 
   &:hover:not(:disabled) {
-    background: #5a4842;
+    background: $color-brand-dark;
   }
 
   &:disabled {
@@ -611,7 +613,7 @@ form {
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }
@@ -621,10 +623,10 @@ form {
   align-items: center;
   gap: 8px;
   padding: 0.55rem 1rem;
-  border: 1px solid #735f58;
+  border: 1px solid $color-brand;
   border-radius: 2px;
   background: transparent;
-  color: #735f58;
+  color: $color-brand;
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
@@ -634,12 +636,12 @@ form {
     color 0.15s ease;
 
   &:hover {
-    background: #735f58;
-    color: #f6f2ef;
+    background: $color-brand;
+    color: $color-surface;
   }
 
   &:focus-visible {
-    outline: 3px solid #1a1a1a;
+    outline: 3px solid $color-text;
     outline-offset: 2px;
   }
 }
@@ -648,17 +650,17 @@ form {
   padding: 0;
   border: none;
   background: none;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
 
   &:hover {
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -683,13 +685,13 @@ form {
   align-items: center;
   gap: 10px;
   padding: 40px 0;
-  color: #6b6c6e;
+  color: $color-text-muted;
   font-size: 0.88rem;
   text-align: center;
 
   fa-icon {
     font-size: 1.6rem;
-    color: #d0bfb2;
+    color: $color-brand-light;
   }
 
   p {
@@ -708,30 +710,30 @@ form {
   display: flex;
   flex-direction: column;
   padding: 20px 20px 18px;
-  border: 1px solid #e4e2e0;
-  border-left: 3px solid #e4e2e0;
+  border: 1px solid $color-border-light;
+  border-left: 3px solid $color-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: $color-white;
   box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04);
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 
   &:hover {
-    border-color: #d0bfb2;
-    border-left-color: #735f58;
+    border-color: $color-brand-light;
+    border-left-color: $color-brand;
     box-shadow: 0 10px 24px rgba(26, 26, 26, 0.08);
   }
 
   &.is-default {
-    border-left-color: #735f58;
+    border-left-color: $color-brand;
   }
 
   &.is-clickable {
     cursor: pointer;
 
     &:focus-visible {
-      outline: 3px solid #735f58;
+      outline: 3px solid $color-brand;
       outline-offset: 2px;
     }
   }
@@ -740,25 +742,25 @@ form {
     margin: 0;
     font-size: 0.98rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   p {
     margin: 0 0 2px;
     font-size: 0.82rem;
-    color: #6b6c6e;
+    color: $color-text-muted;
     line-height: 1.45;
   }
 
   .entity-subtitle {
     margin: 2px 0 0;
     font-size: 0.78rem;
-    color: #8a8b8d;
+    color: $color-text-subtle;
   }
 
   .entity-phone {
     margin-top: 6px;
-    color: #735f58;
+    color: $color-brand;
     font-weight: 600;
   }
 }
@@ -769,7 +771,7 @@ form {
   gap: 12px;
   margin-bottom: 14px;
   padding-bottom: 14px;
-  border-bottom: 1px solid #f0ede9;
+  border-bottom: 1px solid $color-divider;
 }
 
 .entity-card-title {
@@ -789,8 +791,8 @@ form {
   height: 38px;
   margin-top: 1px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ece4df, #e4e2e0);
-  color: #735f58;
+  background: linear-gradient(135deg, $color-surface-alt, $color-border-light);
+  color: $color-brand;
   font-size: 0.85rem;
   box-shadow: inset 0 0 0 1px rgba(115, 95, 88, 0.12);
 }
@@ -804,10 +806,10 @@ form {
   align-items: center;
   gap: 4px;
   padding: 4px 9px;
-  border: 1px solid #ecd9a8;
+  border: 1px solid $color-badge-gold-border;
   border-radius: 2px;
-  background: #fff;
-  color: #5a4842;
+  background: $color-white;
+  color: $color-brand-dark;
   font-size: 0.64rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -816,7 +818,7 @@ form {
 
   fa-icon {
     font-size: 0.65rem;
-    color: #c9972b;
+    color: $color-badge-gold-icon;
   }
 }
 
@@ -834,8 +836,8 @@ form {
   z-index: 1;
   padding: 18px 16px;
   border-radius: 2px;
-  background: linear-gradient(135deg, #5a4842, #2a2220);
-  color: #f6f2ef;
+  background: linear-gradient(135deg, $color-brand-dark, $color-card-back-dark);
+  color: $color-surface;
   box-shadow: 0 8px 20px rgba(42, 34, 32, 0.25);
   overflow: hidden;
 
@@ -866,13 +868,13 @@ form {
 
 .card-chip-icon {
   font-size: 1.4rem;
-  color: #d0bfb2;
+  color: $color-brand-light;
   opacity: 0.9;
 }
 
 .card-brand-icon {
   font-size: 1.5rem;
-  color: #f6f2ef;
+  color: $color-surface;
   opacity: 0.95;
 }
 
@@ -919,7 +921,7 @@ form {
   gap: 8px;
   margin-top: auto;
   padding-top: 14px;
-  border-top: 1px solid #f0ede9;
+  border-top: 1px solid $color-divider;
 }
 
 .icon-text-btn {
@@ -927,10 +929,10 @@ form {
   align-items: center;
   gap: 6px;
   padding: 6px 11px;
-  border: 1px solid #e4e2e0;
+  border: 1px solid $color-border-light;
   border-radius: 2px;
-  background: #f6f2ef;
-  color: #735f58;
+  background: $color-surface;
+  color: $color-brand;
   font-weight: 600;
   font-size: 0.78rem;
   cursor: pointer;
@@ -940,24 +942,24 @@ form {
     color 0.15s ease;
 
   &:hover {
-    background: #ece4df;
-    border-color: #d0bfb2;
-    color: #5a4842;
+    background: $color-surface-alt;
+    border-color: $color-brand-light;
+    color: $color-brand-dark;
   }
 
   &.is-danger {
-    background: #fbf0ee;
-    color: #8b1a0a;
+    background: $color-danger-soft-bg;
+    color: $color-error;
 
     &:hover {
-      background: #f6d9d2;
-      border-color: #e3a79a;
-      color: #5e1206;
+      background: $color-danger-soft-bg-hover;
+      border-color: $color-danger-soft-border-hover;
+      color: $color-error-dark;
     }
   }
 
   &:focus-visible {
-    outline: 3px solid #735f58;
+    outline: 3px solid $color-brand;
     outline-offset: 2px;
   }
 }
@@ -974,14 +976,14 @@ form {
 
   fa-icon {
     font-size: 2rem;
-    color: #d0bfb2;
+    color: $color-brand-light;
     margin-bottom: 8px;
   }
 
   p {
     margin: 0;
     font-weight: 600;
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   .panel-hint {

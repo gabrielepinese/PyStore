@@ -272,31 +272,23 @@
           <div class="sidebar-section">
             <h3 class="sidebar-title">{{ 'dashboard.offersHeading' | transloco }}</h3>
             <div class="check-list">
-              <button
-                type="button"
-                class="check-item"
-                [class.is-active]="filters().onSale"
-                [attr.aria-pressed]="filters().onSale"
-                (click)="toggleOnSale()"
-              >
-                <span class="checkbox" aria-hidden="true"></span>
+              <label class="check-item" [class.is-active]="filters().onSale">
+                <input type="checkbox" [checked]="filters().onSale" (change)="toggleOnSale()" />
                 <span>{{ 'dashboard.onSaleFilter' | transloco }}</span>
                 @if (facets(); as f) {
                   <span class="count">{{ f.onSaleCount }}</span>
                 }
-              </button>
+              </label>
               @for (badge of facets()?.badges ?? []; track badge.name) {
-                <button
-                  type="button"
-                  class="check-item"
-                  [class.is-active]="filters().badges.includes(badge.name)"
-                  [attr.aria-pressed]="filters().badges.includes(badge.name)"
-                  (click)="toggleBadge(badge.name)"
-                >
-                  <span class="checkbox" aria-hidden="true"></span>
+                <label class="check-item" [class.is-active]="filters().badges.includes(badge.name)">
+                  <input
+                    type="checkbox"
+                    [checked]="filters().badges.includes(badge.name)"
+                    (change)="toggleBadge(badge.name)"
+                  />
                   <span>{{ badge.name }}</span>
                   <span class="count">{{ badge.count }}</span>
-                </button>
+                </label>
               }
             </div>
           </div>
@@ -304,16 +296,10 @@
           <div class="sidebar-section">
             <h3 class="sidebar-title">{{ 'dashboard.availabilityHeading' | transloco }}</h3>
             <div class="check-list">
-              <button
-                type="button"
-                class="check-item"
-                [class.is-active]="filters().inStock"
-                [attr.aria-pressed]="filters().inStock"
-                (click)="toggleInStock()"
-              >
-                <span class="checkbox" aria-hidden="true"></span>
+              <label class="check-item" [class.is-active]="filters().inStock">
+                <input type="checkbox" [checked]="filters().inStock" (change)="toggleInStock()" />
                 <span>{{ 'dashboard.inStockOnly' | transloco }}</span>
-              </button>
+              </label>
             </div>
           </div>
 

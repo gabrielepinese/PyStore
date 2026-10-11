@@ -626,26 +626,17 @@ $thumb-size: 16px;
   text-align: left;
   cursor: pointer;
 
-  .checkbox {
-    display: flex;
+  input[type='checkbox'] {
     flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    border: 1px solid #b3b4b8;
-    border-radius: 2px;
-    background: #fff;
-    color: #f6f2ef;
-    font-size: 12px;
-    line-height: 1;
-    transition:
-      background 0.15s ease,
-      border-color 0.15s ease;
+    width: 16px;
+    height: 16px;
+    accent-color: #735f58;
+    cursor: pointer;
 
-    &::after {
-      content: '✓';
-      opacity: 0;
+    &:focus-visible {
+      outline: 3px solid #735f58;
+      outline-offset: 2px;
+      border-radius: 2px;
     }
   }
 
@@ -653,25 +644,6 @@ $thumb-size: 16px;
     margin-left: auto;
     color: #6b6c6e;
     font-size: 0.8rem;
-  }
-
-  &:hover .checkbox {
-    border-color: #735f58;
-  }
-
-  &.is-active .checkbox {
-    background: #735f58;
-    border-color: #735f58;
-
-    &::after {
-      opacity: 1;
-    }
-  }
-
-  &:focus-visible {
-    outline: 3px solid #735f58;
-    outline-offset: 2px;
-    border-radius: 2px;
   }
 }
 
