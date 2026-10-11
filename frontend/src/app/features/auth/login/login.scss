@@ -1,3 +1,5 @@
+@use '../../../../styles/tokens' as *;
+
 :host {
   display: block;
   height: 100vh;
@@ -8,7 +10,7 @@
 .auth-page {
   display: flex;
   height: 100vh;
-  background: #F6F2EF;
+  background: $color-surface;
   overflow: hidden;
 }
 
@@ -33,24 +35,24 @@
     gap: 6px;
     align-self: flex-start;
     margin-bottom: 20px;
-    color: #6B6C6E;
+    color: $color-text-muted;
     font-size: 0.8rem;
     font-weight: 600;
     text-decoration: none;
 
     &:hover {
-      color: #735F58;
+      color: $color-brand;
     }
 
     &:focus-visible {
-      outline: 3px solid #1a1a1a;
+      outline: 3px solid $color-text;
       outline-offset: 2px;
       border-radius: 4px;
     }
   }
 
   .brand {
-    color: #735F58;
+    color: $color-brand;
     font-weight: 700;
     font-size: 1.35rem;
   }
@@ -58,21 +60,21 @@
   .greeting {
     margin: 24px 0 4px;
     font-size: 0.78rem;
-    color: #6B6C6E;
+    color: $color-text-muted;
   }
 
   h1 {
     margin: 0 0 24px;
     font-size: 1.6rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: $color-text;
   }
 
   label {
     display: block;
     font-size: 0.78rem;
     font-weight: 600;
-    color: #6B6C6E;
+    color: $color-text-muted;
   }
 
   input {
@@ -80,18 +82,18 @@
     box-sizing: border-box;
     min-height: 44px;
     padding: 0.85rem 0.9rem;
-    border: 1px solid #B3B4B8;
+    border: 1px solid $color-border;
     border-radius: 10px;
-    background: #ECE4DF;
+    background: $color-surface-alt;
     font-size: 0.88rem;
-    color: #1a1a1a;
+    color: $color-text;
 
     &::placeholder {
-      color: #6B6C6E;
+      color: $color-text-muted;
     }
 
     &:focus-visible {
-      outline: 3px solid #735F58;
+      outline: 3px solid $color-brand;
       outline-offset: 1px;
     }
   }
@@ -126,7 +128,7 @@
     padding: 0;
     border: none;
     background: none;
-    color: #6B6C6E;
+    color: $color-text-muted;
     cursor: pointer;
 
     fa-icon {
@@ -134,7 +136,7 @@
     }
 
     &:focus-visible {
-      outline: 3px solid #735F58;
+      outline: 3px solid $color-brand;
       outline-offset: 2px;
       border-radius: 4px;
     }
@@ -159,12 +161,12 @@
 
   .forgot-link {
     font-size: 0.72rem;
-    color: #735F58;
+    color: $color-brand;
   }
 
   .field-error {
     margin: -4px 0 0;
-    color: #8b1a0a;
+    color: $color-error;
     font-size: 12px;
     line-height: 16px;
     min-height: 16px;
@@ -178,7 +180,7 @@
 
   .form-error {
     margin: 8px 0 0;
-    color: #8b1a0a;
+    color: $color-error;
     font-size: 12px;
     line-height: 16px;
     min-height: 16px;
@@ -193,16 +195,16 @@
   .switch {
     margin-top: 24px;
     font-size: 0.8rem;
-    color: #6B6C6E;
+    color: $color-text-muted;
     text-align: center;
 
     a {
-      color: #735F58;
+      color: $color-brand;
       font-weight: 600;
       text-decoration: underline;
 
       &:focus-visible {
-        outline: 3px solid #1a1a1a;
+        outline: 3px solid $color-text;
         outline-offset: 2px;
       }
     }
@@ -215,7 +217,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #D0BFB2;
+  background: $color-brand-light;
   border-radius: 0;
   overflow: hidden;
   min-height: 0;
