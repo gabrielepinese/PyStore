@@ -540,10 +540,10 @@ export class Dashboard {
     this.wishlist.set(next);
   }
 
-  protected addToCart(): void {
+  protected addToCart(product: Product): void {
     if (!this.requireSignIn()) return;
 
-    this.cartService.add();
+    this.cartService.addItem(product);
   }
 
   /** Guests can browse but not act: sends them to the login page and returns false. */

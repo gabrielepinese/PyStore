@@ -49,9 +49,6 @@ export class Topbar {
   }
 
   protected openCart(): void {
-    // No cart page yet — for guests the icon is just another sign-in entry point.
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigateByUrl('/login');
-    }
+    this.router.navigateByUrl(this.authService.isAuthenticated() ? '/cart' : '/login');
   }
 }

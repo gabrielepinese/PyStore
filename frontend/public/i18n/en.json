@@ -269,7 +269,25 @@
       "comingSoonHint": "You'll be able to view order history and track deliveries here."
     }
   },
+  "cart": {
+    "heading": "Your cart",
+    "itemCount": "{{count}} in cart",
+    "empty": "Your cart is empty.",
+    "emptyHint": "Add something you like and it'll show up here.",
+    "browseProducts": "Browse products",
+    "decreaseQtyAria": "Decrease quantity",
+    "increaseQtyAria": "Increase quantity",
+    "removeAria": "Remove {{name}} from cart",
+    "summaryHeading": "Order summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingCalculated": "Calculated at checkout",
+    "total": "Total",
+    "checkout": "Proceed to checkout"
+  },
   "toast": {
+    "cartItemRemoved": "Removed from cart.",
+    "checkoutComingSoon": "Checkout is coming soon.",
     "profileUpdated": "Profile updated.",
     "profileUpdateFailed": "Could not update profile. Try again.",
     "addressUpdated": "Address updated.",

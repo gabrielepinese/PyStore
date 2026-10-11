@@ -265,7 +265,9 @@ export class ProductDetail {
 
   protected addToCart(): void {
     if (!this.requireSignIn()) return;
-    this.cartService.add();
+    const product = this.product();
+    if (!product) return;
+    this.cartService.addItem(product);
     this.addedToCart.set(true);
   }
 

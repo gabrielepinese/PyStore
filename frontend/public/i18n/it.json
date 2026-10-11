@@ -269,7 +269,25 @@
       "comingSoonHint": "Qui potrai consultare la cronologia degli ordini e tracciare le consegne."
     }
   },
+  "cart": {
+    "heading": "Il tuo carrello",
+    "itemCount": "{{count}} nel carrello",
+    "empty": "Il tuo carrello è vuoto.",
+    "emptyHint": "Aggiungi qualcosa che ti piace e comparirà qui.",
+    "browseProducts": "Sfoglia i prodotti",
+    "decreaseQtyAria": "Diminuisci quantità",
+    "increaseQtyAria": "Aumenta quantità",
+    "removeAria": "Rimuovi {{name}} dal carrello",
+    "summaryHeading": "Riepilogo ordine",
+    "subtotal": "Subtotale",
+    "shipping": "Spedizione",
+    "shippingCalculated": "Calcolata al checkout",
+    "total": "Totale",
+    "checkout": "Procedi al checkout"
+  },
   "toast": {
+    "cartItemRemoved": "Rimosso dal carrello.",
+    "checkoutComingSoon": "Il checkout arriverà presto.",
     "profileUpdated": "Profilo aggiornato.",
     "profileUpdateFailed": "Impossibile aggiornare il profilo. Riprova.",
     "addressUpdated": "Indirizzo aggiornato.",

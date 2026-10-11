@@ -1,0 +1,96 @@
+<app-topbar />
+
+<div class="page">
+  <button type="button" class="back-link" (click)="goBack()">
+    <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> {{ 'common.backToDashboard' | transloco }}
+  </button>
+
+  <h1 class="page-title">{{ 'cart.heading' | transloco }}</h1>
+
+  @if (cartService.count() > 0) {
+    <p class="item-count">{{ 'cart.itemCount' | transloco: { count: cartService.count() } }}</p>
+
+    <div class="cart-layout">
+      <div class="cart-items">
+        @for (item of cartService.items(); track item.productId) {
+          <article class="cart-item">
+            <a class="item-thumb" [routerLink]="['/products', item.productId]" [style.background]="item.accent">
+              @if (item.badge) {
+                <span class="tag">{{ item.badge }}</span>
+              }
+            </a>
+
+            <div class="item-info">
+              <a class="item-name" [routerLink]="['/products', item.productId]">{{ item.name }}</a>
+              <div class="item-price">
+                <span class="price">${{ item.price }}</span>
+                @if (item.originalPrice) {
+                  <span class="price-original">${{ item.originalPrice }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="item-qty">
+              <button
+                type="button"
+                class="qty-btn"
+                [attr.aria-label]="'cart.decreaseQtyAria' | transloco"
+                (click)="decrease(item.productId)"
+              >
+                <fa-icon [icon]="icons.minus" aria-hidden="true" />
+              </button>
+              <span class="qty-value">{{ item.qty }}</span>
+              <button
+                type="button"
+                class="qty-btn"
+                [attr.aria-label]="'cart.increaseQtyAria' | transloco"
+                (click)="increase(item.productId)"
+              >
+                <fa-icon [icon]="icons.plus" aria-hidden="true" />
+              </button>
+            </div>
+
+            <p class="item-total">${{ item.price * item.qty }}</p>
+
+            <button
+              type="button"
+              class="remove-btn"
+              [attr.aria-label]="'cart.removeAria' | transloco: { name: item.name }"
+              (click)="remove(item.productId)"
+            >
+              <fa-icon [icon]="icons.trash" aria-hidden="true" />
+            </button>
+          </article>
+        }
+      </div>
+
+      <aside class="order-summary">
+        <h2>{{ 'cart.summaryHeading' | transloco }}</h2>
+
+        <div class="summary-row">
+          <span>{{ 'cart.subtotal' | transloco }}</span>
+          <span>${{ cartService.subtotal() }}</span>
+        </div>
+        <div class="summary-row">
+          <span>{{ 'cart.shipping' | transloco }}</span>
+          <span class="shipping-note">{{ 'cart.shippingCalculated' | transloco }}</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>{{ 'cart.total' | transloco }}</span>
+          <span>${{ cartService.subtotal() }}</span>
+        </div>
+
+        <button type="button" class="checkout-btn" (click)="checkout()">
+          {{ 'cart.checkout' | transloco }}
+        </button>
+      </aside>
+    </div>
+  } @else {
+    <div class="empty-hint">
+      <fa-icon [icon]="icons.cart" aria-hidden="true" />
+      <p>{{ 'cart.empty' | transloco }}</p>
+      <p class="empty-sub">{{ 'cart.emptyHint' | transloco }}</p>
+      <a class="btn-secondary" routerLink="/dashboard">{{ 'cart.browseProducts' | transloco }}</a>
+    </div>
+  }
+</div>
