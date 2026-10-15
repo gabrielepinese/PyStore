@@ -288,16 +288,24 @@
   "checkout": {
     "heading": "Checkout",
     "backToCart": "Back to cart",
+    "stepAddress": "Shipping",
+    "stepPayment": "Payment",
+    "stepConfirmation": "Confirmation",
     "shippingHeading": "Shipping address",
     "noAddresses": "You don't have a saved address yet.",
     "addAddress": "Add one in your account",
     "continueToPayment": "Continue to payment",
     "paymentHeading": "Payment",
+    "shippingTo": "Shipping to",
     "pay": "Pay ${{amount}}",
+    "processing": "Processing your payment…",
+    "secureNote": "Secured by Stripe — your card details never touch our servers",
     "paymentGenericError": "Payment could not be completed. Try again.",
     "stripeNotConfigured": "Stripe isn't configured — set stripePublishableKey in environment.development.ts and STRIPE_SECRET_KEY for orders-service.",
     "successHeading": "Payment successful",
-    "successOrderId": "Order {{id}} is confirmed."
+    "successSub": "Thanks for your order — we're getting it ready.",
+    "successOrderId": "Order {{id}}",
+    "successNote": "We'll email you a confirmation and update you when it ships."
   },
   "toast": {
     "cartItemRemoved": "Removed from cart.",

@@ -288,16 +288,24 @@
   "checkout": {
     "heading": "Checkout",
     "backToCart": "Torna al carrello",
+    "stepAddress": "Spedizione",
+    "stepPayment": "Pagamento",
+    "stepConfirmation": "Conferma",
     "shippingHeading": "Indirizzo di spedizione",
     "noAddresses": "Non hai ancora un indirizzo salvato.",
     "addAddress": "Aggiungine uno nel tuo account",
     "continueToPayment": "Continua al pagamento",
     "paymentHeading": "Pagamento",
+    "shippingTo": "Spedizione a",
     "pay": "Paga ${{amount}}",
+    "processing": "Pagamento in corso…",
+    "secureNote": "Protetto da Stripe — i dati della carta non passano dai nostri server",
     "paymentGenericError": "Pagamento non riuscito. Riprova.",
     "stripeNotConfigured": "Stripe non configurato — imposta stripePublishableKey in environment.development.ts e STRIPE_SECRET_KEY per orders-service.",
     "successHeading": "Pagamento riuscito",
-    "successOrderId": "Ordine {{id}} confermato."
+    "successSub": "Grazie per il tuo ordine — lo stiamo preparando.",
+    "successOrderId": "Ordine {{id}}",
+    "successNote": "Ti invieremo una conferma via email e un aggiornamento alla spedizione."
   },
   "toast": {
     "cartItemRemoved": "Rimosso dal carrello.",

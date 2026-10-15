@@ -9,6 +9,25 @@
 
   <h1 class="page-title">{{ 'checkout.heading' | transloco }}</h1>
 
+  <ol class="stepper" aria-label="Checkout progress">
+    @for (step of stepDefs; track step.key) {
+      <li
+        class="step"
+        [class.is-done]="stepStatus(step.key) === 'done'"
+        [class.is-active]="stepStatus(step.key) === 'active'"
+      >
+        <span class="step-icon">
+          @if (stepStatus(step.key) === 'done') {
+            <fa-icon [icon]="icons.check" aria-hidden="true" />
+          } @else {
+            <fa-icon [icon]="step.icon" aria-hidden="true" />
+          }
+        </span>
+        <span class="step-label">{{ step.label | transloco }}</span>
+      </li>
+    }
+  </ol>
+
   @switch (stage()) {
     @case ('address') {
       <div class="checkout-layout">
@@ -81,22 +100,55 @@
         <section class="panel">
           <h2>{{ 'checkout.paymentHeading' | transloco }}</h2>
 
+          @if (selectedAddress(); as address) {
+            <div class="shipping-to">
+              <fa-icon [icon]="icons.location" aria-hidden="true" />
+              <div class="shipping-to-text">
+                <span class="shipping-to-label">{{ 'checkout.shippingTo' | transloco }}</span>
+                <span
+                  >{{ address.fullName }} · {{ address.line1 }}, {{ address.city }}
+                  {{ address.postalCode }}</span
+                >
+              </div>
+            </div>
+          }
+
           @if (stripeConfigured) {
-            <div #paymentElement class="payment-element"></div>
+            <div class="payment-form" [class.is-processing]="paying()">
+              <div #paymentElement class="payment-element"></div>
 
-            @if (paymentError()) {
-              <p class="payment-error">{{ paymentError() }}</p>
-            }
-
-            <button type="button" class="btn-primary" [disabled]="paying()" (click)="pay()">
-              @if (paying()) {
-                <app-dot-loader />
-              } @else {
-                {{ 'checkout.pay' | transloco: { amount: cartSubtotal } }}
+              @if (paymentError()) {
+                <div class="alert alert-error">
+                  <fa-icon [icon]="icons.warning" aria-hidden="true" />
+                  <span>{{ paymentError() }}</span>
+                </div>
               }
-            </button>
+
+              <button type="button" class="btn-primary" [disabled]="paying()" (click)="pay()">
+                @if (paying()) {
+                  <app-dot-loader />
+                } @else {
+                  {{ 'checkout.pay' | transloco: { amount: cartSubtotal } }}
+                }
+              </button>
+
+              <p class="secure-note">
+                <fa-icon [icon]="icons.lock" aria-hidden="true" />
+                {{ 'checkout.secureNote' | transloco }}
+              </p>
+
+              @if (paying()) {
+                <div class="processing-overlay">
+                  <app-dot-loader />
+                  <span>{{ 'checkout.processing' | transloco }}</span>
+                </div>
+              }
+            </div>
           } @else {
-            <p class="payment-error">{{ 'checkout.stripeNotConfigured' | transloco }}</p>
+            <div class="alert alert-error">
+              <fa-icon [icon]="icons.warning" aria-hidden="true" />
+              <span>{{ 'checkout.stripeNotConfigured' | transloco }}</span>
+            </div>
           }
         </section>
 
@@ -120,10 +172,31 @@
       <div class="success-state">
         <span class="success-icon"><fa-icon [icon]="icons.check" aria-hidden="true" /></span>
         <h2>{{ 'checkout.successHeading' | transloco }}</h2>
+        <p class="success-sub">{{ 'checkout.successSub' | transloco }}</p>
+
         @if (completedOrder(); as order) {
-          <p>{{ 'checkout.successOrderId' | transloco: { id: order.id } }}</p>
+          <div class="order-receipt">
+            <div class="receipt-row receipt-id">
+              <span>{{ 'checkout.successOrderId' | transloco: { id: order.id } }}</span>
+            </div>
+            <div class="receipt-items">
+              @for (item of order.items; track item.id) {
+                <div class="receipt-line">
+                  <span>{{ item.name }} × {{ item.qty }}</span>
+                  <span>${{ item.unitPrice * item.qty }}</span>
+                </div>
+              }
+            </div>
+            <div class="receipt-row receipt-total">
+              <span>{{ 'cart.total' | transloco }}</span>
+              <span>${{ order.total }}</span>
+            </div>
+          </div>
         }
-        <button type="button" class="btn-secondary" (click)="goToDashboard()">
+
+        <p class="success-note">{{ 'checkout.successNote' | transloco }}</p>
+
+        <button type="button" class="btn-primary" (click)="goToDashboard()">
           {{ 'cart.browseProducts' | transloco }}
         </button>
       </div>

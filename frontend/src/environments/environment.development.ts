@@ -9,5 +9,5 @@ export const environment = {
   // https://dashboard.stripe.com/test/apikeys. Checkout won't work without
   // one (Stripe Elements needs it to mount), and orders-service needs the
   // matching sk_test_ secret key set as STRIPE_SECRET_KEY.
-  stripePublishableKey: 'pk_test_51UPMGlGeUvr6InPrHlC5wZaHR1yOceszodurghsCBF9zDL5wHdYpn6JJUeWE7l87gCUqMX4qeQ8CWOqi3HyI9TLK0060nv2x0w',
+  stripePublishableKey: 'pk_test_51UPMGvGa96UBN7prDJO84jK98l5HUkfdXLMCuV5pt7HOwAZkAZYaDl93K3xuRDqF9xG1xZdoPnG03KShVlJPDn3m00x4MXhT3V',
 };

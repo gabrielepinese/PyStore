@@ -1,6 +1,13 @@
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faAngleLeft, faCheck, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { Component, ElementRef, effect, inject, signal, viewChild } from '@angular/core';
+import {
+  faAngleLeft,
+  faCheck,
+  faCreditCard,
+  faLocationDot,
+  faLock,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
+import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Stripe, StripeElements, loadStripe } from '@stripe/stripe-js';
@@ -27,7 +34,17 @@ export class Checkout {
     angleLeft: faAngleLeft,
     check: faCheck,
     location: faLocationDot,
+    creditCard: faCreditCard,
+    lock: faLock,
+    warning: faTriangleExclamation,
   };
+
+  protected readonly stepDefs: { key: Stage; label: string; icon: typeof faCheck }[] = [
+    { key: 'address', label: 'checkout.stepAddress', icon: faLocationDot },
+    { key: 'payment', label: 'checkout.stepPayment', icon: faCreditCard },
+    { key: 'success', label: 'checkout.stepConfirmation', icon: faCheck },
+  ];
+  private readonly stepOrder: Stage[] = ['address', 'payment', 'success'];
 
   protected readonly cartService = inject(CartService);
   private readonly accountService = inject(AccountService);
@@ -48,6 +65,10 @@ export class Checkout {
 
   protected readonly cartItems = this.cartService.items();
   protected readonly cartSubtotal = this.cartService.subtotal();
+
+  protected readonly selectedAddress = computed(
+    () => this.addresses().find((address) => address.id === this.selectedAddressId()) ?? null,
+  );
 
   private readonly paymentElementRef = viewChild<ElementRef<HTMLElement>>('paymentElement');
 
@@ -85,6 +106,14 @@ export class Checkout {
         this.elements.create('payment').mount(el.nativeElement);
       }
     });
+  }
+
+  protected stepStatus(step: Stage): 'done' | 'active' | 'upcoming' {
+    const current = this.stepOrder.indexOf(this.stage());
+    const target = this.stepOrder.indexOf(step);
+    if (target < current) return 'done';
+    if (target === current) return 'active';
+    return 'upcoming';
   }
 
   protected selectAddress(id: string): void {
