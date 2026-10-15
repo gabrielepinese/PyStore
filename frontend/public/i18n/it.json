@@ -285,9 +285,24 @@
     "total": "Totale",
     "checkout": "Procedi al checkout"
   },
+  "checkout": {
+    "heading": "Checkout",
+    "backToCart": "Torna al carrello",
+    "shippingHeading": "Indirizzo di spedizione",
+    "noAddresses": "Non hai ancora un indirizzo salvato.",
+    "addAddress": "Aggiungine uno nel tuo account",
+    "continueToPayment": "Continua al pagamento",
+    "paymentHeading": "Pagamento",
+    "pay": "Paga ${{amount}}",
+    "paymentGenericError": "Pagamento non riuscito. Riprova.",
+    "stripeNotConfigured": "Stripe non configurato — imposta stripePublishableKey in environment.development.ts e STRIPE_SECRET_KEY per orders-service.",
+    "successHeading": "Pagamento riuscito",
+    "successOrderId": "Ordine {{id}} confermato."
+  },
   "toast": {
     "cartItemRemoved": "Rimosso dal carrello.",
-    "checkoutComingSoon": "Il checkout arriverà presto.",
+    "checkoutOrderFailed": "Impossibile avviare il checkout. Riprova.",
+    "checkoutConfirmFailed": "Pagamento riuscito, ma non siamo riusciti a confermare l'ordine. Contatta l'assistenza.",
     "profileUpdated": "Profilo aggiornato.",
     "profileUpdateFailed": "Impossibile aggiornare il profilo. Riprova.",
     "addressUpdated": "Indirizzo aggiornato.",

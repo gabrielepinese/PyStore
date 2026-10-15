@@ -1,0 +1,274 @@
+@use '../../../styles/tokens' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: $color-surface;
+  font-family: system-ui, sans-serif;
+  color: $color-text;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: $color-text-muted;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.page-title {
+  margin: 0 0 24px;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  padding: 24px;
+  border: 1px solid $color-border-light;
+  border-radius: 2px;
+  background: $color-white;
+
+  h2 {
+    margin: 0 0 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+}
+
+.state-row {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.address-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid $color-border-light;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: $color-brand-light;
+  }
+
+  &.is-selected {
+    border-color: $color-brand;
+    background: $color-surface;
+  }
+
+  input {
+    margin-top: 3px;
+    accent-color: $color-brand;
+    cursor: pointer;
+  }
+}
+
+.address-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.85rem;
+  color: $color-text-muted;
+
+  strong {
+    color: $color-text;
+    font-size: 0.9rem;
+  }
+}
+
+.order-summary {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  border: 1px solid $color-border-light;
+  border-radius: 2px;
+  background: $color-white;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+}
+
+.summary-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: $color-text-muted;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+}
+
+.summary-total {
+  padding-top: 14px;
+  border-top: 1px solid $color-border-light;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.payment-element {
+  margin-bottom: 16px;
+  min-height: 40px;
+}
+
+.payment-error {
+  margin: 0 0 14px;
+  color: $color-error;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 128px;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid $color-brand;
+  border-radius: 2px;
+  background: $color-brand;
+  color: $color-surface;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: $color-brand-dark;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $color-text;
+    outline-offset: 2px;
+  }
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 0.55rem 1.2rem;
+  border: 1px solid $color-brand;
+  border-radius: 2px;
+  background: transparent;
+  color: $color-brand;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    background: $color-brand;
+    color: $color-surface;
+  }
+}
+
+.empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 0;
+  color: $color-text-muted;
+  font-size: 0.88rem;
+  text-align: center;
+
+  fa-icon {
+    font-size: 1.6rem;
+    color: $color-brand-light;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 80px 0;
+  text-align: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  p {
+    margin: 0;
+    color: $color-text-muted;
+    font-size: 0.88rem;
+  }
+}
+
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: $color-success;
+  color: $color-white;
+  font-size: 1.4rem;
+}

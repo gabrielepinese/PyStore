@@ -53,6 +53,6 @@ export class Cart {
   }
 
   protected checkout(): void {
-    this.toastService.show(this.transloco.translate('toast.checkoutComingSoon'), 'info');
+    this.router.navigateByUrl('/checkout');
   }
 }

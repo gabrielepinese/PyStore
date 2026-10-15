@@ -1,0 +1,132 @@
+<app-topbar />
+
+<div class="page">
+  @if (stage() !== 'success') {
+    <button type="button" class="back-link" (click)="backToCart()">
+      <fa-icon [icon]="icons.angleLeft" aria-hidden="true" /> {{ 'checkout.backToCart' | transloco }}
+    </button>
+  }
+
+  <h1 class="page-title">{{ 'checkout.heading' | transloco }}</h1>
+
+  @switch (stage()) {
+    @case ('address') {
+      <div class="checkout-layout">
+        <section class="panel">
+          <h2>{{ 'checkout.shippingHeading' | transloco }}</h2>
+
+          @if (addressesLoading()) {
+            <div class="state-row">
+              <app-dot-loader />
+            </div>
+          } @else if (addresses().length === 0) {
+            <div class="empty-hint">
+              <fa-icon [icon]="icons.location" aria-hidden="true" />
+              <p>{{ 'checkout.noAddresses' | transloco }}</p>
+              <a class="btn-secondary" routerLink="/account">{{ 'checkout.addAddress' | transloco }}</a>
+            </div>
+          } @else {
+            <div class="address-list">
+              @for (address of addresses(); track address.id) {
+                <label class="address-option" [class.is-selected]="selectedAddressId() === address.id">
+                  <input
+                    type="radio"
+                    name="shippingAddress"
+                    [checked]="selectedAddressId() === address.id"
+                    (change)="selectAddress(address.id)"
+                  />
+                  <span class="address-text">
+                    <strong>{{ address.label }}</strong>
+                    <span>{{ address.fullName }}</span>
+                    <span>{{ address.line1 }}{{ address.line2 ? ', ' + address.line2 : '' }}</span>
+                    <span>{{ address.city }}, {{ address.postalCode }} · {{ address.country }}</span>
+                  </span>
+                </label>
+              }
+            </div>
+
+            <button
+              type="button"
+              class="btn-primary"
+              [disabled]="!selectedAddressId() || placingOrder()"
+              (click)="continueToPayment()"
+            >
+              @if (placingOrder()) {
+                <app-dot-loader />
+              } @else {
+                {{ 'checkout.continueToPayment' | transloco }}
+              }
+            </button>
+          }
+        </section>
+
+        <aside class="order-summary">
+          <h2>{{ 'cart.summaryHeading' | transloco }}</h2>
+          @for (item of cartItems; track item.productId) {
+            <div class="summary-line">
+              <span>{{ item.name }} × {{ item.qty }}</span>
+              <span>${{ item.price * item.qty }}</span>
+            </div>
+          }
+          <div class="summary-row summary-total">
+            <span>{{ 'cart.total' | transloco }}</span>
+            <span>${{ cartSubtotal }}</span>
+          </div>
+        </aside>
+      </div>
+    }
+
+    @case ('payment') {
+      <div class="checkout-layout">
+        <section class="panel">
+          <h2>{{ 'checkout.paymentHeading' | transloco }}</h2>
+
+          @if (stripeConfigured) {
+            <div #paymentElement class="payment-element"></div>
+
+            @if (paymentError()) {
+              <p class="payment-error">{{ paymentError() }}</p>
+            }
+
+            <button type="button" class="btn-primary" [disabled]="paying()" (click)="pay()">
+              @if (paying()) {
+                <app-dot-loader />
+              } @else {
+                {{ 'checkout.pay' | transloco: { amount: cartSubtotal } }}
+              }
+            </button>
+          } @else {
+            <p class="payment-error">{{ 'checkout.stripeNotConfigured' | transloco }}</p>
+          }
+        </section>
+
+        <aside class="order-summary">
+          <h2>{{ 'cart.summaryHeading' | transloco }}</h2>
+          @for (item of cartItems; track item.productId) {
+            <div class="summary-line">
+              <span>{{ item.name }} × {{ item.qty }}</span>
+              <span>${{ item.price * item.qty }}</span>
+            </div>
+          }
+          <div class="summary-row summary-total">
+            <span>{{ 'cart.total' | transloco }}</span>
+            <span>${{ cartSubtotal }}</span>
+          </div>
+        </aside>
+      </div>
+    }
+
+    @case ('success') {
+      <div class="success-state">
+        <span class="success-icon"><fa-icon [icon]="icons.check" aria-hidden="true" /></span>
+        <h2>{{ 'checkout.successHeading' | transloco }}</h2>
+        @if (completedOrder(); as order) {
+          <p>{{ 'checkout.successOrderId' | transloco: { id: order.id } }}</p>
+        }
+        <button type="button" class="btn-secondary" (click)="goToDashboard()">
+          {{ 'cart.browseProducts' | transloco }}
+        </button>
+      </div>
+    }
+  }
+</div>

@@ -285,9 +285,24 @@
     "total": "Total",
     "checkout": "Proceed to checkout"
   },
+  "checkout": {
+    "heading": "Checkout",
+    "backToCart": "Back to cart",
+    "shippingHeading": "Shipping address",
+    "noAddresses": "You don't have a saved address yet.",
+    "addAddress": "Add one in your account",
+    "continueToPayment": "Continue to payment",
+    "paymentHeading": "Payment",
+    "pay": "Pay ${{amount}}",
+    "paymentGenericError": "Payment could not be completed. Try again.",
+    "stripeNotConfigured": "Stripe isn't configured — set stripePublishableKey in environment.development.ts and STRIPE_SECRET_KEY for orders-service.",
+    "successHeading": "Payment successful",
+    "successOrderId": "Order {{id}} is confirmed."
+  },
   "toast": {
     "cartItemRemoved": "Removed from cart.",
-    "checkoutComingSoon": "Checkout is coming soon.",
+    "checkoutOrderFailed": "Could not start checkout. Try again.",
+    "checkoutConfirmFailed": "Payment went through, but we couldn't confirm the order. Contact support.",
     "profileUpdated": "Profile updated.",
     "profileUpdateFailed": "Could not update profile. Try again.",
     "addressUpdated": "Address updated.",
