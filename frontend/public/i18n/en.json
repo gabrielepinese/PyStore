@@ -265,8 +265,14 @@
     },
     "orders": {
       "heading": "Your orders",
-      "comingSoon": "Order tracking is coming soon.",
-      "comingSoonHint": "You'll be able to view order history and track deliveries here."
+      "count": "{{count}} orders",
+      "empty": "You haven't placed any orders yet.",
+      "emptyHint": "Items you buy will show up here with their status.",
+      "placedOn": "Placed on",
+      "orderNumber": "Order",
+      "statusPending": "Processing",
+      "statusPaid": "Confirmed",
+      "statusFailed": "Payment failed"
     }
   },
   "cart": {

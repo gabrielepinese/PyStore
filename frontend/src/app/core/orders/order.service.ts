@@ -17,6 +17,10 @@ export class OrderService {
     return this.http.post<Order>(`${this.baseUrl}/${orderId}/confirm`, {});
   }
 
+  list(): Observable<Order[]> {
+    return this.http.get<Order[]>(this.baseUrl);
+  }
+
   get(orderId: string): Observable<Order> {
     return this.http.get<Order>(`${this.baseUrl}/${orderId}`);
   }

@@ -265,8 +265,14 @@
     },
     "orders": {
       "heading": "I tuoi ordini",
-      "comingSoon": "Il tracciamento degli ordini arriverà presto.",
-      "comingSoonHint": "Qui potrai consultare la cronologia degli ordini e tracciare le consegne."
+      "count": "{{count}} ordini",
+      "empty": "Non hai ancora effettuato ordini.",
+      "emptyHint": "Gli articoli che acquisti appariranno qui con il loro stato.",
+      "placedOn": "Effettuato il",
+      "orderNumber": "Ordine",
+      "statusPending": "In elaborazione",
+      "statusPaid": "Confermato",
+      "statusFailed": "Pagamento non riuscito"
     }
   },
   "cart": {

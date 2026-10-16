@@ -5,6 +5,9 @@ import {
   faAngleLeft,
   faBoxOpen,
   faChevronDown,
+  faCircleCheck,
+  faCircleXmark,
+  faClock,
   faCreditCard,
   faLocationDot,
   faLock,
@@ -15,15 +18,18 @@ import {
   faTrash,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+import { DatePipe } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AccountService } from '../../core/account/account.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { Address } from '../../core/models/address.model';
+import { Order, OrderStatus } from '../../core/models/order.model';
 import { PaymentMethod } from '../../core/models/payment-method.model';
+import { OrderService } from '../../core/orders/order.service';
 import { DotLoader } from '../../shared/components/dot-loader/dot-loader';
 import { Topbar } from '../../shared/components/topbar/topbar';
 import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
@@ -50,9 +56,18 @@ type Section = 'profile' | 'addresses' | 'payment' | 'orders';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
+/** No product images in this mock store — a deterministic color swatch stands in for a thumbnail. */
+const ORDER_ITEM_SWATCHES = ['#d0bfb2', '#b0a297', '#ece4df', '#735f58', '#ecd9a8'];
+
+const ORDER_STATUS_META: Record<OrderStatus, { icon: IconDefinition; className: string; labelKey: string }> = {
+  pending: { icon: faClock, className: 'is-pending', labelKey: 'account.orders.statusPending' },
+  paid: { icon: faCircleCheck, className: 'is-paid', labelKey: 'account.orders.statusPaid' },
+  failed: { icon: faCircleXmark, className: 'is-failed', labelKey: 'account.orders.statusFailed' },
+};
+
 @Component({
   selector: 'app-account',
-  imports: [ReactiveFormsModule, FaIconComponent, DotLoader, Topbar, TranslocoPipe],
+  imports: [ReactiveFormsModule, FaIconComponent, DotLoader, Topbar, TranslocoPipe, DatePipe, RouterLink],
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })
@@ -70,6 +85,9 @@ export class Account {
     star: faStar,
     trash: faTrash,
     user: faUser,
+    clock: faClock,
+    circleCheck: faCircleCheck,
+    circleXmark: faCircleXmark,
   };
 
   protected readonly cardYears = Array.from({ length: 16 }, (_, i) => CURRENT_YEAR + i);
@@ -80,6 +98,7 @@ export class Account {
 
   protected readonly authService = inject(AuthService);
   private readonly accountService = inject(AccountService);
+  private readonly orderService = inject(OrderService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
@@ -114,6 +133,7 @@ export class Account {
 
     this.loadAddresses();
     this.loadPaymentMethods();
+    this.loadOrders();
 
     // The CVV's valid length depends on the brand, which isn't known until
     // the card number is typed and recognized — so the field stays locked
@@ -486,6 +506,38 @@ export class Account {
       },
       error: () => this.toastService.show(this.transloco.translate('toast.cardRemoveFailed'), 'error'),
     });
+  }
+
+  // ---- orders ----
+
+  protected readonly orders = signal<Order[]>([]);
+  protected readonly ordersLoading = signal(true);
+
+  private loadOrders(): void {
+    this.ordersLoading.set(true);
+    this.orderService.list().subscribe({
+      next: (list) => {
+        this.orders.set(list);
+        this.ordersLoading.set(false);
+      },
+      error: () => this.ordersLoading.set(false),
+    });
+  }
+
+  protected orderStatusMeta(status: OrderStatus) {
+    return ORDER_STATUS_META[status];
+  }
+
+  protected shortOrderId(id: string): string {
+    return id.slice(0, 8).toUpperCase();
+  }
+
+  protected itemSwatch(productId: string): string {
+    let hash = 0;
+    for (let i = 0; i < productId.length; i++) {
+      hash = (hash * 31 + productId.charCodeAt(i)) | 0;
+    }
+    return ORDER_ITEM_SWATCHES[Math.abs(hash) % ORDER_ITEM_SWATCHES.length];
   }
 
   // ---- nav ----

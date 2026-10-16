@@ -674,12 +674,71 @@
 
       @if (section() === 'orders') {
         <section class="panel-card">
-          <h2>{{ 'account.orders.heading' | transloco }}</h2>
-          <div class="coming-soon">
-            <fa-icon [icon]="icons.boxOpen" aria-hidden="true" />
-            <p>{{ 'account.orders.comingSoon' | transloco }}</p>
-            <p class="panel-hint">{{ 'account.orders.comingSoonHint' | transloco }}</p>
+          <div class="panel-head">
+            <h2>{{ 'account.orders.heading' | transloco }}</h2>
+            @if (!ordersLoading() && orders().length > 0) {
+              <span class="order-count">{{ 'account.orders.count' | transloco: { count: orders().length } }}</span>
+            }
           </div>
+
+          @if (ordersLoading()) {
+            <div class="state-row">
+              <app-dot-loader />
+            </div>
+          } @else if (orders().length === 0) {
+            <div class="coming-soon">
+              <fa-icon [icon]="icons.boxOpen" aria-hidden="true" />
+              <p>{{ 'account.orders.empty' | transloco }}</p>
+              <p class="panel-hint">{{ 'account.orders.emptyHint' | transloco }}</p>
+              <a class="icon-text-btn" routerLink="/dashboard">{{ 'cart.browseProducts' | transloco }}</a>
+            </div>
+          } @else {
+            <div class="order-list">
+              @for (order of orders(); track order.id) {
+                <article class="order-card" [class]="orderStatusMeta(order.status).className">
+                  <div class="order-card-head">
+                    <div class="order-meta">
+                      <div class="order-meta-item">
+                        <span class="order-meta-label">{{ 'account.orders.placedOn' | transloco }}</span>
+                        <span class="order-meta-value">{{ order.createdAt | date: 'mediumDate' }}</span>
+                      </div>
+                      <div class="order-meta-item">
+                        <span class="order-meta-label">{{ 'cart.total' | transloco }}</span>
+                        <span class="order-meta-value order-meta-total">${{ order.total }}</span>
+                      </div>
+                      <div class="order-meta-item">
+                        <span class="order-meta-label">{{ 'account.orders.orderNumber' | transloco }}</span>
+                        <span class="order-meta-value order-id-badge">#{{ shortOrderId(order.id) }}</span>
+                      </div>
+                    </div>
+
+                    <span class="order-status" [class]="orderStatusMeta(order.status).className">
+                      <fa-icon [icon]="orderStatusMeta(order.status).icon" aria-hidden="true" />
+                      {{ orderStatusMeta(order.status).labelKey | transloco }}
+                    </span>
+                  </div>
+
+                  <div class="order-items">
+                    @for (item of order.items; track item.id) {
+                      <div class="order-item-row">
+                        <a
+                          class="order-item-thumb"
+                          [routerLink]="['/products', item.productId]"
+                          [style.background]="itemSwatch(item.productId)"
+                        >
+                          @if (item.qty > 1) {
+                            <span class="order-item-qty">×{{ item.qty }}</span>
+                          }
+                        </a>
+                        <a class="order-item-name" [routerLink]="['/products', item.productId]">{{ item.name }}</a>
+                        <span class="order-item-price">${{ item.unitPrice * item.qty }}</span>
+                      </div>
+                    }
+                  </div>
+                </article>
+              }
+            </div>
+          }
         </section>
       }
     </div>
