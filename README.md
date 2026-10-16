@@ -1,7 +1,7 @@
 # PyStore
 
-Mock ecommerce built for a portfolio. Angular frontend, Python
-microservices backend. Currently scaffolded: login/registration + JWT
+**v1.0.0** — Mock ecommerce built for a portfolio. Angular frontend, Python
+microservices backend. Implemented: login/registration + JWT
 authentication, a product catalog (list/filter/search), a client-side cart,
 and checkout with real Stripe test-mode payments.
 

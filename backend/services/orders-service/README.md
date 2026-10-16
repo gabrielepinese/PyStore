@@ -1,6 +1,6 @@
 # orders-service
 
-FastAPI microservice owning checkout: turning a cart into an order and
+**v1.0.0** — FastAPI microservice owning checkout: turning a cart into an order and
 taking payment through Stripe (test mode). Owns its own database — no
 other service should read its tables directly.
 

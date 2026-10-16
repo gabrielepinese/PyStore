@@ -1,6 +1,6 @@
 # products-service
 
-FastAPI microservice owning the product catalog: listing, category filtering,
+**v1.0.0** — FastAPI microservice owning the product catalog: listing, category filtering,
 search, single-product lookup. Owns its own database — no other service
 should read its tables directly; everything crosses the wire as JSON through
 this service's API.

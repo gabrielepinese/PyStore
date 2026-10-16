@@ -1,6 +1,6 @@
 # auth-service
 
-FastAPI microservice owning user identity: registration, login, JWT
+**v1.0.0** — FastAPI microservice owning user identity: registration, login, JWT
 access/refresh tokens, session revocation. Owns its own database — no other
 service should read its tables directly; everything crosses the wire as
 JSON through this service's API.

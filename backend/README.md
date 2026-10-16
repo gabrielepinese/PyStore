@@ -1,6 +1,6 @@
 # backend
 
-Microservices backend for the PyStore portfolio project. Each service
+**v1.0.0** — Microservices backend for the PyStore portfolio project. Each service
 under `services/` is an independent FastAPI app with its own dependencies,
 database, and Dockerfile — no shared code or shared DB between them.
 
